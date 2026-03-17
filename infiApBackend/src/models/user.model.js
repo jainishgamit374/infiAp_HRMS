@@ -21,9 +21,16 @@ const userSchema = new mongoose.Schema(
         },
         role: {
             type: String,
-            enum: ["user", "admin", "manager"],
-            default: "user"
+            enum: ["employee", "manager", "hr", "admin", "main_admin"],
+            default: "employee"
         },
+        companyId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Company"
+        },
+        permissions: [{
+            type: String
+        }],
         refreshToken: {
             type: String
         },
@@ -34,6 +41,8 @@ const userSchema = new mongoose.Schema(
         verificationToken: String,
         resetPasswordToken: String,
         resetPasswordExpires: Date,
+        twoFactorOTP: String,
+        twoFactorOTPExpires: Date,
     },
     { timestamps: true }
 );

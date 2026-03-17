@@ -8,7 +8,6 @@ dotenv.config({
 });
 
 const compression = require("compression");
-const seoRouter = require("./routes/seo.routes");
 
 const app = express();
 
@@ -46,14 +45,17 @@ app.use(express.urlencoded({ extended: true, limit: "16kb" }));
 app.use(express.static("public"));
 app.use(cookieParser());
 
-// SEO & Sitemap Routes (Should be above API routes)
-app.use("/", seoRouter);
-
 // Import Routes
 const authRouter = require("./routes/auth.routes");
+const mainAdminRouter = require("./routes/mainAdmin.routes");
+const employeeRouter = require("./routes/employee.routes");
+const leaveRouter = require("./routes/leave.routes");
 
 // Routes Declaration
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/main-admin", mainAdminRouter);
+app.use("/api/v1", employeeRouter);
+app.use("/api/v1", leaveRouter);
 
 // Basic health check
 app.get("/", (req, res) => {

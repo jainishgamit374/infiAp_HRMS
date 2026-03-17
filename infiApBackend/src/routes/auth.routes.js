@@ -5,13 +5,13 @@ const {
     loginUser,
     forgotPassword,
     resetPassword,
-    getCurrentUser
+    verifyLoginOTP
 } = require("../controllers/user.controller");
-const { verifyJWT } = require("../middlewares/auth.middleware");
 
 // Public auth routes
 router.post("/signup", registerUser);
 router.post("/login", loginUser);
+router.post("/verify-2fa", verifyLoginOTP);
 router.post("/forgot-password", forgotPassword);
 router.post("/reset-password", resetPassword);
 
