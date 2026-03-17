@@ -107,3 +107,47 @@ exports.empPunch = async (req, res) => {
         res.status(500).json({ status: "Error", message: "Failed to record punch", error: error.message });
     }
 };
+
+// 3. Get User recent Punch Status
+exports.getPunchStatus = async (req, res) => {
+    try {
+        const userId = req.user ? req.user._id : "656b23d91f4a9b2b2c3d4e5f"; // mock user fallback
+
+        // Get the most recent punch
+        const latestPunch = await Punch.findOne({ userId }).sort({ PunchTime: -1 });
+
+        let punchType = 3; // Default: Not In / Not Out
+        let punchTime = null;
+
+        if (latestPunch) {
+            punchType = latestPunch.PunchType;
+            const formatDoubleDigit = (n) => n < 10 ? `0${n}` : n;
+            const d = latestPunch.PunchTime;
+            
+            const year = d.getFullYear();
+            const month = formatDoubleDigit(d.getMonth() + 1);
+            const day = formatDoubleDigit(d.getDate());
+            
+            let hours = d.getHours();
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12; 
+            const mins = formatDoubleDigit(d.getMinutes());
+            const secs = formatDoubleDigit(d.getSeconds());
+
+            // Format: DD-MM-YYYY hh:mm:ss A
+            punchTime = `${day}-${month}-${year} ${formatDoubleDigit(hours)}:${mins}:${secs} ${ampm}`;
+        }
+
+        res.status(200).json({
+            status: "Success",
+            statusCode: 200,
+            data: {
+                PunchType: punchType,
+                PunchDateTime: punchTime || "N/A"
+            }
+        });
+    } catch (error) {
+        res.status(500).json({ status: "Error", message: "Failed to get punch status", error: error.message });
+    }
+};

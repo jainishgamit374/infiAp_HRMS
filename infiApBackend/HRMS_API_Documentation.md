@@ -295,3 +295,20 @@ Base URL: `https://api.yourdomain.com/api/v1`
   "PunchTime": "2025-12-24 11:49:46 AM"
 }
 ```
+
+#### ➤ Get Punch Status
+**GET** `/punch-status`
+*Note: PunchType -> 1 = IN, 2 = OUT, 3 = NOT IN / NOT OUT*
+
+**Response:**
+```json
+{
+  "status": "Success",
+  "statusCode": 200,
+  "data": {
+    "PunchType": 1,
+    "PunchDateTime": "25-12-2025 06:31:15 AM"
+  }
+}
+```
+

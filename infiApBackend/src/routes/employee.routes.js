@@ -12,4 +12,7 @@ router.get("/dashboard/home", employeeController.getDashboardHome);
 // Employee Punch (IN / OUT)
 router.post("/emp-punch", employeeController.empPunch);
 
+// Get User recent Punch Status
+router.get("/punch-status", employeeController.getPunchStatus);
+
 module.exports = router;
