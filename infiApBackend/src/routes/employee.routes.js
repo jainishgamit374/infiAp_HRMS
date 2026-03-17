@@ -1,0 +1,15 @@
+const express = require("express");
+const router = express.Router();
+const employeeController = require("../controllers/employee.controller");
+
+// Optionally use JWT middleware here to protect these routes
+// const { verifyJWT } = require("../middlewares/auth.middleware");
+// router.use(verifyJWT);
+
+// Employee Dashboard Home Data
+router.get("/dashboard/home", employeeController.getDashboardHome);
+
+// Employee Punch (IN / OUT)
+router.post("/emp-punch", employeeController.empPunch);
+
+module.exports = router;

@@ -238,3 +238,60 @@ Base URL: `https://api.yourdomain.com/api/v1`
   "reason": "Invalid request"
 }
 ```
+
+---
+
+## 3️⃣ Employee Dashboard APIs
+
+### Dashboard Data
+
+#### ➤ Get Home Dashboard
+**GET** `/dashboard/home`
+**Response:**
+```json
+{
+  "status": "Success",
+  "data": {
+    "greeting": {
+      "message": "Welcome, Sneha Desai!",
+      "subMessage": "Sneha Desai joined the Engineering team on Jan 20, 2026. Let's give her a warm welcome!"
+    },
+    "joiningToday": [
+      {
+        "name": "Sneha Desai",
+        "role": "Engineering",
+        "joinedAt": "Jan 20, 2026"
+      }
+    ],
+    "checkInInfo": {
+      "lastCheck": "09:02 AM",
+      "location": "Mumbai Office"
+    },
+    ...
+  }
+}
+```
+
+### Attendance / Punch
+
+#### ➤ Employee Punch
+**POST** `/emp-punch`
+**Body:**
+```json
+{
+  "PunchType": 1,
+  "Latitude": "21.1702",
+  "Longitude": "72.8311",
+  "IsAway": false
+}
+```
+*Note: PunchType -> 1 = in, 2 = out, 3 = reset*
+
+**Response:**
+```json
+{
+  "status": "Success",
+  "message": "Punch recorded successfully",
+  "PunchTime": "2025-12-24 11:49:46 AM"
+}
+```
