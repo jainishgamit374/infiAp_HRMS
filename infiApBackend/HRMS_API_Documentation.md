@@ -384,3 +384,18 @@ Base URL: `https://api.yourdomain.com/api/v1`
 }
 ```
 
+#### ➤ Attendance Summary 
+**GET** `/attendance-summary`
+**Response:**
+```json
+{
+  "status": "Success",
+  "statusCode": 200,
+  "data": {
+    "present": 22,
+    "leaves": 2,
+    "holiday": 1
+  }
+}
+```
+

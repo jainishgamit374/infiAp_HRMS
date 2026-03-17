@@ -236,3 +236,22 @@ exports.getHalfDayCount = async (req, res) => {
         res.status(500).json({ status: "Error", message: "Failed to get half day count", error: error.message });
     }
 };
+
+// 8. Attendance Summary
+exports.getAttendanceSummary = async (req, res) => {
+    try {
+        // Here you would query punches for 'present' count, Leave models for 'leaves', and a Holiday model for 'holidays'.
+        // Mocking the data based on the requirements for now.
+        res.status(200).json({
+            status: "Success",
+            statusCode: 200,
+            data: {
+                present: 22,
+                leaves: 2,
+                holiday: 1
+            }
+        });
+    } catch (error) {
+        res.status(500).json({ status: "Error", message: "Failed to get attendance summary", error: error.message });
+    }
+};

@@ -27,4 +27,7 @@ router.get("/early-checkout-count", employeeController.getEarlyCheckoutCount);
 // Half Day Count
 router.get("/Half_Day-count", employeeController.getHalfDayCount);
 
+// Attendance Summary
+router.get("/attendance-summary", employeeController.getAttendanceSummary);
+
 module.exports = router;
