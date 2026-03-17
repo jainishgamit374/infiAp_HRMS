@@ -15,7 +15,4 @@ router.post("/login", loginUser);
 router.post("/forgot-password", forgotPassword);
 router.post("/reset-password", resetPassword);
 
-// Protected routes
-router.get("/profile", verifyJWT, getCurrentUser);
-
 module.exports = router;

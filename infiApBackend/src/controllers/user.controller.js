@@ -99,10 +99,9 @@ const loginUser = async (req, res) => {
             .cookie("accessToken", accessToken, options)
             .cookie("refreshToken", refreshToken, options)
             .json({
-                user: loggedInUser,
-                accessToken,
-                refreshToken,
-                message: "User logged in successfully",
+                token: accessToken,
+                role: loggedInUser.role,
+                user: loggedInUser
             });
     } catch (error) {
         console.error("Login Error:", error);
