@@ -8,7 +8,6 @@ dotenv.config({
 });
 
 const compression = require("compression");
-const seoRouter = require("./routes/seo.routes");
 
 const app = express();
 
@@ -45,9 +44,6 @@ app.use(express.json({ limit: "16kb" }));
 app.use(express.urlencoded({ extended: true, limit: "16kb" }));
 app.use(express.static("public"));
 app.use(cookieParser());
-
-// SEO & Sitemap Routes (Should be above API routes)
-app.use("/", seoRouter);
 
 // Import Routes
 const authRouter = require("./routes/auth.routes");
