@@ -1,0 +1,228 @@
+import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+} from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { Link } from 'expo-router';
+
+export default function ForgotPassword() {
+  const [email, setEmail] = useState('');
+
+  return (
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+    >
+      <ScrollView contentContainerStyle={styles.container}>
+        {/* Header Logo */}
+        <View style={styles.header}>
+          <View style={styles.logoIconContainer} />
+          <Text style={styles.logoText}>InfiAP</Text>
+        </View>
+
+        {/* Card */}
+        <View style={styles.card}>
+          <Text style={styles.title}>Reset your password</Text>
+          <Text style={styles.subtitle}>
+            Enter the email address associated with your account and we'll send you a link to reset your password.
+          </Text>
+
+          {/* Email */}
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>EMAIL ADDRESS</Text>
+            <View style={styles.inputContainer}>
+              <Ionicons name="at-outline" size={20} color="#9ca3af" style={styles.inputIcon} />
+              <TextInput
+                style={styles.input}
+                placeholder="name@company.com"
+                placeholderTextColor="#9ca3af"
+                value={email}
+                onChangeText={setEmail}
+                keyboardType="email-address"
+                autoCapitalize="none"
+              />
+            </View>
+          </View>
+
+          {/* Button */}
+          <TouchableOpacity style={styles.button} activeOpacity={0.8}>
+            <Text style={styles.buttonText}>Send Reset Link</Text>
+            <Ionicons name="arrow-forward" size={18} color="#fff" style={{ marginLeft: 6 }} />
+          </TouchableOpacity>
+
+          {/* Back to Sign In */}
+          <View style={styles.backContainer}>
+            <Link href="/(auth)/sign-in" asChild>
+              <TouchableOpacity style={styles.backButton}>
+                <Ionicons name="arrow-back" size={16} color="#5a55d2" style={{ marginRight: 6 }} />
+                <Text style={styles.backText}>Back to Sign In</Text>
+              </TouchableOpacity>
+            </Link>
+          </View>
+        </View>
+
+        {/* Footer */}
+        <View style={styles.footerContainer}>
+          <Text style={styles.footerText}>
+            Having trouble? <Text style={styles.footerLink}>Contact support</Text>
+          </Text>
+          <View style={styles.socialRow}>
+            <TouchableOpacity style={[styles.socialIconBtn, { backgroundColor: '#111827' }]}>
+              <Ionicons name="logo-google" size={14} color="#fff" />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.socialIconBtn}>
+              <Ionicons name="logo-apple" size={16} color="#111827" />
+            </TouchableOpacity>
+          </View>
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flexGrow: 1,
+    backgroundColor: '#f5f7fa',
+    padding: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  header: {
+    alignItems: 'center',
+    marginBottom: 24,
+    marginTop: Platform.OS === 'ios' ? 40 : 20,
+  },
+  logoIconContainer: {
+    width: 48,
+    height: 48,
+    borderRadius: 12,
+    backgroundColor: '#5a55d2',
+    marginBottom: 12,
+  },
+  logoText: {
+    fontSize: 24,
+    fontWeight: '800',
+    color: '#111827',
+  },
+  card: {
+    backgroundColor: '#ffffff',
+    borderRadius: 20,
+    paddingHorizontal: 24,
+    paddingVertical: 32,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.05,
+    shadowRadius: 10,
+    elevation: 2,
+    marginBottom: 30,
+    width: '100%',
+  },
+  title: {
+    fontSize: 22,
+    fontWeight: '700',
+    color: '#111827',
+    marginBottom: 12,
+  },
+  subtitle: {
+    fontSize: 14,
+    color: '#6b7280',
+    lineHeight: 22,
+    marginBottom: 28,
+  },
+  inputGroup: {
+    marginBottom: 24,
+  },
+  label: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#6b7280',
+    marginBottom: 8,
+    letterSpacing: 0.5,
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#e5e7eb',
+    borderRadius: 8,
+    backgroundColor: '#ffffff',
+    height: 50,
+    paddingHorizontal: 16,
+  },
+  inputIcon: {
+    marginRight: 10,
+  },
+  input: {
+    flex: 1,
+    fontSize: 15,
+    color: '#111827',
+    height: '100%',
+  },
+  button: {
+    backgroundColor: '#5a55d2',
+    borderRadius: 8,
+    height: 50,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#5a55d2',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 4,
+    marginBottom: 40,
+  },
+  buttonText: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  backContainer: {
+    alignItems: 'center',
+  },
+  backButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 8,
+  },
+  backText: {
+    color: '#5a55d2',
+    fontSize: 15,
+    fontWeight: '600',
+  },
+  footerContainer: {
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  footerText: {
+    fontSize: 14,
+    color: '#9ca3af',
+    marginBottom: 16,
+  },
+  footerLink: {
+    color: '#5a55d2',
+    fontWeight: '500',
+  },
+  socialRow: {
+    flexDirection: 'row',
+    gap: 16,
+  },
+  socialIconBtn: {
+    width: 36,
+    height: 36,
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#e5e7eb',
+  },
+});
