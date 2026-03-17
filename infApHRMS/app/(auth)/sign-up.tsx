@@ -8,6 +8,8 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  Modal,
+  Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Link, router } from 'expo-router';
@@ -20,6 +22,36 @@ export default function SignUp() {
   const [agreeToTerms, setAgreeToTerms] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+
+  const handleCreateAccount = () => {
+    if (!fullName.trim()) {
+      Alert.alert('Missing Info', 'Please enter your full name.');
+      return;
+    }
+    if (!email.trim()) {
+      Alert.alert('Missing Info', 'Please enter your email address.');
+      return;
+    }
+    if (password.length < 6) {
+      Alert.alert('Weak Password', 'Password must be at least 6 characters.');
+      return;
+    }
+    if (password !== confirmPassword) {
+      Alert.alert('Password Mismatch', 'Your passwords do not match.');
+      return;
+    }
+    if (!agreeToTerms) {
+      Alert.alert('Terms Required', 'Please agree to the Terms of Service and Privacy Policy.');
+      return;
+    }
+    setShowSuccessModal(true);
+  };
+
+  const handleGoToSignIn = () => {
+    setShowSuccessModal(false);
+    router.replace('/(auth)/sign-in');
+  };
 
   return (
     <KeyboardAvoidingView
@@ -123,12 +155,12 @@ export default function SignUp() {
               />
             </View>
             <Text style={styles.termsText}>
-              By signing up, you agree to our <Text style={styles.linkText}>Terms{'\n'}of Service</Text> and <Text style={styles.linkText}>Privacy Policy</Text>.
+              By signing up, you agree to our <Text style={styles.linkText}>Terms of Service</Text> and <Text style={styles.linkText}>Privacy Policy</Text>.
             </Text>
           </TouchableOpacity>
 
           {/* Create Account Button */}
-          <TouchableOpacity style={styles.createButton} activeOpacity={0.8}>
+          <TouchableOpacity style={styles.createButton} onPress={handleCreateAccount} activeOpacity={0.8}>
             <Text style={styles.createText}>Create Account</Text>
           </TouchableOpacity>
 
@@ -172,6 +204,26 @@ export default function SignUp() {
           </View>
         </View>
       </ScrollView>
+
+      {/* Success Modal */}
+      <Modal visible={showSuccessModal} transparent animationType="fade">
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalCard}>
+            <View style={styles.modalIconContainer}>
+              <Ionicons name="checkmark-circle" size={56} color="#5a55d2" />
+            </View>
+            <Text style={styles.modalTitle}>Account Created!</Text>
+            <Text style={styles.modalSubtitle}>
+              Welcome to InfiAP, {fullName.split(' ')[0]}! Your account has been successfully created.
+              Please sign in to continue.
+            </Text>
+            <TouchableOpacity style={styles.modalButton} onPress={handleGoToSignIn} activeOpacity={0.8}>
+              <Text style={styles.modalButtonText}>Go to Sign In</Text>
+              <Ionicons name="arrow-forward" size={18} color="#fff" style={{ marginLeft: 8 }} />
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </KeyboardAvoidingView>
   );
 }
@@ -359,5 +411,60 @@ const styles = StyleSheet.create({
   footerLinkItem: {
     fontSize: 12,
     color: '#9ca3af',
+  },
+  // Modal Styles
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.45)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 24,
+  },
+  modalCard: {
+    backgroundColor: '#ffffff',
+    borderRadius: 24,
+    padding: 32,
+    alignItems: 'center',
+    width: '100%',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.12,
+    shadowRadius: 24,
+    elevation: 10,
+  },
+  modalIconContainer: {
+    marginBottom: 20,
+  },
+  modalTitle: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: '#111827',
+    marginBottom: 12,
+  },
+  modalSubtitle: {
+    fontSize: 14,
+    color: '#6b7280',
+    textAlign: 'center',
+    lineHeight: 22,
+    marginBottom: 28,
+  },
+  modalButton: {
+    backgroundColor: '#5a55d2',
+    borderRadius: 12,
+    height: 52,
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#5a55d2',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  modalButtonText: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: '600',
   },
 });

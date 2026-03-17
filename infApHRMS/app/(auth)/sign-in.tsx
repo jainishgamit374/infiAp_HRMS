@@ -8,14 +8,38 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
+
+const ROLES = [
+  { label: 'Employee', value: 'employee', icon: 'person-outline' },
+  { label: 'HR', value: 'hr', icon: 'people-outline' },
+  { label: 'Admin', value: 'admin', icon: 'shield-outline' },
+];
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
+  const [selectedRole, setSelectedRole] = useState('employee');
+  const [showRoleDropdown, setShowRoleDropdown] = useState(false);
+
+  const currentRole = ROLES.find(r => r.value === selectedRole)!;
+
+  const handleSignIn = () => {
+    if (!email.trim()) {
+      Alert.alert('Missing Info', 'Please enter your email address.');
+      return;
+    }
+    if (!password.trim()) {
+      Alert.alert('Missing Info', 'Please enter your password.');
+      return;
+    }
+    // Navigate to 2FA screen with selected role
+    router.push({ pathname: '/(auth)/two-factor-auth', params: { role: selectedRole } });
+  };
 
   return (
     <KeyboardAvoidingView
@@ -37,6 +61,50 @@ export default function SignIn() {
           <Text style={styles.subtitle}>
             Enter your credentials to access your{'\n'}enterprise dashboard
           </Text>
+
+          {/* Role Selector */}
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>Sign in as</Text>
+            <TouchableOpacity
+              style={styles.roleSelector}
+              onPress={() => setShowRoleDropdown(!showRoleDropdown)}
+              activeOpacity={0.7}
+            >
+              <View style={styles.roleSelectorLeft}>
+                <Ionicons name={currentRole.icon as any} size={20} color="#5a55d2" />
+                <Text style={styles.roleSelectorText}>{currentRole.label}</Text>
+              </View>
+              <Ionicons name={showRoleDropdown ? "chevron-up" : "chevron-down"} size={20} color="#9ca3af" />
+            </TouchableOpacity>
+            
+            {showRoleDropdown && (
+              <View style={styles.roleDropdown}>
+                {ROLES.map((role) => (
+                  <TouchableOpacity
+                    key={role.value}
+                    style={[
+                      styles.roleOption,
+                      selectedRole === role.value && styles.roleOptionActive,
+                    ]}
+                    onPress={() => {
+                      setSelectedRole(role.value);
+                      setShowRoleDropdown(false);
+                    }}
+                    activeOpacity={0.7}
+                  >
+                    <Ionicons name={role.icon as any} size={18} color={selectedRole === role.value ? '#5a55d2' : '#6b7280'} />
+                    <Text style={[
+                      styles.roleOptionText,
+                      selectedRole === role.value && styles.roleOptionTextActive,
+                    ]}>{role.label}</Text>
+                    {selectedRole === role.value && (
+                      <Ionicons name="checkmark" size={18} color="#5a55d2" style={{ marginLeft: 'auto' }} />
+                    )}
+                  </TouchableOpacity>
+                ))}
+              </View>
+            )}
+          </View>
 
           {/* Email */}
           <View style={styles.inputGroup}>
@@ -93,7 +161,7 @@ export default function SignIn() {
           </TouchableOpacity>
 
           {/* Sign In Button */}
-          <TouchableOpacity style={styles.signInButton} activeOpacity={0.8}>
+          <TouchableOpacity style={styles.signInButton} onPress={handleSignIn} activeOpacity={0.8}>
             <Text style={styles.signInText}>Sign In</Text>
           </TouchableOpacity>
 
@@ -195,16 +263,73 @@ const styles = StyleSheet.create({
     color: '#6b7280',
     textAlign: 'center',
     lineHeight: 20,
-    marginBottom: 32,
+    marginBottom: 28,
   },
   inputGroup: {
     marginBottom: 20,
+    zIndex: 10,
   },
   label: {
     fontSize: 14,
     fontWeight: '600',
     color: '#374151',
     marginBottom: 8,
+  },
+  // Role Selector
+  roleSelector: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderWidth: 2,
+    borderColor: '#5a55d2',
+    borderRadius: 12,
+    backgroundColor: '#f8f7ff',
+    height: 52,
+    paddingHorizontal: 16,
+  },
+  roleSelectorLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  roleSelectorText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#5a55d2',
+  },
+  roleDropdown: {
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    marginTop: 8,
+    borderWidth: 1,
+    borderColor: '#e5e7eb',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+    elevation: 6,
+    overflow: 'hidden',
+  },
+  roleOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    gap: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f3f4f6',
+  },
+  roleOptionActive: {
+    backgroundColor: '#f8f7ff',
+  },
+  roleOptionText: {
+    fontSize: 15,
+    color: '#6b7280',
+    fontWeight: '500',
+  },
+  roleOptionTextActive: {
+    color: '#5a55d2',
+    fontWeight: '600',
   },
   passwordHeader: {
     flexDirection: 'row',
