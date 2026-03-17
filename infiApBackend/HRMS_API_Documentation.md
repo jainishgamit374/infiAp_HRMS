@@ -280,8 +280,8 @@ Base URL: `https://api.yourdomain.com/api/v1`
 ```json
 {
   "PunchType": 1,
-  "Latitude": "21.1702",
-  "Longitude": "72.8311",
+  "Latitude": 21.1702,
+  "Longitude": 72.8311,
   "IsAway": false
 }
 ```

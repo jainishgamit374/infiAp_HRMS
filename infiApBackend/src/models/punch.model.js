@@ -13,10 +13,10 @@ const punchSchema = new mongoose.Schema(
             required: true,
         },
         Latitude: {
-            type: String,
+            type: Number,
         },
         Longitude: {
-            type: String,
+            type: Number,
         },
         IsAway: {
             type: Boolean,
