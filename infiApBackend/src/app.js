@@ -50,11 +50,13 @@ app.use(cookieParser());
 app.use("/", seoRouter);
 
 // Import Routes
+const authRouter = require("./routes/auth.routes");
 const userRouter = require("./routes/user.routes");
 const blogRouter = require("./routes/blog.routes");
 const bookingRouter = require("./routes/booking.routes");
 
 // Routes Declaration
+app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/blogs", blogRouter);
 app.use("/api/v1/bookings", bookingRouter);
