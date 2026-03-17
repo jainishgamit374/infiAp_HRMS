@@ -188,3 +188,51 @@ exports.getEmployeeLeaveBalance = async (req, res) => {
         res.status(500).json({ status: "Error", message: "Failed to get leave balance", error: error.message });
     }
 };
+
+// 5. Late Check-in Count
+exports.getLateCheckinCount = async (req, res) => {
+    try {
+        // Query logic would be implemented here
+        res.status(200).json({
+            status: "Success",
+            statusCode: 200,
+            data: {
+                late_checkin_count: 1
+            }
+        });
+    } catch (error) {
+        res.status(500).json({ status: "Error", message: "Failed to get late checkin count", error: error.message });
+    }
+};
+
+// 6. Early Check-out Count
+exports.getEarlyCheckoutCount = async (req, res) => {
+    try {
+        // Query logic would be implemented here
+        res.status(200).json({
+            status: "Success",
+            statusCode: 200,
+            data: {
+                early_checkout_count: 1
+            }
+        });
+    } catch (error) {
+        res.status(500).json({ status: "Error", message: "Failed to get early checkout count", error: error.message });
+    }
+};
+
+// 7. Half Day Count
+exports.getHalfDayCount = async (req, res) => {
+    try {
+        // Query logic would be implemented here
+        res.status(200).json({
+            status: "Success",
+            statusCode: 200,
+            data: {
+                Half_Day_count: 1
+            }
+        });
+    } catch (error) {
+        res.status(500).json({ status: "Error", message: "Failed to get half day count", error: error.message });
+    }
+};

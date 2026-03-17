@@ -343,3 +343,44 @@ Base URL: `https://api.yourdomain.com/api/v1`
 }
 ```
 
+### Attendance Analytics
+
+#### ➤ Late Check-in Count
+**GET** `/late-checkin-count`
+**Response:**
+```json
+{
+  "status": "Success",
+  "statusCode": 200,
+  "data": {
+    "late_checkin_count": 1
+  }
+}
+```
+
+#### ➤ Early Check-out Count
+**GET** `/early-checkout-count`
+**Response:**
+```json
+{
+  "status": "Success",
+  "statusCode": 200,
+  "data": {
+    "early_checkout_count": 1
+  }
+}
+```
+
+#### ➤ Half Day Count
+**GET** `/Half_Day-count`
+**Response:**
+```json
+{
+  "status": "Success",
+  "statusCode": 200,
+  "data": {
+    "Half_Day_count": 1
+  }
+}
+```
+

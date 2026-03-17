@@ -18,4 +18,13 @@ router.get("/punch-status", employeeController.getPunchStatus);
 // Get Employee Leave Balance
 router.get("/getemployeeleavebalance", employeeController.getEmployeeLeaveBalance);
 
+// Late Check-in Count
+router.get("/late-checkin-count", employeeController.getLateCheckinCount);
+
+// Early Check-out Count
+router.get("/early-checkout-count", employeeController.getEarlyCheckoutCount);
+
+// Half Day Count
+router.get("/Half_Day-count", employeeController.getHalfDayCount);
+
 module.exports = router;
