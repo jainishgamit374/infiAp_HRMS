@@ -420,3 +420,138 @@ Base URL: `https://api.yourdomain.com/api/v1`
 }
 ```
 
+### Awards / Recognition
+
+#### ➤ Get Employee of the Month
+**GET** `/getemployeeofthemonth`
+**Response:**
+```json
+{
+    "status": "Success",
+    "statusCode": 200,
+    "data": [
+        {
+            "EmployeeOfTheMonthID": 1,
+            "EmployeeID": 1,
+            "Name": "Durgesh Jadav",
+            "MonthOfYear": "2026-01",
+            "CreatedDate": "2026-01-06 09:11:32",
+            "UpdatedDate": "2026-01-06 09:11:32"
+        }
+    ]
+}
+```
+
+### Events / Birthdays
+
+#### ➤ Get DOB (Birthdays)
+**GET** `/getDOB`
+**Response:**
+```json
+{
+    "status": "Success",
+    "data": {
+        "todays_birthdays": [
+            {
+                "name": "Jainish Gamit",
+                "dob": "06-01-2026"
+            }
+        ],
+        "current_month_birthdays": []
+    }
+}
+```
+
+### Leave Management
+
+#### ➤ Apply for Leave
+**POST** `/leaveapplications`
+**Body:**
+```json
+{
+     "LeaveType": "SL",
+     "Reason": "Family function 111111..",
+     "StartDate": "2026-01-18",
+     "EndDate": "2026-01-18",
+     "IsHalfDay": false,
+     "IsFirstHalf": false
+}
+```
+**Response:**
+```json
+{
+     "status": "Success",
+     "message": "Leave application submitted successfully."
+}
+```
+
+#### ➤ Get User Leave Application
+**GET** `/leaveapplications`
+**Response:**
+```json
+{
+     "status": "Success",
+     "statusCode": 200,
+     "data": {
+         "LeaveApplicationMasterID": 9,
+         "EmployeeID": 1,
+         "LeaveType": "Sick Leave",
+         "ApprovalStatusID": 3,
+         "ApprovalStatus": "Awaiting Approve",
+         "ApprovalUsername": "Jainish Gamit",
+         "Reason": "Family function 111111..",
+         "StartDate": "2026-01-18",
+         "EndDate": "2026-01-18",
+         "IsHalfDay": false,
+         "IsFirstHalf": false,
+         "CreatedBy": 7,
+         "UpdatedBy": 7,
+         "CreatedDate": "2026-01-16T09:03:45.804918Z",
+         "UpdatedDate": "2026-01-16T09:03:45.804935Z"
+     }
+}
+```
+
+#### ➤ Get Pending Approvals (For HR/Manager)
+**GET** `/leaveapprovals`
+**Response:**
+```json
+{
+     "status": "Success",
+     "total_pending_approvals": 1,
+     "pending_approvals": [
+         {
+             "Leave_ID": 9,
+             "employee_name": "Riya mishra",
+             "leave_type": "Sick Leave",
+             "start_date": "2026-01-18",
+             "end_date": "2026-01-18",
+             "reason": "Family function 111111..",
+             "profile_image": "/img/StoreGoogle_Play_TypeLight_LanguageEnglish3x.png",
+             "applied_on": "2026-01-16",
+             "IsHalfDay": false,
+             "IsFirstHalf": false
+         }
+     ]
+}
+```
+
+#### ➤ Approve Leave
+**POST** `/allapprove`
+**Body:**
+```json
+{
+     "ProgramID": 2,
+     "TranID": 9,
+     "Reason": "done chal se"
+}
+```
+**Response:**
+```json
+{
+     "status": "Success",
+     "statusCode": 200,
+     "message": "Approval updated successfully."
+}
+```
+

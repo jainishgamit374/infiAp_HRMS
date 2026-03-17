@@ -33,4 +33,10 @@ router.get("/attendance-summary", employeeController.getAttendanceSummary);
 // Missed Punches
 router.get("/missed-punches", employeeController.getMissedPunches);
 
+// Employee of the Month
+router.get("/getemployeeofthemonth", employeeController.getEmployeeOfTheMonth);
+
+// DOB / Birthdays
+router.get("/getDOB", employeeController.getDOB);
+
 module.exports = router;

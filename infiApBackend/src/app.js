@@ -49,11 +49,13 @@ app.use(cookieParser());
 const authRouter = require("./routes/auth.routes");
 const mainAdminRouter = require("./routes/mainAdmin.routes");
 const employeeRouter = require("./routes/employee.routes");
+const leaveRouter = require("./routes/leave.routes");
 
 // Routes Declaration
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/main-admin", mainAdminRouter);
 app.use("/api/v1", employeeRouter);
+app.use("/api/v1", leaveRouter);
 
 // Basic health check
 app.get("/", (req, res) => {

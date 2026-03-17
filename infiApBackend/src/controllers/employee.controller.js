@@ -275,3 +275,48 @@ exports.getMissedPunches = async (req, res) => {
         res.status(500).json({ status: "Error", message: "Failed to get missed punches", error: error.message });
     }
 };
+
+// 10. Employee of the Month
+exports.getEmployeeOfTheMonth = async (req, res) => {
+    try {
+        // Query logic to fetch the employee of the month
+        // Mocking the data based on provided request requirements
+        res.status(200).json({
+            status: "Success",
+            statusCode: 200,
+            data: [
+                {
+                    "EmployeeOfTheMonthID": 1,
+                    "EmployeeID": 1,
+                    "Name": "Durgesh Jadav",
+                    "MonthOfYear": "2026-01",
+                    "CreatedDate": "2026-01-06 09:11:32",
+                    "UpdatedDate": "2026-01-06 09:11:32"
+                }
+            ]
+        });
+    } catch (error) {
+        res.status(500).json({ status: "Error", message: "Failed to get employee of the month", error: error.message });
+    }
+};
+
+// 11. DOB / Birthdays
+exports.getDOB = async (req, res) => {
+    try {
+        // Query logic to fetch todays and current month birthdays
+        res.status(200).json({
+            status: "Success",
+            data: {
+                todays_birthdays: [
+                    {
+                        "name": "Jainish Gamit",
+                        "dob": "06-01-2026"
+                    }
+                ],
+                current_month_birthdays: []
+            }
+        });
+    } catch (error) {
+        res.status(500).json({ status: "Error", message: "Failed to get DOB data", error: error.message });
+    }
+};
