@@ -30,4 +30,7 @@ router.get("/Half_Day-count", employeeController.getHalfDayCount);
 // Attendance Summary
 router.get("/attendance-summary", employeeController.getAttendanceSummary);
 
+// Missed Punches
+router.get("/missed-punches", employeeController.getMissedPunches);
+
 module.exports = router;

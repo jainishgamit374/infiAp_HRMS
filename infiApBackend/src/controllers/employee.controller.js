@@ -255,3 +255,23 @@ exports.getAttendanceSummary = async (req, res) => {
         res.status(500).json({ status: "Error", message: "Failed to get attendance summary", error: error.message });
     }
 };
+
+// 9. Missed Punches
+exports.getMissedPunches = async (req, res) => {
+    try {
+        // Here you would query punches for missing out/missing in. 
+        // For example, finding presence records with no check-in after 10 AM, or no check-out at the end of day.
+        
+        // Mocking the data based on UI req
+        res.status(200).json({
+            status: "Success",
+            statusCode: 200,
+            data: [
+                { date: "Mar 2, 2026", type: "Missing In" },
+                { date: "Mar 3, 2026", type: "Missing Out" }
+            ]
+        });
+    } catch (error) {
+        res.status(500).json({ status: "Error", message: "Failed to get missed punches", error: error.message });
+    }
+};

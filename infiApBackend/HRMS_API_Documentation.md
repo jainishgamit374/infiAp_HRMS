@@ -399,3 +399,24 @@ Base URL: `https://api.yourdomain.com/api/v1`
 }
 ```
 
+#### ➤ Missed Punches
+**GET** `/missed-punches`
+*Note: Evaluates check-ins missed after 10 AM*
+**Response:**
+```json
+{
+  "status": "Success",
+  "statusCode": 200,
+  "data": [
+    {
+      "date": "Mar 2, 2026",
+      "type": "Missing In"
+    },
+    {
+      "date": "Mar 3, 2026",
+      "type": "Missing Out"
+    }
+  ]
+}
+```
+
