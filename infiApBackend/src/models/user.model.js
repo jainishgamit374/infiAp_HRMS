@@ -21,9 +21,16 @@ const userSchema = new mongoose.Schema(
         },
         role: {
             type: String,
-            enum: ["employee", "manager", "admin"],
+            enum: ["employee", "manager", "hr", "admin", "main_admin"],
             default: "employee"
         },
+        companyId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Company"
+        },
+        permissions: [{
+            type: String
+        }],
         refreshToken: {
             type: String
         },

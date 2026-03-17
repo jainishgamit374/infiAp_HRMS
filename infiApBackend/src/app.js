@@ -47,9 +47,11 @@ app.use(cookieParser());
 
 // Import Routes
 const authRouter = require("./routes/auth.routes");
+const mainAdminRouter = require("./routes/mainAdmin.routes");
 
 // Routes Declaration
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/main-admin", mainAdminRouter);
 
 // Basic health check
 app.get("/", (req, res) => {
