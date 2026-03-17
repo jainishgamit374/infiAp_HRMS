@@ -4,10 +4,8 @@ const {
     registerUser,
     loginUser,
     forgotPassword,
-    resetPassword,
-    getCurrentUser
+    resetPassword
 } = require("../controllers/user.controller");
-const { verifyJWT } = require("../middlewares/auth.middleware");
 
 // Public auth routes
 router.post("/signup", registerUser);
