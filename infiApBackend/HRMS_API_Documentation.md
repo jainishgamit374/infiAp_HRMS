@@ -312,3 +312,34 @@ Base URL: `https://api.yourdomain.com/api/v1`
 }
 ```
 
+### Leave Balance
+
+#### ➤ Get Employee Leave Balance
+**GET** `/getemployeeleavebalance`
+**Response:**
+```json
+{
+  "status": "Success",
+  "statusCode": 200,
+  "message": "Leave balance retrieved successfully.",
+  "data": [
+    {
+      "Leavename": "CL",
+      "count": 15
+    },
+    {
+      "Leavename": "PL",
+      "count": 15
+    },
+    {
+      "Leavename": "SL",
+      "count": 13
+    },
+    {
+      "Leavename": "WFH",
+      "count": "7 day's"
+    }
+  ]
+}
+```
+

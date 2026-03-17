@@ -15,4 +15,7 @@ router.post("/emp-punch", employeeController.empPunch);
 // Get User recent Punch Status
 router.get("/punch-status", employeeController.getPunchStatus);
 
+// Get Employee Leave Balance
+router.get("/getemployeeleavebalance", employeeController.getEmployeeLeaveBalance);
+
 module.exports = router;
