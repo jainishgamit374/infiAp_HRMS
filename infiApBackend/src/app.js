@@ -1,0 +1,76 @@
+const express = require("express");
+const cors = require("cors");
+const cookieParser = require("cookie-parser");
+const dotenv = require("dotenv");
+
+dotenv.config({
+  path: "./.env",
+});
+
+const compression = require("compression");
+const seoRouter = require("./routes/seo.routes");
+
+const app = express();
+
+// 1. Gzip Compression for performance
+app.use(compression());
+
+// Middleware
+app.use(cors({
+  origin: process.env.CORS_ORIGIN || "*",
+  credentials: true,
+}));
+
+// 301 Redirect Middleware (Example: force https/www if needed)
+app.use((req, res, next) => {
+  // if (req.headers['x-forwarded-proto'] !== 'https') {
+  //   return res.redirect(301, `https://${req.headers.host}${req.url}`);
+  // }
+  next();
+});
+
+// 2. Caching Headers for performance
+app.use((req, res, next) => {
+  if (req.method === 'GET') {
+    if (req.url.match(/\.(css|js|png|jpg|jpeg|gif|ico|svg|woff|woff2)$/)) {
+      res.set('Cache-Control', 'public, max-age=31536000, immutable');
+    } else {
+      res.set('Cache-Control', 'no-store');
+    }
+  }
+  next();
+});
+
+app.use(express.json({ limit: "16kb" }));
+app.use(express.urlencoded({ extended: true, limit: "16kb" }));
+app.use(express.static("public"));
+app.use(cookieParser());
+
+// SEO & Sitemap Routes (Should be above API routes)
+app.use("/", seoRouter);
+
+// Import Routes
+const userRouter = require("./routes/user.routes");
+const blogRouter = require("./routes/blog.routes");
+const bookingRouter = require("./routes/booking.routes");
+
+// Routes Declaration
+app.use("/api/v1/users", userRouter);
+app.use("/api/v1/blogs", blogRouter);
+app.use("/api/v1/bookings", bookingRouter);
+
+// Basic health check
+app.get("/", (req, res) => {
+  res.json({ message: "InfiAP Tech Solution API is running" });
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(err.status || 500).json({
+    message: err.message || "Internal Server Error",
+    error: process.env.NODE_ENV === "development" ? err : {},
+  });
+});
+
+module.exports = app;
