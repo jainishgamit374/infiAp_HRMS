@@ -4,12 +4,14 @@ const {
     registerUser,
     loginUser,
     forgotPassword,
-    resetPassword
+    resetPassword,
+    verifyLoginOTP
 } = require("../controllers/user.controller");
 
 // Public auth routes
 router.post("/signup", registerUser);
 router.post("/login", loginUser);
+router.post("/verify-2fa", verifyLoginOTP);
 router.post("/forgot-password", forgotPassword);
 router.post("/reset-password", resetPassword);
 

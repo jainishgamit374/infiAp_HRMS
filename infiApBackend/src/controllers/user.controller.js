@@ -85,8 +85,56 @@ const loginUser = async (req, res) => {
             return res.status(401).json({ message: "Invalid user credentials" });
         }
 
-        const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(user._id);
+        // Generate a 6-digit OTP
+        const otp = crypto.randomInt(100000, 999999).toString();
+        user.twoFactorOTP = otp;
+        user.twoFactorOTPExpires = Date.now() + 10 * 60 * 1000; // 10 minutes expiry
+        await user.save({ validateBeforeSave: false });
 
+        // Typically, you would send the OTP via email or SMS here
+        // await sendVerificationEmail(user.email, `Your 2FA OTP is: ${otp}`);
+
+        return res.status(200).json({
+            message: "OTP sent to your email for 2FA verification",
+            require2FA: true,
+            userId: user._id
+        });
+    } catch (error) {
+        console.error("Login Error:", error);
+        res.status(500).json({ message: "Server error during login" });
+    }
+};
+
+
+// Verify Login OTP (2FA)
+const verifyLoginOTP = async (req, res) => {
+    try {
+        const { userId, otp } = req.body;
+
+        if (!userId || !otp) {
+            return res.status(400).json({ message: "User ID and OTP are required" });
+        }
+
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        if (user.twoFactorOTP !== otp) {
+            return res.status(400).json({ message: "Invalid OTP" });
+        }
+
+        if (user.twoFactorOTPExpires < Date.now()) {
+            return res.status(400).json({ message: "OTP has expired" });
+        }
+
+        // Clear the OTP fields
+        user.twoFactorOTP = undefined;
+        user.twoFactorOTPExpires = undefined;
+        await user.save({ validateBeforeSave: false });
+
+        const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(user._id);
         const loggedInUser = await User.findById(user._id).select("-password -refreshToken");
 
         const options = {
@@ -99,16 +147,16 @@ const loginUser = async (req, res) => {
             .cookie("accessToken", accessToken, options)
             .cookie("refreshToken", refreshToken, options)
             .json({
+                message: "2FA verified successfully",
                 token: accessToken,
                 role: loggedInUser.role,
                 user: loggedInUser
             });
     } catch (error) {
-        console.error("Login Error:", error);
-        res.status(500).json({ message: "Server error during login" });
+        console.error("Verify OTP Error:", error);
+        res.status(500).json({ message: "Server error during 2FA verification" });
     }
 };
-
 
 // Forgot Password
 const forgotPassword = async (req, res) => {
@@ -167,6 +215,7 @@ const resetPassword = async (req, res) => {
 module.exports = {
     registerUser,
     loginUser,
+    verifyLoginOTP,
     forgotPassword,
     resetPassword
 };
