@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import { BottomNav } from '../../components/BottomNav';
 import { GestureHandlerRootView, GestureDetector, Gesture } from 'react-native-gesture-handler';
 import Animated, { useSharedValue, useAnimatedStyle, withSpring, runOnJS, withTiming } from 'react-native-reanimated';
 
@@ -331,30 +332,7 @@ export default function EmployeeDashboard() {
           <View style={{ height: 100 }} />
         </ScrollView>
 
-        {/* Bottom Navigation */}
-        <View style={styles.bottomNav}>
-          {[
-            { icon: 'home', label: 'HOME', active: true, route: '/(employee)/' },
-            { icon: 'finger-print', label: 'ATTENDANCE', active: false, route: '/(employee)/attendance' },
-            { icon: 'people-outline', label: 'DIRECTORY', active: false, route: '/(employee)/directory' },
-            { icon: 'person-outline', label: 'PROFILE', active: false, route: '/(employee)/profile' },
-          ].map((item, i) => (
-            <TouchableOpacity
-              key={i}
-              style={styles.navItem}
-              onPress={() => router.push(item.route as any)}
-              activeOpacity={0.7}
-            >
-              <Ionicons
-                name={(item.active ? item.icon : item.icon) as any}
-                size={22}
-                color={item.active ? '#2e4ce6' : '#9ca3af'}
-              />
-              <Text style={[styles.navLabel, item.active && styles.navLabelActive]}>{item.label}</Text>
-              {item.active && <View style={styles.navActiveIndicator} />}
-            </TouchableOpacity>
-          ))}
-        </View>
+        <BottomNav />
       </SafeAreaView>
     </GestureHandlerRootView>
   );
@@ -379,7 +357,8 @@ const styles = StyleSheet.create({
   },
   headerLogo: {
     width: 140,
-    height: 40,
+    height: 42,
+    marginLeft: -20, // Flush to the edge if container padding is 20
   },
   profileCircle: {
     width: 36,

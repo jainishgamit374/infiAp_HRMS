@@ -8,6 +8,7 @@ import {
   Animated,
   Easing,
   Platform,
+  Image,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Link, router, useLocalSearchParams } from 'expo-router';
@@ -134,10 +135,11 @@ export default function TwoFactorAuth() {
       <SafeAreaView style={styles.container}>
         <View style={styles.cardCenter}>
           <View style={styles.successHeader}>
-            <View style={styles.smallLogoContainer}>
-               <Ionicons name="shield-checkmark" size={16} color="#fff" />
-            </View>
-            <Text style={styles.smallLogoText}>InfiAP</Text>
+            <Image 
+              source={require('../../assets/images/logo.png')} 
+              style={styles.headerLogo} 
+              resizeMode="contain"
+            />
           </View>
 
           <View style={styles.successContent}>
@@ -442,19 +444,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginBottom: 48,
   },
-  smallLogoContainer: {
-    width: 28,
-    height: 28,
-    borderRadius: 8,
-    backgroundColor: '#5a55d2',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 8,
-  },
-  smallLogoText: {
-    fontSize: 18,
-    fontWeight: '800',
-    color: '#111827',
+  headerLogo: {
+    width: 100,
+    height: 30,
   },
   successContent: {
     alignItems: 'center',

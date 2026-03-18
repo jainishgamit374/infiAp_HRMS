@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import { BottomNav } from '../../components/BottomNav';
 
 const TEAMS = ['All Teams', 'Engineering', 'Design', 'Marketing', 'Product', 'HR'];
 
@@ -174,29 +175,7 @@ export default function DirectoryPage() {
         <View style={{ height: 120 }} />
       </ScrollView>
 
-      {/* Bottom Navigation */}
-      <View style={styles.bottomNav}>
-        {[
-          { icon: 'home-outline', label: 'HOME', active: false, route: '/(employee)/' },
-          { icon: 'finger-print', label: 'ATTENDANCE', active: false, route: '/(employee)/attendance' },
-          { icon: 'people', label: 'DIRECTORY', active: true, route: '/(employee)/directory' },
-          { icon: 'person-outline', label: 'PROFILE', active: false, route: '/(employee)/profile' },
-        ].map((item, i) => (
-          <TouchableOpacity
-            key={i}
-            style={styles.navItem}
-            onPress={() => router.push(item.route as any)}
-            activeOpacity={0.7}
-          >
-            <Ionicons
-              name={item.icon as any}
-              size={22}
-              color={item.active ? '#2e4ce6' : '#9ca3af'}
-            />
-            <Text style={[styles.navLabel, item.active && styles.navLabelActive]}>{item.label}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
+      <BottomNav />
     </SafeAreaView>
   );
 }

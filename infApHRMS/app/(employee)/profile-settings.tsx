@@ -1,0 +1,272 @@
+import * as React from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  SafeAreaView,
+  Platform,
+  Image,
+  Switch,
+} from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { router } from 'expo-router';
+import { useUser } from '../../context/UserContext';
+
+export default function ProfileSettingsPage() {
+  const { user, updateSettings } = useUser();
+
+  const renderSectionHeader = (icon: any, title: string) => (
+    <View style={styles.sectionHeader}>
+      <Ionicons name={icon} size={20} color="#4f46e5" />
+      <Text style={styles.sectionHeaderText}>{title}</Text>
+    </View>
+  );
+
+  const renderItem = (label: string, value?: string, hasArrow?: boolean, isSwitch?: boolean, switchValue?: boolean, onSwitchChange?: (v: boolean) => void, icon?: any) => (
+    <TouchableOpacity 
+      style={styles.itemRow} 
+      activeOpacity={0.7}
+      disabled={isSwitch}
+    >
+      <View style={styles.itemContent}>
+        <Text style={styles.itemLabel}>{label}</Text>
+        {value && <Text style={styles.itemValue}>{value}</Text>}
+      </View>
+      {isSwitch ? (
+        <Switch 
+          value={switchValue} 
+          onValueChange={onSwitchChange}
+          trackColor={{ false: '#e2e8f0', true: '#4f46e5' }}
+          thumbColor="#fff"
+        />
+      ) : hasArrow ? (
+        <Ionicons name="chevron-forward" size={20} color="#94a3b8" />
+      ) : icon ? (
+        <Ionicons name={icon} size={20} color="#94a3b8" />
+      ) : null}
+    </TouchableOpacity>
+  );
+
+  return (
+    <SafeAreaView style={styles.root}>
+      {/* Header */}
+      <View style={styles.header}>
+        <TouchableOpacity style={styles.headerBtn} onPress={() => router.back()}>
+          <Ionicons name="arrow-back" size={24} color="#1e293b" />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Profile Settings</Text>
+        <TouchableOpacity style={styles.headerBtn}>
+          <Ionicons name="ellipsis-vertical" size={24} color="#1e293b" />
+        </TouchableOpacity>
+      </View>
+
+      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+        {/* Profile Summary Card (Mini) */}
+        <View style={styles.profileSummaryRow}>
+          <Image source={user.avatar} style={styles.miniAvatar} />
+          <View style={styles.miniMeta}>
+             <Text style={styles.miniName}>{user.name}</Text>
+             <Text style={styles.miniRole}>{user.role}</Text>
+          </View>
+          <TouchableOpacity 
+            style={styles.editBtn}
+            onPress={() => router.push('/(employee)/edit-profile')}
+          >
+            <Text style={styles.editBtnText}>Edit</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Personal Info */}
+        <View style={styles.section}>
+          {renderSectionHeader('person-outline', 'Personal Info')}
+          <View style={styles.infoRow}>
+            <Text style={styles.infoLabelText}>Employee ID</Text>
+            <Text style={styles.infoValueText}>{user.employeeId}</Text>
+          </View>
+          <View style={styles.infoRow}>
+            <Text style={styles.infoLabelText}>Email</Text>
+            <Text style={styles.infoValueText}>{user.email}</Text>
+          </View>
+          <View style={styles.infoRow}>
+            <Text style={styles.infoLabelText}>Department</Text>
+            <Text style={styles.infoValueText}>{user.department}</Text>
+          </View>
+          <View style={[styles.infoRow, { borderBottomWidth: 0 }]}>
+            <Text style={styles.infoLabelText}>Joining Date</Text>
+            <Text style={styles.infoValueText}>{user.joiningDate}</Text>
+          </View>
+        </View>
+
+        {/* App Settings */}
+        <View style={styles.section}>
+          {renderSectionHeader('settings-outline', 'App Settings')}
+          {renderItem('Dark Mode', undefined, false, true, user.settings.darkMode, (v) => updateSettings({ darkMode: v }))}
+          {renderItem('Language', user.settings.language, true)}
+        </View>
+
+        {/* Notifications */}
+        <View style={styles.section}>
+          {renderSectionHeader('notifications-outline', 'Notifications')}
+          {renderItem('Push Notifications', undefined, false, true, user.settings.pushNotifications, (v) => updateSettings({ pushNotifications: v }))}
+          {renderItem('Email Reports', undefined, false, true, user.settings.emailReports, (v) => updateSettings({ emailReports: v }))}
+        </View>
+
+        {/* Security */}
+        <View style={styles.section}>
+          {renderSectionHeader('shield-checkmark-outline', 'Security')}
+          {renderItem('Change Password', undefined, true)}
+          {renderItem('Two-Factor Authentication', user.settings.twoFactorEnabled ? 'Currently Enabled' : 'Disabled', true)}
+        </View>
+
+        {/* Support & Legal */}
+        <View style={styles.section}>
+          {renderSectionHeader('information-circle-outline', 'Support & Legal')}
+          {renderItem('Help Center', undefined, false, false, false, undefined, 'open-outline')}
+          {renderItem('Privacy Policy', undefined, true)}
+        </View>
+
+        {/* Logout */}
+        <TouchableOpacity style={styles.logoutBtn} onPress={() => router.replace('/(auth)/sign-in')}>
+          <Ionicons name="log-out-outline" size={24} color="#ef4444" />
+          <Text style={styles.logoutText}>Logout</Text>
+        </TouchableOpacity>
+
+        <View style={{ height: 40 }} />
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f1f5f9',
+    marginTop: Platform.OS === 'android' ? 30 : 0,
+  },
+  headerBtn: {
+    padding: 4,
+  },
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: '800',
+    color: '#0f172a',
+  },
+  scrollContent: {
+    paddingBottom: 20,
+  },
+  profileSummaryRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f1f5f9',
+    gap: 16,
+  },
+  miniAvatar: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    borderWidth: 2,
+    borderColor: '#e2e8f0',
+  },
+  miniMeta: {
+    flex: 1,
+  },
+  miniName: {
+    fontSize: 18,
+    fontWeight: '800',
+    color: '#0f172a',
+  },
+  miniRole: {
+    fontSize: 13,
+    color: '#64748b',
+    fontWeight: '600',
+  },
+  editBtn: {
+    backgroundColor: '#4f46e522',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 8,
+  },
+  editBtnText: {
+    color: '#4f46e5',
+    fontSize: 14,
+    fontWeight: '700',
+  },
+  section: {
+    paddingHorizontal: 20,
+    paddingTop: 24,
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 16,
+  },
+  sectionHeaderText: {
+    fontSize: 16,
+    fontWeight: '800',
+    color: '#1e293b',
+  },
+  infoRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f1f5f9',
+  },
+  infoLabelText: {
+    fontSize: 14,
+    color: '#94a3b8',
+    fontWeight: '600',
+  },
+  infoValueText: {
+    fontSize: 14,
+    color: '#1e293b',
+    fontWeight: '700',
+  },
+  itemRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 12,
+  },
+  itemContent: {
+    flex: 1,
+  },
+  itemLabel: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#1e293b',
+  },
+  itemValue: {
+    fontSize: 12,
+    color: '#22c55e',
+    fontWeight: '600',
+    marginTop: 2,
+  },
+  logoutBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    paddingHorizontal: 20,
+    marginTop: 32,
+    marginBottom: 10,
+  },
+  logoutText: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#ef4444',
+  },
+});

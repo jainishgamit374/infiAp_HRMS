@@ -9,6 +9,7 @@ import {
   Platform,
   ScrollView,
   Alert,
+  Image,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Link, router } from 'expo-router';
@@ -49,10 +50,11 @@ export default function SignIn() {
       <ScrollView contentContainerStyle={styles.container}>
         {/* Header Logo */}
         <View style={styles.header}>
-          <View style={styles.logoIconContainer}>
-            <Ionicons name="git-network" size={20} color="#fff" />
-          </View>
-          <Text style={styles.logoText}>InfiAP</Text>
+          <Image 
+            source={require('../../assets/images/logo.png')} 
+            style={styles.headerLogo} 
+            resizeMode="contain"
+          />
         </View>
 
         {/* Card */}
@@ -223,20 +225,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 32,
     marginTop: Platform.OS === 'ios' ? 40 : 20,
+    marginLeft: -24, // Flush to the edge if container padding is 24
   },
-  logoIconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 10,
-    backgroundColor: '#5a55d2',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 10,
-  },
-  logoText: {
-    fontSize: 22,
-    fontWeight: '800',
-    color: '#111827',
+  headerLogo: {
+    width: 150,
+    height: 45,
   },
   card: {
     backgroundColor: '#ffffff',

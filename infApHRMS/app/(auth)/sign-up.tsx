@@ -10,6 +10,7 @@ import {
   ScrollView,
   Modal,
   Alert,
+  Image,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Link, router } from 'expo-router';
@@ -64,8 +65,12 @@ export default function SignUp() {
           <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
             <Ionicons name="arrow-back" size={24} color="#111827" />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>InfiAP</Text>
-          <View style={{ width: 24 }} /> {/* Placeholder for center alignment */}
+          <Image 
+            source={require('../../assets/images/logo.png')} 
+            style={styles.headerLogo} 
+            resizeMode="contain"
+          />
+          <View style={{ width: 24 }} />
         </View>
 
         {/* Card */}
@@ -245,11 +250,10 @@ const styles = StyleSheet.create({
     padding: 8,
     marginLeft: -8,
   },
-  headerTitle: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: '#5a55d2',
-    marginLeft: -16, // offset the back button
+  headerLogo: {
+    width: 120,
+    height: 36,
+    marginLeft: -24, // Flush to the edge if container padding is 24
   },
   card: {
     backgroundColor: '#ffffff',
