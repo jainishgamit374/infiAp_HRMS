@@ -49,6 +49,15 @@ const userSchema = new mongoose.Schema(
         joiningDate: {
             type: Date,
             default: Date.now
+        },
+        phone: {
+            type: String
+        },
+        address: {
+            type: String
+        },
+        profileImage: {
+            type: String
         }
     },
     { timestamps: true }
