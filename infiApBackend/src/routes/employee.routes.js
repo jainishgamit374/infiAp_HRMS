@@ -76,4 +76,34 @@ router.get("/profile/notifications", employeeController.getNotificationSettings)
 // Edit Personal Profile
 router.post("/profile/edit", employeeController.editProfile);
 
+// Attendance Granular APIs (Reusable - POST for GET)
+router.post("/attendance/stats", employeeController.getAttendanceStats);
+router.post("/attendance/work-summary", employeeController.getAttendanceWorkSummary);
+router.post("/attendance/shift", employeeController.getAttendanceShift);
+router.post("/attendance/timeline", employeeController.getAttendanceTimeline);
+router.post("/attendance/logs", employeeController.getAttendanceHistory);
+
+// Working Schedule Granular APIs
+router.post("/schedule/current", employeeController.getCurrentSchedule);
+router.post("/schedule/weekly", employeeController.getWeeklySchedule);
+router.post("/schedule/holidays", employeeController.getUpcomingHolidays);
+router.post("/schedule/request-shift-change", employeeController.requestShiftChange);
+router.post("/schedule/holiday-calendar", employeeController.getHolidayCalendar);
+
+// Leave Management Granular APIs (Reusable - POST for GET)
+router.post("/leave/balances", employeeController.getLeaveBalances);
+router.post("/leave/upcoming", employeeController.getUpcomingLeaves);
+router.post("/leave/history", employeeController.getLeaveHistory);
+router.post("/leave/apply", employeeController.applyLeaveRequest);
+
+// Leave Request Management (Approver/Admin View - POST for GET)
+router.post("/leave/requests/all", employeeController.getAllLeaveRequests);
+router.post("/leave/requests/pending", employeeController.getPendingLeaveRequests);
+router.post("/leave/requests/history", employeeController.getHistoryLeaveRequests);
+
+// Payroll Granular APIs (Reusable - POST for GET)
+router.post("/payroll/current", employeeController.getPayrollCurrent);
+router.post("/payroll/history", employeeController.getPayrollHistory);
+router.post("/payroll/details", employeeController.getPayrollDetails);
+
 module.exports = router;
