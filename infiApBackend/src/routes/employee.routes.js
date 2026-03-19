@@ -39,4 +39,41 @@ router.get("/getemployeeofthemonth", employeeController.getEmployeeOfTheMonth);
 // DOB / Birthdays
 router.get("/getDOB", employeeController.getDOB);
 
+// Leave Applications route
+router.post("/leaveapplications", employeeController.applyLeave);
+router.get("/leaveapplications", employeeController.getEmployeeLeaves);
+
+// Pending approvals route
+router.get("/leaveapprovals", employeeController.getPendingApprovals);
+
+// Approval action route
+router.post("/allapprove", employeeController.approveActivity);
+
+// InfiAp Directors List
+router.get("/directors", employeeController.getDirectors);
+
+// Get Profile Header Info
+router.get("/profile/header", employeeController.getProfileHeader);
+
+// Get Personal Information
+router.get("/profile/personal", employeeController.getPersonalInformation);
+
+// Get Professional Information
+router.get("/profile/professional", employeeController.getProfessionalInformation);
+
+// Get Account Information
+router.get("/profile/account", employeeController.getAccountInformation);
+
+// Get Profile Documents
+router.get("/profile/documents", employeeController.getProfileDocuments);
+
+// Get Profile Activity Feed
+router.get("/profile/activity", employeeController.getProfileActivityFeed);
+
+// Get Notification Settings
+router.get("/profile/notifications", employeeController.getNotificationSettings);
+
+// Edit Personal Profile
+router.post("/profile/edit", employeeController.editProfile);
+
 module.exports = router;

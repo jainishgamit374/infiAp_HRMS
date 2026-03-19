@@ -417,3 +417,306 @@ exports.getDOB = async (req, res) => {
         res.status(500).json({ status: "Error", message: "Failed to get DOB data", error: error.message });
     }
 };
+
+// 12. Apply Leave Request
+exports.applyLeave = async (req, res) => {
+    try {
+        const { LeaveType, Reason, StartDate, EndDate, IsHalfDay, IsFirstHalf } = req.body;
+        const EmployeeID = req.user ? req.user._id : "656b23d91f4a9b2b2c3d4e5f"; 
+
+        const leaveApp = new LeaveApplication({
+            EmployeeID,
+            LeaveType,
+            Reason,
+            StartDate,
+            EndDate,
+            IsHalfDay,
+            IsFirstHalf,
+            ApprovalStatusID: 3, // 3: Awaiting
+            ApprovalStatus: "Awaiting Approve"
+        });
+
+        await leaveApp.save();
+
+        res.status(200).json({
+            status: "Success",
+            message: "Leave application submitted successfully."
+        });
+    } catch (error) {
+        res.status(500).json({ status: "Error", message: "Failed to apply for leave", error: error.message });
+    }
+};
+
+// 13. Get Employee Leaves
+exports.getEmployeeLeaves = async (req, res) => {
+    try {
+        const EmployeeID = req.user ? req.user._id : "656b23d91f4a9b2b2c3d4e5f"; 
+
+        const leaves = await LeaveApplication.find({ EmployeeID }).sort({ createdAt: -1 });
+        
+        const data = leaves.map(l => ({
+            LeaveApplicationMasterID: l._id,
+            EmployeeID: l.EmployeeID,
+            LeaveType: l.LeaveType,
+            ApprovalStatusID: l.ApprovalStatusID,
+            ApprovalStatus: l.ApprovalStatus,
+            ApprovalUsername: l.ApprovalUsername,
+            Reason: l.Reason,
+            StartDate: l.StartDate,
+            EndDate: l.EndDate,
+            IsHalfDay: l.IsHalfDay,
+            IsFirstHalf: l.IsFirstHalf,
+            CreatedDate: l.createdAt,
+            UpdatedDate: l.updatedAt
+        }));
+
+        res.status(200).json({
+            status: "Success",
+            statusCode: 200,
+            data: data
+        });
+    } catch (error) {
+        res.status(500).json({ status: "Error", message: "Failed to fetch leaves", error: error.message });
+    }
+};
+
+// 14. Get Pending Approvals (For Approver)
+exports.getPendingApprovals = async (req, res) => {
+    try {
+        // Find leaves awaiting approval
+        const pendingLeaves = await LeaveApplication.find({ ApprovalStatusID: 3 }).populate("EmployeeID", "name profile_image");
+
+        const pending_approvals = pendingLeaves.map(l => ({
+            Leave_ID: l._id,
+            employee_name: l.EmployeeID ? l.EmployeeID.name : "Unknown",
+            leave_type: l.LeaveType,
+            start_date: l.StartDate,
+            end_date: l.EndDate,
+            reason: l.Reason,
+            profile_image: l.EmployeeID ? l.EmployeeID.profile_image : "",
+            applied_on: l.createdAt,
+            IsHalfDay: l.IsHalfDay,
+            IsFirstHalf: l.IsFirstHalf
+        }));
+
+        res.status(200).json({
+            status: "Success",
+            total_pending_approvals: pending_approvals.length,
+            pending_approvals
+        });
+    } catch (error) {
+        res.status(500).json({ status: "Error", message: "Failed to get approvals", error: error.message });
+    }
+};
+
+// 15. Approve Activity
+exports.approveActivity = async (req, res) => {
+    try {
+        const { ProgramID, TranID, Reason } = req.body;
+        const approverID = req.user ? req.user._id : "656b23d91f4a9b2b2c3d4e5f";
+
+        // ProgramID 2 corresponds to Leave Request etc.
+        if (ProgramID === 2) {
+            await LeaveApplication.findByIdAndUpdate(TranID, {
+                ApprovalStatusID: 1, // 1: Approved
+                ApprovalStatus: "Approved",
+                ApproverID: approverID,
+                ApprovalUsername: "Approver", 
+            });
+        }
+        
+        // Similarly handle other ProgramIDs like Missed Punch, WFH...
+
+        res.status(200).json({
+            status: "Success",
+            statusCode: 200,
+            message: "Approval updated successfully."
+        });
+    } catch (error) {
+        res.status(500).json({ status: "Error", message: "Failed to approve activity", error: error.message });
+    }
+};
+
+// 16. Get Directors List (infiApDirectors page)
+exports.getDirectors = async (req, res) => {
+    try {
+        // Mocking directors data since there is no standalone Director model
+        const directorsData = [
+            {
+                name: "Shruti Desai",
+                profile: "/img/profile_shruti.png",
+                roal: "Director",
+                "work roal": "Director of Engineering",
+                contact: {
+                    email: "shruti.desai@example.com",
+                    slack: "@shrutidesai"
+                }
+            },
+            {
+                name: "Rahul Mehta",
+                profile: "/img/profile_rahul.png",
+                roal: "Managing Director",
+                "work roal": "Head of Strategy",
+                contact: {
+                    email: "rahul.mehta@example.com",
+                    slack: "@rahulmehta"
+                }
+            }
+        ];
+
+        res.status(200).json({
+            status: "Success",
+            statusCode: 200,
+            data: directorsData
+        });
+    } catch (error) {
+        res.status(500).json({ status: "Error", message: "Failed to fetch directors", error: error.message });
+    }
+};
+
+// 17. Get Personal Profile
+
+// 17. Get Profile Header Info
+exports.getProfileHeader = async (req, res) => {
+    try {
+        const userId = req.user ? req.user._id : "656b23d91f4a9b2b2c3d4e5f";
+        const headerData = {
+            name: "Sneha Desai",
+            role: "Frontend Developer",
+            department: "Engineering",
+            employeeId: "EMP1024",
+            profileImage: "/img/sneha_profile.png",
+            isOnline: true
+        };
+        res.status(200).json({ status: "Success", statusCode: 200, data: headerData });
+    } catch (error) {
+        res.status(500).json({ status: "Error", message: "Failed to get header data", error: error.message });
+    }
+};
+
+// 18. Get Personal Information
+exports.getPersonalInformation = async (req, res) => {
+    try {
+        const personalData = {
+            fullName: "Sneha Desai",
+            dob: "14 May 1995",
+            phone: "+91 98765 43210",
+            email: "sneha.d@example.com",
+            address: "123, Tech Heights, Bangalore, India",
+            emergencyContact: "Rohan Desai (Father) - +91 98765 00000"
+        };
+        res.status(200).json({ status: "Success", statusCode: 200, data: personalData });
+    } catch (error) {
+        res.status(500).json({ status: "Error", message: "Failed to get personal information", error: error.message });
+    }
+};
+
+// 19. Get Professional Information
+exports.getProfessionalInformation = async (req, res) => {
+    try {
+        const professionalData = {
+            department: "Engineering",
+            role: "Frontend Developer",
+            manager: "Arjun Mehta",
+            joiningDate: "Jan 10, 2022",
+            employmentType: "Full-Time",
+            workLocation: "Hybrid (Bangalore)"
+        };
+        res.status(200).json({ status: "Success", statusCode: 200, data: professionalData });
+    } catch (error) {
+        res.status(500).json({ status: "Error", message: "Failed to get professional information", error: error.message });
+    }
+};
+
+// 20. Get Account Information
+exports.getAccountInformation = async (req, res) => {
+    try {
+        const accountData = {
+            employeeId: "EMP1024",
+            status: "Active",
+            username: "sneha_desai_infiap",
+            workEmail: "sneha.desai@infiap.com"
+        };
+        res.status(200).json({ status: "Success", statusCode: 200, data: accountData });
+    } catch (error) {
+        res.status(500).json({ status: "Error", message: "Failed to get account information", error: error.message });
+    }
+};
+
+// 21. Get Profile Documents
+exports.getProfileDocuments = async (req, res) => {
+    try {
+        const documents = [
+            { name: "Employment Contract", link: "/docs/contract.pdf" },
+            { name: "ID Verification", link: "/docs/id.pdf" },
+            { name: "Salary Documents", link: "/docs/salary.pdf" }
+        ];
+        res.status(200).json({ status: "Success", statusCode: 200, data: documents });
+    } catch (error) {
+        res.status(500).json({ status: "Error", message: "Failed to get documents", error: error.message });
+    }
+};
+
+// 22. Get Profile Activity Feed
+exports.getProfileActivityFeed = async (req, res) => {
+    try {
+        const activityFeed = [
+            { activity: "Address details updated", date: "Oct 12, 2023 • 11:45 AM" },
+            { activity: "Emergency contact added", date: "Sep 05, 2023 • 09:20 AM" },
+            { activity: "Password changed", date: "Aug 20, 2023 • 04:15 PM" }
+        ];
+        res.status(200).json({ status: "Success", statusCode: 200, data: activityFeed });
+    } catch (error) {
+        res.status(500).json({ status: "Error", message: "Failed to get activity feed", error: error.message });
+    }
+};
+
+// 23. Get Notification Settings
+exports.getNotificationSettings = async (req, res) => {
+    try {
+        const notificationSettings = {
+            emailNotifications: true,
+            hrAnnouncements: true,
+            payrollNotifications: false
+        };
+        res.status(200).json({ status: "Success", statusCode: 200, data: notificationSettings });
+    } catch (error) {
+        res.status(500).json({ status: "Error", message: "Failed to get notification settings", error: error.message });
+    }
+};
+
+// 24. Edit Profile
+exports.editProfile = async (req, res) => {
+    try {
+        const { name, phone, address, profileImage } = req.body;
+        const userId = req.user ? req.user._id : "656b23d91f4a9b2b2c3d4e5f";
+
+        const updatedUser = await User.findByIdAndUpdate(
+            userId,
+            {
+                $set: {
+                    name,
+                    phone,
+                    address,
+                    profileImage
+                }
+            },
+            { new: true }
+        ).select("-password");
+
+        if (!updatedUser) {
+            return res.status(404).json({ status: "Error", message: "User not found" });
+        }
+
+        res.status(200).json({
+            status: "Success",
+            statusCode: 200,
+            message: "Profile updated successfully",
+            data: updatedUser
+        });
+    } catch (error) {
+        res.status(500).json({ status: "Error", message: "Failed to update profile", error: error.message });
+    }
+};
+
+
