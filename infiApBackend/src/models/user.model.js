@@ -43,6 +43,13 @@ const userSchema = new mongoose.Schema(
         resetPasswordExpires: Date,
         twoFactorOTP: String,
         twoFactorOTPExpires: Date,
+        dob: {
+            type: Date
+        },
+        joiningDate: {
+            type: Date,
+            default: Date.now
+        }
     },
     { timestamps: true }
 );

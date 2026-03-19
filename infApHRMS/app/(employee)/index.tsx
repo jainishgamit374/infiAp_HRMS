@@ -27,8 +27,8 @@ const CircularProgress = ({ value, total, color, label, subLabel }: { value: num
   return (
     <View style={styles.leaveCard}>
       <View style={[styles.progressCircle, { borderColor: `${color}33` }]}>
-        <View style={[styles.progressCircleInner, { 
-          borderTopColor: color, 
+        <View style={[styles.progressCircleInner, {
+          borderTopColor: color,
           borderRightColor: color,
           borderBottomColor: value > total / 2 ? color : 'transparent',
           borderLeftColor: value > total * 0.75 ? color : 'transparent',
@@ -47,7 +47,7 @@ const SwipeToCheckIn = () => {
   const SWIPE_WIDTH = 280;
   const KNOB_SIZE = 48;
   const MAX_TRANSLATE = SWIPE_WIDTH - KNOB_SIZE - 10;
-  
+
   const translateX = useSharedValue(0);
   const [isCheckedIn, setIsCheckedIn] = useState(false);
   const [time, setTime] = useState('09:02 AM');
@@ -98,7 +98,7 @@ const SwipeToCheckIn = () => {
           </Animated.View>
         </View>
       </GestureDetector>
-      
+
       <View style={styles.swipeFooter}>
         <View style={styles.footerItem}>
           <Ionicons name="time-outline" size={14} color={isCheckedIn ? "#059669" : "#22c55e"} />
@@ -119,14 +119,17 @@ export default function EmployeeDashboard() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaView style={styles.root}>
         <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
-          
+
           {/* Header */}
           <View style={styles.header}>
-            <Image 
-              source={require('../../assets/images/logo.png')} 
-              style={styles.headerLogo} 
-              resizeMode="contain"
-            />
+            <View style={styles.logoContainer}>
+              <Image
+
+                source={require('../../assets/images/logo.png')}
+                style={styles.headerLogo}
+                resizeMode="contain"
+              />
+            </View>
             <TouchableOpacity style={styles.profileCircle} onPress={() => router.replace('/(auth)/sign-in')}>
               <Ionicons name="person-outline" size={18} color="#374151" />
             </TouchableOpacity>
@@ -158,7 +161,7 @@ export default function EmployeeDashboard() {
               <Text style={styles.historyLink}>History</Text>
             </TouchableOpacity>
           </View>
-          
+
           <View style={styles.leaveGrid}>
             <CircularProgress value={6} total={10} color="#3b82f6" label="Privilege Leave" subLabel="AVAILABLE" />
             <CircularProgress value={6} total={10} color="#6366f1" label="Casual Leave" subLabel="AVAILABLE" />
@@ -265,7 +268,10 @@ export default function EmployeeDashboard() {
           {/* Approvals & Activities */}
           <Text style={styles.sectionHeader}>Approvals & Activities</Text>
           <View style={styles.listCard}>
-            <TouchableOpacity style={styles.listItem}>
+            <TouchableOpacity 
+              style={styles.listItem}
+              onPress={() => router.push('/(employee)/leave')}
+            >
               <View style={[styles.listIconWrap, { backgroundColor: '#e0e7ff' }]}>
                 <Ionicons name="calendar-outline" size={20} color="#6366f1" />
               </View>
@@ -292,9 +298,9 @@ export default function EmployeeDashboard() {
           <View style={styles.eomCard}>
             <View style={styles.eomContent}>
               <View style={styles.eomAvatarWrap}>
-                <Image 
-                  source={{ uri: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop' }} 
-                  style={styles.eomAvatar} 
+                <Image
+                  source={{ uri: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop' }}
+                  style={styles.eomAvatar}
                 />
                 <View style={styles.eomBadge}>
                   <Ionicons name="star" size={10} color="#fff" />
@@ -347,13 +353,17 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingTop: Platform.OS === 'android' ? 40 : 20,
   },
-  
+
   // Header
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 24,
+  },
+  logoContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   headerLogo: {
     width: 140,
