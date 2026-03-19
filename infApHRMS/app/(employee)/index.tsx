@@ -1,5 +1,4 @@
-import * as React from 'react';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -115,6 +114,25 @@ const SwipeToCheckIn = () => {
 
 
 export default function EmployeeDashboard() {
+  const scrollViewRef = useRef<ScrollView>(null);
+  const scrollIndex = useRef(0);
+  const totalItems = 4;
+  const itemWidth = 212;
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      if (scrollViewRef.current) {
+        scrollIndex.current = (scrollIndex.current + 1) % totalItems;
+        scrollViewRef.current.scrollTo({
+          x: scrollIndex.current * itemWidth,
+          animated: true,
+        });
+      }
+    }, 3000);
+
+    return () => clearInterval(timer);
+  }, []);
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaView style={styles.root}>
@@ -228,9 +246,16 @@ export default function EmployeeDashboard() {
             </View>
           </View>
 
-          {/* Missed Punches Grid */}
+          {/* Missed Punches Carousel */}
           <Text style={[styles.sectionHeader, { marginTop: 12, marginBottom: 16 }]}>Missed Punches</Text>
-          <View style={styles.missedPunchesGrid}>
+          <ScrollView 
+            ref={scrollViewRef}
+            horizontal 
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.missedPunchesCarousel}
+            snapToInterval={212} // card width (200) + gap (12)
+            decelerationRate="fast"
+          >
             <View style={styles.missedPunchCard}>
               <View style={styles.missedPunchRow}>
                 <Text style={styles.missedPunchDate}>Mar 2, 2026</Text>
@@ -263,7 +288,7 @@ export default function EmployeeDashboard() {
               <Text style={styles.missedPunchTitle}>Missing Out</Text>
               <Text style={styles.missedPunchAction}>APPLY PUNCH</Text>
             </View>
-          </View>
+          </ScrollView>
 
           {/* Approvals & Activities */}
           <Text style={styles.sectionHeader}>Approvals & Activities</Text>
@@ -686,20 +711,25 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
 
-  // Missed Punches Grid
-  missedPunchesGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+  // Missed Punches Carousel
+  missedPunchesCarousel: {
+    paddingRight: 20, // To allow the last card to be centered or at least have some space
     gap: 12,
-    marginBottom: 24,
+    paddingBottom: 24,
   },
   missedPunchCard: {
-    width: '48%',
+    width: 200,
     backgroundColor: '#fff5f5',
     borderWidth: 1,
     borderColor: '#fee2e2',
     borderRadius: 16,
     padding: 16,
+    // Add shadow to make it pop more in the carousel
+    shadowColor: '#ef4444',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 3,
   },
   missedPunchRow: {
     flexDirection: 'row',

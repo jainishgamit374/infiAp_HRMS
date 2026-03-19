@@ -6,6 +6,8 @@ export default function EmployeeLayout() {
       <Stack.Screen name="index" />
       <Stack.Screen name="attendance" />
       <Stack.Screen name="leave" />
+      <Stack.Screen name="apply-leave" />
+      <Stack.Screen name="my-leaves" />
       <Stack.Screen name="payroll" />
       <Stack.Screen name="profile" />
       <Stack.Screen name="notifications" />

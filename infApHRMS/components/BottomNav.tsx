@@ -11,10 +11,10 @@ const NAV_ITEMS = [
     route: '/(employee)/' 
   },
   { 
-    icon: 'calendar-outline', 
-    activeIcon: 'calendar', 
-    label: 'Leave', 
-    route: '/(employee)/leave' 
+    icon: 'people-outline', 
+    activeIcon: 'people', 
+    label: 'Directory', 
+    route: '/(employee)/directory' 
   },
   { 
     icon: 'time-outline', 
@@ -40,7 +40,7 @@ export const BottomNav = () => {
         // Handle trailing slash for index route
         const isActive = pathname === item.route || 
                          (item.route === '/(employee)/' && pathname === '/(employee)') ||
-                         (item.route === '/(employee)/leave' && (pathname === '/(employee)/leave' || pathname === '/(employee)/apply-leave')) ||
+                         (item.route === '/(employee)/directory' && pathname === '/(employee)/directory') ||
                          ((item.route === '/(employee)/attendance') && 
                           (pathname === '/(employee)/attendance' || pathname === '/(employee)/attendance-logging' || pathname === '/(employee)/attendance-history'));
 
