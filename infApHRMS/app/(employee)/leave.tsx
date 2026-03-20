@@ -38,7 +38,7 @@ export default function LeaveManagement() {
       subtitle: 'Approve/reject leaves',
       icon: 'checkmark-circle-outline',
       color: '#4f39f6',
-      route: '/(employee)/leave', // Stay here or mock
+      route: '/(employee)/leave-approvals',
     },
   ];
 

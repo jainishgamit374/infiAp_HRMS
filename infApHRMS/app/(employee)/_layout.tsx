@@ -15,6 +15,14 @@ export default function EmployeeLayout() {
       <Stack.Screen name="work-schedule" />
       <Stack.Screen name="activity-log" />
       <Stack.Screen name="directory" />
+      <Stack.Screen name="leave-approvals" />
+      <Stack.Screen name="leave-details" />
+      <Stack.Screen name="edit-leave" />
+      <Stack.Screen name="events" />
+      <Stack.Screen name="upcoming-wfh" />
+      <Stack.Screen name="payroll-history" />
+      <Stack.Screen name="payroll-tax" />
+      <Stack.Screen name="performance" />
     </Stack>
   );
 }

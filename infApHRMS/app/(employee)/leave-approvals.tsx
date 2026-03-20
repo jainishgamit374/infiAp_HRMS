@@ -15,19 +15,17 @@ import Animated, {
   useAnimatedStyle, 
   withTiming, 
   withSpring,
-  withRepeat,
-  Easing,
   FadeInDown,
-  LinearTransition // For smooth list layout changes
+  LinearTransition
 } from 'react-native-reanimated';
 import { useLeave, LeaveRequest } from '../../context/LeaveContext';
 
 const { width } = Dimensions.get('window');
 
-const TABS = ['All', 'Pending', 'Approved', 'History'];
-const TAB_WIDTH = width / 4;
+const TABS = ['All', 'Approved', 'Rejected'];
+const TAB_WIDTH = width / 3;
 
-export default function MyLeaves() {
+export default function LeaveApprovals() {
   const { leaves } = useLeave();
   const [activeTab, setActiveTab] = useState('All');
   const indicatorPosition = useSharedValue(0);
@@ -47,29 +45,16 @@ export default function MyLeaves() {
     };
   });
 
-  // Filter leaves based on active tab
-  const filteredLeaves = leaves.filter((leave) => {
+  // Filter leaves: only show APPROVED or REJECTED
+  const relevantLeaves = leaves.filter(l => l.status === 'APPROVED' || l.status === 'REJECTED');
+  
+  const filteredLeaves = relevantLeaves.filter((leave) => {
     if (activeTab === 'All') return true;
-    if (activeTab === 'Pending') return leave.status === 'PENDING';
     if (activeTab === 'Approved') return leave.status === 'APPROVED';
-    if (activeTab === 'History') return leave.status === 'REJECTED' || leave.status === 'CANCELLED';
+    if (activeTab === 'Rejected') return leave.status === 'REJECTED';
     return true;
   });
 
-  // Badge pulse animation
-  const pulse = useSharedValue(1);
-  useEffect(() => {
-    pulse.value = withRepeat(
-      withTiming(1.05, { duration: 1500, easing: Easing.inOut(Easing.ease) }),
-      -1,
-      true
-    );
-  }, []);
-  const animatedBadgeStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: pulse.value }],
-  }));
-
-  // Helpers
   const formatDateRange = (start: string, end: string) => {
     const d1 = new Date(start);
     const d2 = new Date(end);
@@ -88,7 +73,6 @@ export default function MyLeaves() {
   const getStatusColor = (status: string) => {
     switch(status) {
       case 'APPROVED': return { text: '#22c55e', bg: '#dcfce7' };
-      case 'PENDING': return { text: '#ea580c', bg: '#ffedd5' };
       case 'REJECTED': return { text: '#ef4444', bg: '#fee2e2' };
       default: return { text: '#64748b', bg: '#f1f5f9' };
     }
@@ -109,13 +93,8 @@ export default function MyLeaves() {
         <TouchableOpacity style={styles.headerBtn} onPress={() => router.back()}>
           <Ionicons name="arrow-back" size={24} color="#1e293b" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Leave Requests</Text>
-        <TouchableOpacity 
-          style={styles.addBtn}
-          onPress={() => router.push('/(employee)/apply-leave')}
-        >
-          <Ionicons name="add" size={24} color="#fff" />
-        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Approvals & Rejections</Text>
+        <View style={{ width: 40 }} />
       </View>
 
       {/* Tabs */}
@@ -150,8 +129,8 @@ export default function MyLeaves() {
         itemLayoutAnimation={LinearTransition.springify().damping(15)}
         ListEmptyComponent={() => (
           <View style={styles.emptyContainer}>
-            <Ionicons name="document-text-outline" size={48} color="#cbd5e1" />
-            <Text style={styles.emptyText}>No leaves found in this category.</Text>
+            <Ionicons name="documents-outline" size={48} color="#cbd5e1" />
+            <Text style={styles.emptyText}>No records found in this category.</Text>
           </View>
         )}
         renderItem={({ item, index }) => {
@@ -163,62 +142,38 @@ export default function MyLeaves() {
               entering={FadeInDown.delay(index * 100).springify().damping(15)}
               style={styles.card}
             >
-              <View style={styles.cardTop}>
-                {/* Left side: Icon + Texts */}
-                <View style={styles.cardLeft}>
-                  <View style={styles.iconBox}>
-                    <Ionicons name={iconName} size={28} color="#4f39f6" />
+              <View style={styles.cardHeader}>
+                <View style={styles.employeeInfo}>
+                  <View style={styles.avatarPlaceholder}>
+                    <Text style={styles.avatarInitial}>{item.employeeName?.charAt(0) || 'E'}</Text>
                   </View>
-                  <View style={styles.infoBox}>
-                    <Text style={styles.cardTitle}>{item.type}</Text>
-                    <Text style={styles.cardDates}>{formatDateRange(item.startDate, item.endDate)}</Text>
-                  </View>
+                  <Text style={styles.employeeName}>{item.employeeName || 'Unknown Employee'}</Text>
                 </View>
-
-                {/* Right side: Badge */}
-                <Animated.View style={[styles.badge, { backgroundColor: statusColors.bg }, animatedBadgeStyle]}>
+                <View style={[styles.badge, { backgroundColor: statusColors.bg }]}>
                   <Text style={[styles.badgeText, { color: statusColors.text }]}>
                     {item.status}
                   </Text>
-                </Animated.View>
+                </View>
               </View>
 
-              {/* Divider (optional, but design implies visual separation) */}
               <View style={styles.divider} />
 
-              <View style={styles.cardBottom}>
-                <View style={styles.durationWrap}>
-                  <Ionicons name="time-outline" size={14} color="#64748b" />
-                  <Text style={styles.durationText}>{item.days} day{item.days > 1 ? 's' : ''} total</Text>
+              <View style={styles.cardBody}>
+                <View style={styles.iconBox}>
+                  <Ionicons name={iconName} size={28} color="#4f39f6" />
                 </View>
-
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  {item.status === 'PENDING' ? (
-                    <TouchableOpacity 
-                      activeOpacity={0.6}
-                      style={{ marginRight: 16, flexDirection: 'row', alignItems: 'center' }}
-                      onPress={() => router.push({ pathname: '/(employee)/edit-leave', params: { id: item.id } })}
-                    >
-                      <Ionicons name="pencil" size={14} color="#4f39f6" />
-                      <Text style={[styles.viewDetailsText, { marginLeft: 4 }]}>Edit</Text>
-                    </TouchableOpacity>
-                  ) : (
-                    <View style={{ marginRight: 16, flexDirection: 'row', alignItems: 'center', opacity: 0.5 }}>
-                      <Ionicons name="pencil" size={14} color="#94a3b8" />
-                      <Text style={[styles.viewDetailsText, { color: '#94a3b8', marginLeft: 4 }]}>Edit</Text>
-                    </View>
-                  )}
-
-                  <TouchableOpacity 
-                    activeOpacity={0.6}
-                    onPress={() => router.push({ pathname: '/(employee)/leave-details', params: { id: item.id } })}
-                  >
-                    <Text style={styles.viewDetailsText}>
-                      {item.status === 'REJECTED' ? 'View Reason' : 'View Details'}
-                    </Text>
-                  </TouchableOpacity>
+                <View style={styles.infoBox}>
+                  <Text style={styles.cardTitle}>{item.type}</Text>
+                  <Text style={styles.cardDates}>{formatDateRange(item.startDate, item.endDate)} • {item.days} day{item.days > 1 ? 's' : ''}</Text>
                 </View>
               </View>
+
+              {item.status === 'REJECTED' && item.rejectionReason && (
+                <View style={styles.reasonBox}>
+                   <Ionicons name="information-circle-outline" size={16} color="#ef4444" />
+                   <Text style={styles.reasonText}>{item.rejectionReason}</Text>
+                </View>
+              )}
             </Animated.View>
           );
         }}
@@ -253,19 +208,6 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     color: '#0f172a',
   },
-  addBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: '#4f39f6',
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#4f39f6',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 6,
-    elevation: 4,
-  },
   tabsContainer: {
     flexDirection: 'row',
     borderBottomWidth: 1,
@@ -296,7 +238,7 @@ const styles = StyleSheet.create({
     height: 3,
   },
   indicator: {
-    width: 24, // Slightly narrower for 4 tabs
+    width: 24, // Narrow indicator
     height: 3,
     backgroundColor: '#4f39f6',
     borderRadius: 2,
@@ -318,51 +260,43 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: '#fff',
     borderWidth: 1,
-    borderColor: '#f1f5f9', // Lighter border
+    borderColor: '#f1f5f9',
     borderRadius: 16,
     marginBottom: 16,
     padding: 16,
-    // Slightly enhanced shadow as requested
     shadowColor: '#4f39f6',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.04,
     shadowRadius: 10,
     elevation: 2,
   },
-  cardTop: {
+  cardHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    alignItems: 'center',
   },
-  cardLeft: {
+  employeeInfo: {
     flexDirection: 'row',
-    flex: 1,
+    alignItems: 'center',
   },
-  iconBox: {
-    width: 48,
-    height: 48,
-    borderRadius: 12,
-    backgroundColor: '#eef2ff', // Light purple background
+  avatarPlaceholder: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: '#f1f5f9',
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#e0e7ff',
+    marginRight: 12,
   },
-  infoBox: {
-    marginLeft: 14,
-    justifyContent: 'center',
-    flex: 1,
+  avatarInitial: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#64748b',
   },
-  cardTitle: {
+  employeeName: {
     fontSize: 16,
     fontWeight: '700',
     color: '#1e293b',
-    marginBottom: 4,
-  },
-  cardDates: {
-    fontSize: 13,
-    color: '#64748b',
-    fontWeight: '500',
   },
   badge: {
     paddingHorizontal: 10,
@@ -378,27 +312,51 @@ const styles = StyleSheet.create({
   divider: {
     height: 1,
     backgroundColor: '#f1f5f9',
-    marginTop: 16,
-    marginBottom: 12,
+    marginTop: 14,
+    marginBottom: 14,
   },
-  cardBottom: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  durationWrap: {
+  cardBody: {
     flexDirection: 'row',
     alignItems: 'center',
   },
-  durationText: {
-    fontSize: 12,
+  iconBox: {
+    width: 44,
+    height: 44,
+    borderRadius: 12,
+    backgroundColor: '#eef2ff', 
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#e0e7ff',
+  },
+  infoBox: {
+    marginLeft: 14,
+    justifyContent: 'center',
+    flex: 1,
+  },
+  cardTitle: {
+    fontSize: 15,
+    fontWeight: '700',
+    color: '#1e293b',
+    marginBottom: 4,
+  },
+  cardDates: {
+    fontSize: 13,
     color: '#64748b',
     fontWeight: '500',
-    marginLeft: 6,
   },
-  viewDetailsText: {
+  reasonBox: {
+    marginTop: 14,
+    backgroundColor: '#fff5f5',
+    padding: 10,
+    borderRadius: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  reasonText: {
     fontSize: 13,
-    color: '#4f39f6',
-    fontWeight: '700',
+    color: '#991b1b',
+    marginLeft: 6,
+    flex: 1,
   },
 });

@@ -8,12 +8,15 @@ import {
   SafeAreaView,
   Platform,
   Image,
+  Dimensions,
 } from 'react-native';
+
+const { width } = Dimensions.get('window');
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { BottomNav } from '../../components/BottomNav';
 import { GestureHandlerRootView, GestureDetector, Gesture } from 'react-native-gesture-handler';
-import Animated, { useSharedValue, useAnimatedStyle, withSpring, runOnJS, withTiming } from 'react-native-reanimated';
+import Animated, { useSharedValue, useAnimatedStyle, withSpring, runOnJS, withTiming, withDelay, FadeInDown } from 'react-native-reanimated';
 
 // Helper for dates
 const TODAY = new Date();
@@ -113,6 +116,42 @@ const SwipeToCheckIn = () => {
 };
 
 
+const FeatureCard = ({ icon, title, sub, color, bgColor, route, delay }: { icon: any, title: string, sub: string, color: string, bgColor: string, route: string, delay: number }) => {
+  const scale = useSharedValue(1);
+  
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  const handlePressIn = () => {
+    scale.value = withSpring(0.95);
+  };
+
+  const handlePressOut = () => {
+    scale.value = withSpring(1);
+  };
+
+  return (
+    <Animated.View entering={FadeInDown.delay(delay).springify()} style={animatedStyle}>
+      <TouchableOpacity 
+        style={[styles.featureCard, { backgroundColor: bgColor }]}
+        onPress={() => router.push(route as any)}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+        activeOpacity={0.9}
+      >
+        <View style={[styles.featureIconWrap, { backgroundColor: color }]}>
+          <Ionicons name={icon} size={24} color="#fff" />
+          {title === 'Notifications' && <View style={styles.notiBadge} />}
+        </View>
+        <Text style={styles.featureTitle}>{title}</Text>
+        <Text style={styles.featureSub}>{sub}</Text>
+      </TouchableOpacity>
+    </Animated.View>
+  );
+};
+
+
 export default function EmployeeDashboard() {
   const scrollViewRef = useRef<ScrollView>(null);
   const scrollIndex = useRef(0);
@@ -136,7 +175,8 @@ export default function EmployeeDashboard() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaView style={styles.root}>
-        <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
+        <Animated.View entering={FadeInDown.duration(800).springify()} style={{ flex: 1 }}>
+          <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
 
           {/* Header */}
           <View style={styles.header}>
@@ -245,6 +285,64 @@ export default function EmployeeDashboard() {
               <Text style={styles.attLabel}>HOLIDAY</Text>
             </View>
           </View>
+          {/* Quick Features Section */}
+          <Text style={styles.sectionHeader}>Quick Actions</Text>
+          <View style={styles.featuresGrid}>
+            <FeatureCard 
+              icon="calendar-outline" 
+              title="Leave Requests" 
+              sub="Manage" 
+              color="#3b82f6" 
+              bgColor="#eff6ff" 
+              route="/(employee)/leave" 
+              delay={100} 
+            />
+            <FeatureCard 
+              icon="laptop-outline" 
+              title="Upcoming WFH" 
+              sub="Schedule" 
+              color="#8b5cf6" 
+              bgColor="#f5f3ff" 
+              route="/(employee)/upcoming-wfh" 
+              delay={200} 
+            />
+            <FeatureCard 
+              icon="megaphone-outline" 
+              title="Events" 
+              sub="Explore" 
+              color="#f97316" 
+              bgColor="#fff7ed" 
+              route="/(employee)/events" 
+              delay={300} 
+            />
+            <FeatureCard 
+              icon="cash-outline" 
+              title="Payroll" 
+              sub="Salary Slips" 
+              color="#4f46e5" 
+              bgColor="#f5f3ff" 
+              route="/(employee)/payroll" 
+              delay={400} 
+            />
+            <FeatureCard 
+              icon="trending-up-outline" 
+              title="Performance" 
+              sub="Metrics" 
+              color="#6366f1" 
+              bgColor="#f5f3ff" 
+              route="/(employee)/performance" 
+              delay={500} 
+            />
+            <FeatureCard 
+              icon="notifications-outline" 
+              title="Notifications" 
+              sub="Alerts" 
+              color="#ef4444" 
+              bgColor="#fef2f2" 
+              route="/(employee)/notifications" 
+              delay={600} 
+            />
+          </View>
 
           {/* Missed Punches Carousel */}
           <Text style={[styles.sectionHeader, { marginTop: 12, marginBottom: 16 }]}>Missed Punches</Text>
@@ -290,34 +388,6 @@ export default function EmployeeDashboard() {
             </View>
           </ScrollView>
 
-          {/* Approvals & Activities */}
-          <Text style={styles.sectionHeader}>Approvals & Activities</Text>
-          <View style={styles.listCard}>
-            <TouchableOpacity 
-              style={styles.listItem}
-              onPress={() => router.push('/(employee)/leave')}
-            >
-              <View style={[styles.listIconWrap, { backgroundColor: '#e0e7ff' }]}>
-                <Ionicons name="calendar-outline" size={20} color="#6366f1" />
-              </View>
-              <View style={styles.listItemBody}>
-                <Text style={styles.listItemTitle}>Leave Requests</Text>
-                <Text style={styles.listItemSub}>2 Pending Approvals</Text>
-              </View>
-              <Ionicons name="chevron-forward" size={18} color="#9ca3af" />
-            </TouchableOpacity>
-            <View style={styles.listDivider} />
-            <TouchableOpacity style={styles.listItem}>
-              <View style={[styles.listIconWrap, { backgroundColor: '#dcfce7' }]}>
-                <Ionicons name="laptop-outline" size={20} color="#22c55e" />
-              </View>
-              <View style={styles.listItemBody}>
-                <Text style={styles.listItemTitle}>Upcoming WFH</Text>
-                <Text style={styles.listItemSub}>Approved for Mar 15-16</Text>
-              </View>
-              <Ionicons name="chevron-forward" size={18} color="#9ca3af" />
-            </TouchableOpacity>
-          </View>
 
           {/* Employee of the Month */}
           <View style={styles.eomCard}>
@@ -357,15 +427,13 @@ export default function EmployeeDashboard() {
                 <Text style={styles.avatarMoreText}>+3</Text>
               </View>
             </View>
-            <Text style={styles.birthdayMsg}>Wish your colleagues a very happy birthday!</Text>
           </View>
-
           <View style={{ height: 100 }} />
         </ScrollView>
-
-        <BottomNav />
-      </SafeAreaView>
-    </GestureHandlerRootView>
+      </Animated.View>
+      <BottomNav />
+    </SafeAreaView>
+  </GestureHandlerRootView>
   );
 }
 
@@ -796,6 +864,66 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: '#f1f5f9',
     marginVertical: 12,
+  },
+
+  // Features Grid
+  featuresGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    marginBottom: 24,
+    gap: 12,
+  },
+  featureCard: {
+    width: (width - 52) / 2, // 20 padding * 2 + 12 gap = 52
+    borderRadius: 20,
+    padding: 16,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.05,
+    shadowRadius: 10,
+    elevation: 2,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.5)',
+  },
+  featureIconWrap: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 10,
+    position: 'relative',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 4,
+  },
+  featureTitle: {
+    fontSize: 12,
+    fontWeight: '800',
+    color: '#1e293b',
+    marginBottom: 2,
+    textAlign: 'center',
+  },
+  featureSub: {
+    fontSize: 9,
+    fontWeight: '600',
+    color: '#64748b',
+    textAlign: 'center',
+  },
+  notiBadge: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: '#ef4444',
+    borderWidth: 2,
+    borderColor: '#fff',
   },
 
   // Employee of the Month
