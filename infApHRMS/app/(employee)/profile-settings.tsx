@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import { BottomNav } from '../../components/BottomNav';
 import { useUser } from '../../context/UserContext';
 
 export default function ProfileSettingsPage() {
@@ -135,6 +136,7 @@ export default function ProfileSettingsPage() {
 
         <View style={{ height: 40 }} />
       </ScrollView>
+      <BottomNav />
     </SafeAreaView>
   );
 }

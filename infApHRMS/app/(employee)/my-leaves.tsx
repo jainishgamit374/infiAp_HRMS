@@ -21,6 +21,7 @@ import Animated, {
   LinearTransition // For smooth list layout changes
 } from 'react-native-reanimated';
 import { useLeave, LeaveRequest } from '../../context/LeaveContext';
+import { BottomNav } from '../../components/BottomNav';
 
 const { width } = Dimensions.get('window');
 
@@ -223,6 +224,7 @@ export default function MyLeaves() {
           );
         }}
       />
+      <BottomNav />
     </SafeAreaView>
   );
 }

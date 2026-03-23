@@ -6,6 +6,7 @@ import 'react-native-reanimated';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { UserProvider } from '../context/UserContext';
 import { LeaveProvider } from '../context/LeaveContext';
+import { NotificationProvider } from '../context/NotificationContext';
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -13,7 +14,8 @@ export default function RootLayout() {
   return (
     <UserProvider>
       <LeaveProvider>
-        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <NotificationProvider>
+          <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
           <Stack>
             <Stack.Screen name="(auth)" options={{ headerShown: false }} />
             <Stack.Screen name="(employee)" options={{ headerShown: false }} />
@@ -24,6 +26,7 @@ export default function RootLayout() {
           </Stack>
           <StatusBar style="auto" />
         </ThemeProvider>
+        </NotificationProvider>
       </LeaveProvider>
     </UserProvider>
   );

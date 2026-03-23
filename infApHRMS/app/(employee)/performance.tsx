@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import { BottomNav } from '../../components/BottomNav';
 import Animated, { 
   useSharedValue, 
   useAnimatedStyle, 
@@ -172,11 +173,19 @@ export default function PerformanceDashboard() {
            </Animated.View>
 
            <Animated.View entering={FadeInDown.delay(300).springify()} style={styles.statsCard}>
-              <Text style={styles.cardLabel}>Project Rating</Text>
-              <Text style={styles.statValue}>Excellent</Text>
-              <View style={styles.starsRow}>
-                 {[1,2,3,4,5].map(s => <Ionicons key={s} name="star" size={14} color="#f59e0b" />)}
-              </View>
+              <TouchableOpacity 
+                activeOpacity={0.7} 
+                onPress={() => router.push('/(employee)/performance-history')}
+              >
+                <Text style={styles.cardLabel}>Project Rating</Text>
+                <View style={styles.rowBetween}>
+                  <Text style={styles.statValue}>Excellent</Text>
+                  <Ionicons name="chevron-forward" size={16} color="#94a3b8" />
+                </View>
+                <View style={styles.starsRow}>
+                  {[1,2,3,4,5].map(s => <Ionicons key={s} name="star" size={14} color="#f59e0b" />)}
+                </View>
+              </TouchableOpacity>
            </Animated.View>
         </View>
 
@@ -261,6 +270,7 @@ export default function PerformanceDashboard() {
 
         <View style={{ height: 100 }} />
       </ScrollView>
+      <BottomNav />
     </SafeAreaView>
   );
 }
@@ -380,6 +390,11 @@ const styles = StyleSheet.create({
     padding: 20,
     borderWidth: 1,
     borderColor: '#f1f5f9',
+  },
+  rowBetween: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   cardLabel: {
     fontSize: 12,

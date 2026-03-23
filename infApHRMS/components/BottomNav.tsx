@@ -74,7 +74,6 @@ const NavItem = ({ item, isActive }: { item: typeof NAV_ITEMS[0], isActive: bool
       </Animated.Text>
       {isActive && (
         <Animated.View 
-          entering={null} 
           style={styles.activeIndicator} 
         />
       )}

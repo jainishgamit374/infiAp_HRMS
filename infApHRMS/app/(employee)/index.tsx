@@ -15,6 +15,7 @@ const { width } = Dimensions.get('window');
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { BottomNav } from '../../components/BottomNav';
+import { useNotifications } from '../../context/NotificationContext';
 import { GestureHandlerRootView, GestureDetector, Gesture } from 'react-native-gesture-handler';
 import Animated, { useSharedValue, useAnimatedStyle, withSpring, runOnJS, withTiming, withDelay, FadeInDown } from 'react-native-reanimated';
 
@@ -116,7 +117,7 @@ const SwipeToCheckIn = () => {
 };
 
 
-const FeatureCard = ({ icon, title, sub, color, bgColor, route, delay }: { icon: any, title: string, sub: string, color: string, bgColor: string, route: string, delay: number }) => {
+const FeatureCard = ({ icon, title, sub, color, bgColor, route, delay, unreadCount }: { icon: any, title: string, sub: string, color: string, bgColor: string, route: string, delay: number, unreadCount?: number }) => {
   const scale = useSharedValue(1);
   
   const animatedStyle = useAnimatedStyle(() => ({
@@ -142,7 +143,11 @@ const FeatureCard = ({ icon, title, sub, color, bgColor, route, delay }: { icon:
       >
         <View style={[styles.featureIconWrap, { backgroundColor: color }]}>
           <Ionicons name={icon} size={24} color="#fff" />
-          {title === 'Notifications' && <View style={styles.notiBadge} />}
+          {title === 'Notifications' && unreadCount !== undefined && unreadCount > 0 && (
+            <View style={styles.notiBadge}>
+               <Text style={styles.notiBadgeText}>{unreadCount}</Text>
+            </View>
+          )}
         </View>
         <Text style={styles.featureTitle}>{title}</Text>
         <Text style={styles.featureSub}>{sub}</Text>
@@ -153,6 +158,9 @@ const FeatureCard = ({ icon, title, sub, color, bgColor, route, delay }: { icon:
 
 
 export default function EmployeeDashboard() {
+  const { notifications } = useNotifications();
+  const unreadCount = notifications.filter(n => !n.isRead).length;
+
   const scrollViewRef = useRef<ScrollView>(null);
   const scrollIndex = useRef(0);
   const totalItems = 4;
@@ -341,6 +349,7 @@ export default function EmployeeDashboard() {
               bgColor="#fef2f2" 
               route="/(employee)/notifications" 
               delay={600} 
+              unreadCount={unreadCount}
             />
           </View>
 
@@ -916,14 +925,21 @@ const styles = StyleSheet.create({
   },
   notiBadge: {
     position: 'absolute',
-    top: 0,
-    right: 0,
-    width: 10,
-    height: 10,
-    borderRadius: 5,
+    top: -4,
+    right: -4,
     backgroundColor: '#ef4444',
+    width: 18,
+    height: 18,
+    borderRadius: 9,
     borderWidth: 2,
-    borderColor: '#fff',
+    borderColor: '#fef2f2',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  notiBadgeText: {
+    color: '#fff',
+    fontSize: 8,
+    fontWeight: '900',
   },
 
   // Employee of the Month
@@ -1049,43 +1065,5 @@ const styles = StyleSheet.create({
   birthdayMsg: {
     fontSize: 13,
     color: '#64748b',
-  },
-
-  // Bottom Nav
-  bottomNav: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: '#fff',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    paddingTop: 16,
-    paddingBottom: Platform.OS === 'ios' ? 32 : 16,
-    borderTopWidth: 1,
-    borderTopColor: '#f1f5f9',
-  },
-  navItem: {
-    alignItems: 'center',
-    gap: 4,
-    position: 'relative',
-    minWidth: 60,
-  },
-  navLabel: {
-    fontSize: 9,
-    color: '#94a3b8',
-    fontWeight: '700',
-    letterSpacing: 0.5,
-  },
-  navLabelActive: {
-    color: '#2e4ce6',
-  },
-  navActiveIndicator: {
-    width: 4,
-    height: 4,
-    backgroundColor: '#2e4ce6',
-    borderRadius: 2,
-    position: 'absolute',
-    bottom: -8,
   },
 });

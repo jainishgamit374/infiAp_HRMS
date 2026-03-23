@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import { BottomNav } from '../../components/BottomNav';
 import Animated, { FadeInDown, FadeInRight } from 'react-native-reanimated';
 
 const { width } = Dimensions.get('window');
@@ -92,25 +93,7 @@ export default function PayrollTax() {
         <View style={{ height: 100 }} />
       </ScrollView>
 
-      {/* Internal Nav matches main payroll for consistency */}
-      <View style={styles.bottomNav}>
-        <TouchableOpacity style={styles.navItem} onPress={() => router.push('/(employee)')}>
-          <Ionicons name="home-outline" size={24} color="#94a3b8" />
-          <Text style={styles.navText}>HOME</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem} onPress={() => router.push('/(employee)/payroll-history')}>
-          <Ionicons name="time-outline" size={24} color="#94a3b8" />
-          <Text style={styles.navText}>HISTORY</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
-          <Ionicons name="receipt-outline" size={24} color="#4f46e5" />
-          <Text style={[styles.navText, { color: '#4f46e5' }]}>TAX</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem} onPress={() => router.push('/(employee)/profile')}>
-          <Ionicons name="person-outline" size={24} color="#94a3b8" />
-          <Text style={styles.navText}>PROFILE</Text>
-        </TouchableOpacity>
-      </View>
+      <BottomNav />
     </SafeAreaView>
   );
 }

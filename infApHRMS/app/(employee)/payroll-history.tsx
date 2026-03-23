@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import { BottomNav } from '../../components/BottomNav';
 import Animated, { FadeInDown, SlideInUp } from 'react-native-reanimated';
 
 const HISTORY_DATA = [
@@ -113,6 +114,7 @@ export default function PayrollHistory() {
           </Animated.View>
         </TouchableOpacity>
       </Modal>
+      <BottomNav />
     </SafeAreaView>
   );
 }

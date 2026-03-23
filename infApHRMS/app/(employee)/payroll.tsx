@@ -15,6 +15,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import { BottomNav } from '../../components/BottomNav';
 import Animated, { 
   useSharedValue, 
   useAnimatedStyle, 
@@ -287,25 +288,7 @@ export default function PayrollDashboard() {
         </TouchableOpacity>
       </Modal>
 
-      {/* Simplified Bottom Nav to match mockup's appearance within page context */}
-      <View style={styles.bottomNav}>
-        <TouchableOpacity style={styles.navItem} onPress={() => router.push('/(employee)')}>
-          <Ionicons name="home-outline" size={24} color="#4f46e5" />
-          <Text style={[styles.navText, { color: '#4f46e5' }]}>HOME</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem} onPress={() => router.push('/(employee)/payroll-history')}>
-          <Ionicons name="time-outline" size={24} color="#94a3b8" />
-          <Text style={styles.navText}>HISTORY</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem} onPress={() => router.push('/(employee)/payroll-tax')}>
-          <Ionicons name="receipt-outline" size={24} color="#94a3b8" />
-          <Text style={styles.navText}>TAX</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem} onPress={() => router.push('/(employee)/profile')}>
-          <Ionicons name="person-outline" size={24} color="#94a3b8" />
-          <Text style={styles.navText}>PROFILE</Text>
-        </TouchableOpacity>
-      </View>
+      <BottomNav />
 
       {/* Success Animation */}
       {successVisible && (
