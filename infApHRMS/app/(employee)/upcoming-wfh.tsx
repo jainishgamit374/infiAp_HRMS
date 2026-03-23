@@ -341,7 +341,7 @@ export default function UpcomingWFH() {
                       key={idx} 
                       style={[
                         styles.calendarDay,
-                        isActive && styles.calendarDayActive
+                        isActive ? styles.calendarDayActive : undefined
                       ]}
                       disabled={!day}
                       onPress={() => {
@@ -353,8 +353,8 @@ export default function UpcomingWFH() {
                     >
                       <Text style={[
                          styles.calendarDayText,
-                         !day && styles.calendarDayDisabled,
-                         isActive && styles.calendarDayActiveText
+                         !day ? styles.calendarDayDisabled : undefined,
+                         isActive ? styles.calendarDayActiveText : undefined
                       ]}>{day}</Text>
                     </TouchableOpacity>
                   );
