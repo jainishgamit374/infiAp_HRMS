@@ -22,8 +22,22 @@ This document lists all the API endpoints created for the Employee Dashboard fun
 
 ### Record Employee Punch
 - **Endpoint:** `POST /api/v1/emp-punch`
-- **Description:** Records an employee punch.
-    - **Payload:** `PunchType` (`1` = Check-In, `2` = Check-Out, `3` = Reset). Required location parameters (`Latitude`, `Longitude`) and `IsAway` status.
+- **Description:** Records an employee punch with location and work mode details.
+- **Payload Parameters:**
+    - `PunchType` (Number):
+        - `1` = Check-In
+        - `2` = Check-Out
+        - `3` = Reset
+        - `4` = Break Start
+        - `5` = Break End
+    - `WorkMode` (Number):
+        - `1` = Office
+        - `2` = WFH
+        - `3` = Meeting mode
+        - `4` = Offside
+    - `Latitude` (Number): GPS Latitude
+    - `Longitude` (Number): GPS Longitude
+    - `IsAway` (Boolean): Current status of the user being away.
 
 ### Get Punch Status
 - **Endpoint:** `GET /api/v1/punch-status`
@@ -132,3 +146,127 @@ These endpoints split the profile data for better frontend performance and reusa
       "profileImage": "Image URL or Path"
   }
   ```
+
+---
+ 
+## Day-4: Reusable Attendance, Schedule & Payroll APIs
+
+### 7. Detailed Attendance View (Reusable)
+
+#### Get Today's Attendance Stats
+- **Endpoint:** `POST /api/v1/attendance/stats`
+- **Description:** Basic attendance data (Status, Date, Check-In/Out times).
+
+#### Get Work Hours Summary
+- **Endpoint:** `POST /api/v1/attendance/work-summary`
+- **Description:** Worked hours, break duration, and percentage calculations.
+
+#### Get Shift & Schedule
+- **Endpoint:** `POST /api/v1/attendance/shift`
+- **Description:** Shift timings (9:00-6:00) and break schedules.
+
+#### Get Attendance Timeline
+- **Endpoint:** `POST /api/v1/attendance/timeline`
+- **Description:** Chronological timeline of events (Punch IN/OUT, Break Start/End).
+
+#### Get Attendance History / Logs
+- **Endpoint:** `POST /api/v1/attendance/logs`
+- **Description:** Retrieves attendance history for a specific date range.
+- **Payload:**
+    ```json
+    {
+        "fromDate": "2026-03-01",
+        "toDate": "2026-03-31"
+    }
+    ```
+- **Response includes:**
+    - `summary`: Total working hours, present day count, late day count.
+    - `logs`: Daily list of {Date, check-in, check-out, status, isLate}.
+
+---
+
+### 8. Working Schedule & Holidays
+
+#### Get Current Schedule
+- **Endpoint:** `POST /api/v1/schedule/current`
+- **Description:** Details of current duty (Day/Night), shift category, and working hours.
+
+#### Get Weekly Schedule
+- **Endpoint:** `POST /api/v1/schedule/weekly`
+- **Description:** 7-day view of the schedule including work days, holidays, and offs.
+
+#### Get Upcoming Holidays
+- **Endpoint:** `POST /api/v1/schedule/holidays`
+- **Description:** List of the next few company holidays.
+
+#### Request Shift Change
+- **Endpoint:** `POST /api/v1/schedule/request-shift-change`
+- **Description:** Allows an employee to request a change in their assigned shift.
+
+#### Full Holiday Calendar
+- **Endpoint:** `POST /api/v1/schedule/holiday-calendar`
+- **Description:** Complete year-wise holiday list.
+
+---
+
+### 9. Reusable Leave Management (POST for GET)
+
+#### Get Leave Balances
+- **Endpoint:** `POST /api/v1/leave/balances`
+- **Description:** Current balances for PL, CL, and SL.
+
+#### Get Upcoming Leaves
+- **Endpoint:** `POST /api/v1/leave/upcoming`
+- **Description:** List of future leave requests with details (Date, Type, Days, Reason, Status).
+
+#### Get Leave History
+- **Endpoint:** `POST /api/v1/leave/history`
+- **Description:** Historical record of all past leaves with from-to dates, type, and final status.
+
+#### Apply for Leave (Granular)
+- **Endpoint:** `POST /api/v1/leave/apply`
+- **Description:** Submits a new leave request.
+- **Payload:**
+    ```json
+    {
+        "leaveType": "SL",
+        "startDate": "2026-04-10",
+        "endDate": "2026-04-12",
+        "reason": "Family function"
+    }
+    ```
+- **Leave Types:** `SL` (Sick Leave), `CL` (Casual Leave), `PL` (Privilege Leave).
+
+---
+
+### 10. Leave Request Management (Approver View)
+
+#### Get All Employee Leave Requests
+- **Endpoint:** `POST /api/v1/leave/requests/all`
+- **Description:** Returns every leave application across the board (Used by HR/Manager).
+
+#### Get Pending Leave Requests
+- **Endpoint:** `POST /api/v1/leave/requests/pending`
+- **Description:** Returns only the leave applications with status "Pending" (`ApprovalStatusID: 3`).
+
+#### Get Leave Approval History
+- **Endpoint:** `POST /api/v1/leave/requests/history`
+- **Description:** Returns requests that have already been finalized (Approved or Rejected).
+
+---
+
+### 11. Payroll Management (POST for GET)
+
+#### Get Current Month Salary
+- **Endpoint:** `POST /api/v1/payroll/current`
+- **Description:** Returns detailed earnings/deductions breakdown and action links (View, Download, Share).
+
+#### Get Salary History
+- **Endpoint:** `POST /api/v1/payroll/history`
+- **Description:** Historical record of monthly salaries, statuses, and payment dates.
+
+#### Get Payslip Detailed View
+- **Endpoint:** `POST /api/v1/payroll/details`
+- **Description:** Full breakdown of earnings (Basic + Bonus = Gross) and deductions (Tax + PF) for a specific month.
+- **Includes:** Employee IDs, Department, Payroll Period, and Net Take Home Pay calculation.
+

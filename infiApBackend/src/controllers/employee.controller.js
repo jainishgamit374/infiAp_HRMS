@@ -65,7 +65,7 @@ exports.getDashboardHome = async (req, res) => {
 // 2. Employee Punch (IN / OUT)
 exports.empPunch = async (req, res) => {
     try {
-        const { PunchType, Latitude, Longitude, IsAway } = req.body;
+        const { PunchType, Latitude, Longitude, IsAway, WorkMode } = req.body;
         
         const userId = req.user ? req.user._id : "656b23d91f4a9b2b2c3d4e5f"; 
 
@@ -74,7 +74,8 @@ exports.empPunch = async (req, res) => {
             PunchType,
             Latitude,
             Longitude,
-            IsAway
+            IsAway,
+            WorkMode
         });
 
         const formatDoubleDigit = (n) => n < 10 ? `0${n}` : n;
@@ -718,5 +719,417 @@ exports.editProfile = async (req, res) => {
         res.status(500).json({ status: "Error", message: "Failed to update profile", error: error.message });
     }
 };
+
+// 25. Attendance Stats (Status & Times)
+exports.getAttendanceStats = async (req, res) => {
+    try {
+        const stats = {
+            date: "March 25, 2026",
+            status: "PRESENT",
+            checkIn: {
+                time: "09:05 AM",
+                status: "On Time",
+                method: "Web Dashboard"
+            },
+            checkOut: {
+                time: "06:02 PM",
+                status: "Completed",
+                method: "Mobile App"
+            }
+        };
+        res.status(200).json({ status: "Success", statusCode: 200, data: stats });
+    } catch (error) {
+        res.status(500).json({ status: "Error", message: "Failed to get attendance stats", error: error.message });
+}
+};
+
+// 26. Work Hours Summary
+exports.getAttendanceWorkSummary = async (req, res) => {
+    try {
+        const summary = {
+            worked: "7h 30m",
+            workedPercentage: 85,
+            break: "30m",
+            remaining: "30m"
+        };
+        res.status(200).json({ status: "Success", statusCode: 200, data: summary });
+    } catch (error) {
+        res.status(500).json({ status: "Error", message: "Failed to get work summary", error: error.message });
+    }
+};
+
+// 27. Shift & Schedule info
+exports.getAttendanceShift = async (req, res) => {
+    try {
+        const shift = {
+            standardShift: "09:00 AM - 06:00 PM",
+            shiftDays: "Mon-Fri",
+            breakTime: "01:00 PM - 02:00 PM",
+            breakType: "Fixed 60 mins"
+        };
+        res.status(200).json({ status: "Success", statusCode: 200, data: shift });
+    } catch (error) {
+        res.status(500).json({ status: "Error", message: "Failed to get shift info", error: error.message });
+    }
+};
+
+// 28. Today's Timeline
+exports.getAttendanceTimeline = async (req, res) => {
+    try {
+        const timeline = [
+            {
+                activity: "Checked In",
+                time: "09:05 AM",
+                source: "Web Dashboard",
+                type: "punch_in"
+            },
+            {
+                activity: "Break Started",
+                time: "01:05 PM",
+                source: "Lunch Break",
+                type: "break_start"
+            },
+            {
+                activity: "Break Ended",
+                time: "01:35 PM",
+                source: "Resumed Work",
+                type: "break_end"
+            },
+            {
+                activity: "Checked Out",
+                time: "06:02 PM",
+                source: "Mobile App",
+                type: "punch_out"
+            }
+        ];
+        res.status(200).json({ status: "Success", statusCode: 200, data: timeline });
+    } catch (error) {
+        res.status(500).json({ status: "Error", message: "Failed to get timeline", error: error.message });
+    }
+};
+
+// 29. Get Attendance History / Log with date filter
+exports.getAttendanceHistory = async (req, res) => {
+    try {
+        const { fromDate, toDate } = req.body;
+        const userId = req.user ? req.user._id : "656b23d91f4a9b2b2c3d4e5f";
+
+        // Mocking the data based on filter
+        // In a real app, you would query the Punch model using date ranges
+        const attendanceLog = [
+            { date: "20-Mar-2026", checkIn: "09:05 AM", checkOut: "06:02 PM", status: "Present", isLate: false },
+            { date: "19-Mar-2026", checkIn: "09:15 AM", checkOut: "06:10 PM", status: "Present", isLate: true },
+            { date: "18-Mar-2026", checkIn: "08:55 AM", checkOut: "05:55 PM", status: "Present", isLate: false },
+            { date: "17-Mar-2026", checkIn: "N/A", checkOut: "N/A", status: "Absent", isLate: false }
+        ];
+
+        const summary = {
+            totalHoursWorking: "165h 30m",
+            presentDayCount: 22,
+            absentDayCount: 2,
+            lateDayCount: 5
+        };
+
+        res.status(200).json({
+            status: "Success",
+            statusCode: 200,
+            data: {
+                summary,
+                logs: attendanceLog
+            }
+        });
+    } catch (error) {
+        res.status(500).json({ status: "Error", message: "Failed to fetch attendance history", error: error.message });
+    }
+};
+
+// 30. Get Current Shift & Working Schedule
+exports.getCurrentSchedule = async (req, res) => {
+    try {
+        const schedule = {
+            currentShift: "Day Duty",
+            shiftCategory: "Morning Shift",
+            workingTime: "09:00 AM - 06:00 PM",
+            shiftId: "DS-01",
+            location: "Office - Mumbai"
+        };
+        res.status(200).json({ status: "Success", statusCode: 200, data: schedule });
+    } catch (error) {
+        res.status(500).json({ message: "Failed to load current schedule", error: error.message });
+    }
+};
+
+// 31. Get Weekly Schedule View
+exports.getWeeklySchedule = async (req, res) => {
+    try {
+        const weeklyData = [
+            { day: "Mon", date: "23-Mar", status: "Work", type: "Full Day" },
+            { day: "Tue", date: "24-Mar", status: "Work", type: "Full Day" },
+            { day: "Wed", date: "25-Mar", status: "Work", type: "Full Day" },
+            { day: "Thu", date: "26-Mar", status: "Off", type: "Weekly Off" },
+            { day: "Fri", date: "27-Mar", status: "Work", type: "Full Day" },
+            { day: "Sat", date: "28-Mar", status: "Holiday", type: "Ganesh Chaturthi" },
+            { day: "Sun", date: "29-Mar", status: "Off", type: "Weekly Off" }
+        ];
+        res.status(200).json({ status: "Success", statusCode: 200, data: weeklyData });
+    } catch (error) {
+        res.status(500).json({ message: "Failed to load weekly schedule", error: error.message });
+    }
+};
+
+// 32. Get Upcoming Holidays
+exports.getUpcomingHolidays = async (req, res) => {
+    try {
+        const holidays = [
+            { id: 1, name: "Ganesh Chaturthi", date: "28-Mar-2026", day: "Saturday" },
+            { id: 2, name: "Good Friday", date: "03-Apr-2026", day: "Friday" },
+            { id: 3, name: "Eid-ul-Fitr", date: "10-Apr-2026", day: "Friday" }
+        ];
+        res.status(200).json({ status: "Success", statusCode: 200, data: holidays });
+    } catch (error) {
+        res.status(500).json({ message: "Failed to load holidays", error: error.message });
+    }
+};
+
+// 33. Request Shift Change
+exports.requestShiftChange = async (req, res) => {
+    try {
+        const { current_shift_id, requested_shift_id, reason, start_date } = req.body;
+        // In a real implementation, we'd save this to a ShiftRequest model
+        res.status(200).json({
+            status: "Success",
+            message: "Shift change request submitted successfully."
+        });
+    } catch (error) {
+        res.status(500).json({ message: "Failed to submit request", error: error.message });
+    }
+};
+
+// 34. Get Full Holiday Calendar
+exports.getHolidayCalendar = async (req, res) => {
+    try {
+        // Mock full year calendar
+        const calendar = [
+            { month: "January", holidays: [{ name: "New Year's Day", date: "01-Jan" }, { name: "Republic Day", date: "26-Jan" }] },
+            { month: "February", holidays: [] },
+            { month: "March", holidays: [{ name: "Holi", date: "06-Mar" }, { name: "Ganesh Chaturthi", date: "28-Mar" }] }
+        ];
+        res.status(200).json({ status: "Success", statusCode: 200, data: calendar });
+    } catch (error) {
+        res.status(500).json({ message: "Failed to load full calendar", error: error.message });
+    }
+};
+
+// 35. Get Leave Balances (PL, CL, SL) - POST for GET
+exports.getLeaveBalances = async (req, res) => {
+    try {
+        const userId = req.user ? req.user._id : "656b23d91f4a9b2b2c3d4e5f";
+        let balance = await LeaveBalance.findOne({ userId });
+        if (!balance) balance = { CL: 15, PL: 15, SL: 13 };
+
+        const data = {
+            privilegeLeave: balance.PL,
+            casualLeave: balance.CL,
+            sickLeave: balance.SL,
+            total: balance.PL + balance.CL + balance.SL
+        };
+        res.status(200).json({ status: "Success", statusCode: 200, data });
+    } catch (error) {
+        res.status(500).json({ message: "Failed to fetch balances", error: error.message });
+    }
+};
+
+// 36. Get Upcoming Leaves
+exports.getUpcomingLeaves = async (req, res) => {
+    try {
+        const userId = req.user ? req.user._id : "656b23d91f4a9b2b2c3d4e5f";
+        const today = new Date();
+        const upcoming = await LeaveApplication.find({
+            EmployeeID: userId,
+            StartDate: { $gte: today }
+        }).sort({ StartDate: 1 });
+
+        const data = upcoming.map(l => ({
+            id: l._id,
+            date: l.StartDate,
+            endDate: l.EndDate,
+            type: l.LeaveType,
+            days: 1, // simplified for mock/initial
+            reason: l.Reason,
+            status: l.ApprovalStatus // Approved, Rejected, Pending (Awaiting)
+        }));
+
+        res.status(200).json({ status: "Success", statusCode: 200, data });
+    } catch (error) {
+        res.status(500).json({ message: "Failed to fetch upcoming leaves", error: error.message });
+    }
+};
+
+// 37. Get Leave History
+exports.getLeaveHistory = async (req, res) => {
+    try {
+        const userId = req.user ? req.user._id : "656b23d91f4a9b2b2c3d4e5f";
+        const today = new Date();
+        const history = await LeaveApplication.find({
+            EmployeeID: userId,
+            EndDate: { $lt: today }
+        }).sort({ StartDate: -1 });
+
+        const data = history.map(l => ({
+            id: l._id,
+            fromDate: l.StartDate,
+            toDate: l.EndDate,
+            type: l.LeaveType,
+            status: l.ApprovalStatus,
+            reason: l.Reason
+        }));
+
+        res.status(200).json({ status: "Success", statusCode: 200, data });
+    } catch (error) {
+        res.status(500).json({ message: "Failed to fetch leave history", error: error.message });
+    }
+};
+
+// 38. Apply Leave (Granular)
+exports.applyLeaveRequest = async (req, res) => {
+    try {
+        const { leaveType, startDate, endDate, reason } = req.body;
+        const employeeID = req.user ? req.user._id : "656b23d91f4a9b2b2c3d4e5f";
+
+        // Simple validation or defaults
+        const leaveApp = new LeaveApplication({
+            EmployeeID: employeeID,
+            LeaveType: leaveType, // SL, CL, PL
+            Reason: reason,
+            StartDate: startDate,
+            EndDate: endDate,
+            ApprovalStatusID: 3, // Awaiting
+            ApprovalStatus: "Awaiting Approve"
+        });
+
+        await leaveApp.save();
+
+        res.status(200).json({
+            status: "Success",
+            message: "Leave application for " + leaveType + " submitted successfully."
+        });
+    } catch (error) {
+        res.status(500).json({ status: "Error", message: "Failed to apply for " + req.body.leaveType, error: error.message });
+    }
+};
+
+// 39. Get ALL Leave Requests (Approver View)
+exports.getAllLeaveRequests = async (req, res) => {
+    try {
+        const requests = await LeaveApplication.find().populate("EmployeeID", "name profile_image").sort({ createdAt: -1 });
+        res.status(200).json({ status: "Success", total: requests.length, data: requests });
+    } catch (error) {
+        res.status(500).json({ message: "Failed to fetch all requests", error: error.message });
+    }
+};
+
+// 40. Get PENDING Leave Requests (Approver View)
+exports.getPendingLeaveRequests = async (req, res) => {
+    try {
+        const requests = await LeaveApplication.find({ ApprovalStatusID: 3 }).populate("EmployeeID", "name profile_image").sort({ createdAt: -1 });
+        res.status(200).json({ status: "Success", total: requests.length, data: requests });
+    } catch (error) {
+        res.status(500).json({ message: "Failed to fetch pending requests", error: error.message });
+    }
+};
+
+// 41. Get HISTORY of Leave Requests (Approver View)
+exports.getHistoryLeaveRequests = async (req, res) => {
+    try {
+        const requests = await LeaveApplication.find({ ApprovalStatusID: { $in: [1, 2] } }).populate("EmployeeID", "name profile_image").sort({ createdAt: -1 });
+        res.status(200).json({ status: "Success", total: requests.length, data: requests });
+    } catch (error) {
+        res.status(500).json({ message: "Failed to fetch historical requests", error: error.message });
+    }
+};
+
+// 42. Get Current Month Salary (POST for GET)
+exports.getPayrollCurrent = async (req, res) => {
+    try {
+        const salaryData = {
+            month: "March 2026",
+            grossSalary: 65000,
+            netSalary: 58500,
+            earnings: [
+                { category: "Basic Pay", amount: 45000 },
+                { category: "HRA", amount: 12000 },
+                { category: "Special Allowance", amount: 8000 }
+            ],
+            deductions: [
+                { category: "PF", amount: 4500 },
+                { category: "Professional Tax", amount: 2000 }
+            ],
+            actions: {
+                viewUrl: "/api/v1/payroll/view/2026-03",
+                downloadUrl: "/api/v1/payroll/download/2026-03",
+                shareUrl: "/api/v1/payroll/share/2026-03"
+            }
+        };
+        res.status(200).json({ status: "Success", statusCode: 200, data: salaryData });
+    } catch (error) {
+        res.status(500).json({ message: "Failed to fetch payroll data", error: error.message });
+    }
+};
+
+// 43. Get Salary History (POST for GET)
+exports.getPayrollHistory = async (req, res) => {
+    try {
+        const history = [
+            { id: 1, month: "February 2026", netSalary: 58500, status: "Paid", paidAt: "01-Feb-2026" },
+            { id: 2, month: "January 2026", netSalary: 58500, status: "Paid", paidAt: "01-Jan-2026" },
+            { id: 3, month: "December 2025", netSalary: 62000, status: "Paid", paidAt: "01-Dec-2025" } // higher due to bonus
+        ];
+        res.status(200).json({ status: "Success", statusCode: 200, data: history });
+    } catch (error) {
+        res.status(500).json({ message: "Failed to fetch payroll history", error: error.message });
+    }
+};
+
+// 44. Get Specific Payslip Details (POST for GET)
+exports.getPayrollDetails = async (req, res) => {
+    try {
+        const { id } = req.body; // e.g. 2026-03
+        
+        // Mocking detailed breakdown for a specific period
+        const details = {
+            employee: {
+                name: "Sneha Desai",
+                department: "Engineering",
+                employeeID: "EMP1024"
+            },
+            payrollPeriod: "March 1 - 31, 2026",
+            earnings: {
+                basicSalary: 55000,
+                performanceBonus: 10000,
+                grossPay: 65000
+            },
+            deductions: {
+                incomeTax: 4000,
+                pf: 2500,
+                totalDeduction: 6500
+            },
+            final: {
+                netTakeHomePay: 58500
+            }
+        };
+
+        res.status(200).json({ status: "Success", statusCode: 200, data: details });
+    } catch (error) {
+        res.status(500).json({ message: "Failed to fetch payslip details", error: error.message });
+    }
+};
+
+
+
+
+
+
+
+
 
 
