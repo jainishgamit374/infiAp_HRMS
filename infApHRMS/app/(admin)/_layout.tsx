@@ -13,6 +13,22 @@ export default function AdminLayout() {
       <Stack.Screen name="security-docs" />
       <Stack.Screen name="notifications" />
       <Stack.Screen name="create-notification" />
+      <Stack.Screen name="salary-structure" />
+      <Stack.Screen name="payslip-generation" />
+      <Stack.Screen name="department-details/[id]" />
+      <Stack.Screen name="manage-teams" />
+      <Stack.Screen name="job-posting" />
+      <Stack.Screen name="candidate-tracking" />
+      <Stack.Screen name="interview-management" />
+      <Stack.Screen name="stats" />
+      <Stack.Screen name="profile" />
+      <Stack.Screen name="add-employee" />
+      <Stack.Screen name="leave-approvals" />
+      <Stack.Screen name="policies" />
+      <Stack.Screen name="security-docs" />
+      <Stack.Screen name="payslip-generation" />
+      <Stack.Screen name="salary-structure" />
+      <Stack.Screen name="create-notification" />
     </Stack>
   );
 }

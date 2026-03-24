@@ -62,20 +62,17 @@ export default function AdminNotifications() {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Header */}
       <View style={styles.header}>
-        <View>
-          <Text style={styles.headerTitle}>Admin Notifications</Text>
-          <Text style={styles.headerSub}>InfiAP Enterprise Portal</Text>
+        <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
+          <Ionicons name="arrow-back" size={24} color="#1e293b" />
+        </TouchableOpacity>
+        <View style={styles.headerCenter}>
+          <Text style={styles.headerTitle}>Notifications</Text>
+          <Text style={styles.headerSub}>Admin Activity Hub</Text>
         </View>
-        <View style={styles.headerIcons}>
-          <TouchableOpacity style={styles.iconBtn}>
-            <Ionicons name="search-outline" size={24} color="#64748b" />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.iconBtn}>
-            <Ionicons name="options-outline" size={24} color="#64748b" />
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity style={styles.iconBtn} onPress={() => alert('Filter options')}>
+          <Ionicons name="options-outline" size={24} color="#64748b" />
+        </TouchableOpacity>
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
@@ -201,10 +198,23 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 16,
     backgroundColor: '#fff',
-    marginTop: Platform.OS === 'android' ? 30 : 0,
+    paddingTop: Platform.OS === 'ios' ? 50 : 20,
+    borderBottomWidth: 1, borderBottomColor: '#f1f5f9',
+  },
+  backBtn: {
+    width: 40,
+    height: 40,
+    borderRadius: 12,
+    backgroundColor: '#f1f5f9',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  headerCenter: {
+    flex: 1,
+    paddingHorizontal: 16,
   },
   headerTitle: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: '800',
     color: '#1e293b',
   },

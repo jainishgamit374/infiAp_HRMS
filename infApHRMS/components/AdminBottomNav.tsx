@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
+import React, { useEffect } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Platform, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router, usePathname } from 'expo-router';
 
@@ -11,31 +11,46 @@ const NAV_ITEMS = [
   { id: 'admin', label: 'ADMIN', icon: 'shield-outline', activeIcon: 'shield', route: '/(admin)/settings' },
 ];
 
+const NavItem = ({ item, isActive }: { item: any, isActive: boolean }) => {
+  const scaleAnim = React.useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    Animated.spring(scaleAnim, {
+      toValue: isActive ? 1.15 : 1,
+      useNativeDriver: true,
+      friction: 4,
+    }).start();
+  }, [isActive]);
+
+  return (
+    <TouchableOpacity
+      style={styles.navItem}
+      onPress={() => router.push(item.route as any)}
+      activeOpacity={0.7}
+    >
+      <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
+        <Ionicons
+          name={(isActive ? item.activeIcon : item.icon) as any}
+          size={24}
+          color={isActive ? '#4f46e5' : '#94a3b8'}
+        />
+      </Animated.View>
+      <Text style={[styles.navText, isActive && styles.activeNavText]}>
+        {item.label}
+      </Text>
+      {isActive && <View style={styles.activeIndicator} />}
+    </TouchableOpacity>
+  );
+};
+
 export const AdminBottomNav = () => {
   const pathname = usePathname();
 
   return (
     <View style={styles.container}>
-      {NAV_ITEMS.map((item) => {
-        const isActive = pathname === item.route;
-        return (
-          <TouchableOpacity
-            key={item.id}
-            style={styles.navItem}
-            onPress={() => router.push(item.route as any)}
-          >
-            <Ionicons
-              name={(isActive ? item.activeIcon : item.icon) as any}
-              size={24}
-              color={isActive ? '#4f46e5' : '#94a3b8'}
-            />
-            <Text style={[styles.navText, isActive && styles.activeNavText]}>
-              {item.label}
-            </Text>
-            {isActive && <View style={styles.activeIndicator} />}
-          </TouchableOpacity>
-        );
-      })}
+      {NAV_ITEMS.map((item) => (
+        <NavItem key={item.id} item={item} isActive={pathname === item.route} />
+      ))}
     </View>
   );
 };
