@@ -1,17 +1,29 @@
 import { Stack } from 'expo-router';
+import { HRProvider } from '@/context/HRContext';
 
 export default function HRLayout() {
   return (
-    <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="index" />
-      <Stack.Screen name="attendance" />
-      <Stack.Screen name="leave" />
-      <Stack.Screen name="employee-management" />
-      <Stack.Screen name="recruitment" />
-      <Stack.Screen name="performance" />
-      <Stack.Screen name="resignation" />
-      <Stack.Screen name="analytics" />
-      <Stack.Screen name="finance" />
-    </Stack>
+    <HRProvider>
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          animation: 'fade_from_bottom',
+        }}
+      >
+        <Stack.Screen name="index" />
+        <Stack.Screen name="attendance" />
+        <Stack.Screen name="leave" />
+        <Stack.Screen name="employee-management" />
+        <Stack.Screen name="add-employee" />
+        <Stack.Screen name="employee-profile/[id]" />
+        <Stack.Screen name="edit-employee/[id]" />
+        <Stack.Screen name="bulk-import" />
+        <Stack.Screen name="recruitment" />
+        <Stack.Screen name="performance" />
+        <Stack.Screen name="resignation" />
+        <Stack.Screen name="analytics" />
+        <Stack.Screen name="finance" />
+      </Stack>
+    </HRProvider>
   );
 }

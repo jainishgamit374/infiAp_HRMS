@@ -1,25 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import PlaceholderScreen from './placeholder_content';
 
-const ResignationManagement = () => {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.text}>ResignationManagement</Text>
-    </View>
-  );
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-  },
-  text: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-});
-
-export default ResignationManagement;
+export default function Resignation() {
+  return <PlaceholderScreen title="Resignation" icon="exit-outline" />;
+}

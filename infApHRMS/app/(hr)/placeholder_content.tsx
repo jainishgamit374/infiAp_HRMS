@@ -5,7 +5,7 @@ import { router } from 'expo-router';
 import { HRBottomNav } from '@/components/HRBottomNav';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 
-const RecruitmentScreen = () => {
+const PlaceholderScreen = ({ title, icon }: { title: string, icon: string }) => {
   return (
     <View style={{ flex: 1 }}>
       <ScrollView style={styles.container} contentContainerStyle={styles.content}>
@@ -13,16 +13,13 @@ const RecruitmentScreen = () => {
           <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
             <Ionicons name="arrow-back" size={24} color="#1f2937" />
           </TouchableOpacity>
-          <Text style={styles.title}>Recruitment</Text>
+          <Text style={styles.title}>{title}</Text>
         </Animated.View>
 
         <Animated.View entering={FadeInDown.delay(200).duration(600)} style={styles.placeholderCard}>
-          <Ionicons name="rocket-outline" size={64} color="#5a55d2" />
-          <Text style={styles.placeholderTitle}>Recruitment Module</Text>
-          <Text style={styles.placeholderBox}>Manage job openings, candidate pipelines, and interview schedules.</Text>
-          <TouchableOpacity style={styles.actionButton}>
-            <Text style={styles.actionButtonText}>Post a Job Opening</Text>
-          </TouchableOpacity>
+          <Ionicons name={icon as any} size={64} color="#5a55d2" />
+          <Text style={styles.placeholderTitle}>{title} Module</Text>
+          <Text style={styles.placeholderBox}>Under development. This module will allow you to manage {title.toLowerCase()} efficiently.</Text>
         </Animated.View>
       </ScrollView>
       <HRBottomNav />
@@ -39,8 +36,6 @@ const styles = StyleSheet.create({
   placeholderCard: { backgroundColor: '#fff', borderRadius: 24, padding: 40, alignItems: 'center', borderWidth: 1, borderColor: '#e5e7eb' },
   placeholderTitle: { fontSize: 20, fontWeight: '700', color: '#111827', marginTop: 20 },
   placeholderBox: { fontSize: 14, color: '#6b7280', textAlign: 'center', marginTop: 12, lineHeight: 20 },
-  actionButton: { backgroundColor: '#5a55d2', paddingHorizontal: 24, paddingVertical: 12, borderRadius: 12, marginTop: 24 },
-  actionButtonText: { color: '#fff', fontWeight: '700', fontSize: 14 },
 });
 
-export default RecruitmentScreen;
+export default PlaceholderScreen;
