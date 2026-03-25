@@ -104,13 +104,14 @@ export const BottomNav = () => {
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    bottom: 0,
+    bottom: 32,
     left: 0,
     right: 0,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingBottom: Platform.OS === 'ios' ? 24 : 16,
+    paddingBottom: Platform.OS === 'ios' ? 24 : 0,
     zIndex: 1000,
+    // backgroundColor: "red",
   },
   floatingNav: {
     flexDirection: 'row',

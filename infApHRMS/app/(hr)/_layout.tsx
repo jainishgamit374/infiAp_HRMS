@@ -7,7 +7,7 @@ export default function HRLayout() {
       <Stack
         screenOptions={{
           headerShown: false,
-          animation: 'fade_from_bottom',
+          animation: 'slide_from_right',
         }}
       >
         <Stack.Screen name="index" />

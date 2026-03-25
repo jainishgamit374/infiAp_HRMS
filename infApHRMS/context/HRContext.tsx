@@ -9,6 +9,9 @@ export interface Employee {
   avatar: string;
   manager: string;
   salary: string;
+  email: string;
+  phone: string;
+  joiningDate: string;
 }
 
 export interface LeaveRequest {
@@ -60,9 +63,9 @@ interface HRContextType {
 const HRContext = createContext<HRContextType | undefined>(undefined);
 
 const INITIAL_EMPLOYEES: Employee[] = [
-  { id: '1', name: 'Sarah Jenkins', department: 'Product', role: 'Senior UX Designer', status: 'Active', avatar: 'https://i.pravatar.cc/150?u=sarahj', manager: 'Alex Thompson', salary: '95,000' },
-  { id: '2', name: 'Michael Chen', department: 'Engineering', role: 'Full Stack Developer', status: 'Active', avatar: 'https://i.pravatar.cc/150?u=michael', manager: 'Sarah Jenkins', salary: '88,000' },
-  { id: '3', name: 'Emily Davis', department: 'Design', role: 'UI Lead', status: 'On Leave', avatar: 'https://i.pravatar.cc/150?u=emily', manager: 'Alex Thompson', salary: '92,000' },
+  { id: '1', name: 'Sarah Jenkins', department: 'Product', role: 'Senior UX Designer', status: 'Active', avatar: 'https://i.pravatar.cc/150?u=sarahj', manager: 'Alex Thompson', salary: '95,000', email: 'sarah.jenkins@company.com', phone: '+1 555-0123', joiningDate: '12 Jan 2022' },
+  { id: '2', name: 'Michael Chen', department: 'Engineering', role: 'Full Stack Developer', status: 'Active', avatar: 'https://i.pravatar.cc/150?u=michael', manager: 'Sarah Jenkins', salary: '88,000', email: 'michael.chen@company.com', phone: '+1 555-0124', joiningDate: '23 Mar 2023' },
+  { id: '3', name: 'Emily Davis', department: 'Design', role: 'UI Lead', status: 'On Leave', avatar: 'https://i.pravatar.cc/150?u=emily', manager: 'Alex Thompson', salary: '92,000', email: 'emily.davis@company.com', phone: '+1 555-0125', joiningDate: '05 Nov 2021' },
 ];
 
 const INITIAL_LEAVES: LeaveRequest[] = [

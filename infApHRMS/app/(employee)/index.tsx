@@ -468,11 +468,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   headerLogo: {
-    width: 50,
+    width: 58,
     height: 58,
     marginLeft: 2,
     borderRadius: 10,
-    backgroundColor: "red",
   },
   profileCircle: {
     width: 36,

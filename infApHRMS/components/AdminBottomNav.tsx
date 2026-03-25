@@ -58,7 +58,7 @@ export const AdminBottomNav = () => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    backgroundColor: '#fff',
+    backgroundColor: '#8c2424ff',
     paddingTop: 12,
     paddingBottom: Platform.OS === 'ios' ? 30 : 12,
     borderTopWidth: 1,

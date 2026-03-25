@@ -143,7 +143,7 @@ const EmployeeProfile = () => {
             <Ionicons name="chevron-forward" size={20} color="#9ca3af" />
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.logoutButton}>
+          <TouchableOpacity style={styles.logoutButton} onPress={() => router.replace('/')}>
             <Ionicons name="log-out-outline" size={20} color="#ef4444" />
             <Text style={styles.logoutText}>Logout Session</Text>
           </TouchableOpacity>
