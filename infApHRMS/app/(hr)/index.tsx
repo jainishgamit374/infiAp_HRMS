@@ -151,17 +151,14 @@ const HRDashboard = () => {
     <View style={{ flex: 1, backgroundColor: '#fcfcfd' }}>
       {/* Top Bar */}
       <View style={styles.topBar}>
-        <TouchableOpacity style={styles.menuBtn}>
-          <Ionicons name="menu-outline" size={28} color="#1f2937" />
-        </TouchableOpacity>
-        <Text style={styles.platformName}>InfiAP</Text>
+        <Image
+          source={require('../../assets/images/logo.png')}
+          style={styles.headerLogo}
+          resizeMode="contain"
+        />
         <View style={styles.topRight}>
-          <TouchableOpacity style={styles.notifBtn}>
-            <Ionicons name="notifications-outline" size={24} color="#1f2937" />
-            <View style={styles.notifBadge} />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.topAvatar}>
-            <Image source={{ uri: 'https://i.pravatar.cc/150?u=hrmanager' }} style={styles.avatarImg} />
+          <TouchableOpacity style={styles.menuBtn}>
+            <Ionicons name="menu-outline" size={28} color="#1f2937" />
           </TouchableOpacity>
         </View>
       </View>
@@ -310,6 +307,11 @@ const styles = StyleSheet.create({
   },
   menuBtn: {
     padding: 4,
+  },
+  headerLogo: {
+    width: 58,
+    height: 58,
+    borderRadius: 10,
   },
   platformName: {
     fontSize: 20,
