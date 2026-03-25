@@ -2,10 +2,10 @@ import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Platform, Dimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router, usePathname } from 'expo-router';
-import Animated, { 
-  useAnimatedStyle, 
-  withSpring, 
-  useSharedValue, 
+import Animated, {
+  useAnimatedStyle,
+  withSpring,
+  useSharedValue,
   withTiming,
   interpolateColor
 } from 'react-native-reanimated';
@@ -13,29 +13,29 @@ import Animated, {
 const { width } = Dimensions.get('window');
 
 const NAV_ITEMS = [
-  { 
-    icon: 'home-outline', 
-    activeIcon: 'home', 
-    label: 'Home', 
-    route: '/(employee)/' 
+  {
+    icon: 'home-outline',
+    activeIcon: 'home',
+    label: 'Home',
+    route: '/(employee)/'
   },
-  { 
-    icon: 'people-outline', 
-    activeIcon: 'people', 
-    label: 'Directory', 
-    route: '/(employee)/directory' 
+  {
+    icon: 'people-outline',
+    activeIcon: 'people',
+    label: 'Directory',
+    route: '/(employee)/directory'
   },
-  { 
-    icon: 'time-outline', 
-    activeIcon: 'time', 
-    label: 'Attendance', 
-    route: '/(employee)/attendance' 
+  {
+    icon: 'time-outline',
+    activeIcon: 'time',
+    label: 'Attendance',
+    route: '/(employee)/attendance'
   },
-  { 
-    icon: 'person-outline', 
-    activeIcon: 'person', 
-    label: 'Profile', 
-    route: '/(employee)/profile' 
+  {
+    icon: 'person-outline',
+    activeIcon: 'person',
+    label: 'Profile',
+    route: '/(employee)/profile'
   },
 ];
 
@@ -73,8 +73,8 @@ const NavItem = ({ item, isActive }: { item: typeof NAV_ITEMS[0], isActive: bool
         {item.label}
       </Animated.Text>
       {isActive && (
-        <Animated.View 
-          style={styles.activeIndicator} 
+        <Animated.View
+          style={styles.activeIndicator}
         />
       )}
     </TouchableOpacity>
@@ -88,11 +88,11 @@ export const BottomNav = () => {
     <View style={styles.container}>
       <View style={styles.floatingNav}>
         {NAV_ITEMS.map((item, i) => {
-          const isActive = pathname === item.route || 
-                           (item.route === '/(employee)/' && pathname === '/(employee)') ||
-                           (item.route === '/(employee)/directory' && pathname === '/(employee)/directory') ||
-                           ((item.route === '/(employee)/attendance') && 
-                            (pathname === '/(employee)/attendance' || pathname === '/(employee)/attendance-logging' || pathname === '/(employee)/attendance-history'));
+          const isActive = pathname === item.route ||
+            (item.route === '/(employee)/' && pathname === '/(employee)') ||
+            (item.route === '/(employee)/directory' && pathname === '/(employee)/directory') ||
+            ((item.route === '/(employee)/attendance') &&
+              (pathname === '/(employee)/attendance' || pathname === '/(employee)/attendance-logging' || pathname === '/(employee)/attendance-history'));
 
           return <NavItem key={i} item={item} isActive={isActive} />;
         })}

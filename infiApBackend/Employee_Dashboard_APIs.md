@@ -152,7 +152,7 @@ These endpoints split the profile data for better frontend performance and reusa
 ## Day-4: Reusable Attendance, Schedule & Payroll APIs
 
 ### 7. Detailed Attendance View (Reusable)
-
+ 
 #### Get Today's Attendance Stats
 - **Endpoint:** `POST /api/v1/attendance/stats`
 - **Description:** Basic attendance data (Status, Date, Check-In/Out times).

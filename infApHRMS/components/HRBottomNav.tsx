@@ -2,11 +2,11 @@ import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Dimensions, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router, usePathname } from 'expo-router';
-import Animated, { 
-  useAnimatedStyle, 
-  withSpring, 
-  useSharedValue, 
-  withTiming 
+import Animated, {
+  useAnimatedStyle,
+  withSpring,
+  useSharedValue,
+  withTiming
 } from 'react-native-reanimated';
 
 const { width } = Dimensions.get('window');
@@ -44,10 +44,10 @@ export const HRBottomNav = () => {
       <View style={styles.navBar}>
         <NavItem item={NAV_ITEMS[0]} isActive={pathname === '/(hr)' || pathname === '/(hr)/'} />
         <NavItem item={NAV_ITEMS[1]} isActive={pathname.includes('employee')} />
-        
+
         {/* Floating Add Button */}
         <View style={styles.fabContainer}>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.fab}
             onPress={() => router.push('/(hr)/add-employee' as any)}
             activeOpacity={0.8}

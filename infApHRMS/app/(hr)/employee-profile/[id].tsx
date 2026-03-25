@@ -49,7 +49,7 @@ const EmployeeProfile = () => {
             <Ionicons name="arrow-back" size={24} color="#1f2937" />
           </TouchableOpacity>
           <Text style={styles.title}>Employee Profile</Text>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.editButton}
             onPress={() => router.push(`/(hr)/edit-employee/${employee.id}` as any)}
           >

@@ -119,7 +119,7 @@ const SwipeToCheckIn = () => {
 
 const FeatureCard = ({ icon, title, sub, color, bgColor, route, delay, unreadCount }: { icon: any, title: string, sub: string, color: string, bgColor: string, route: string, delay: number, unreadCount?: number }) => {
   const scale = useSharedValue(1);
-  
+
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
   }));
@@ -134,7 +134,7 @@ const FeatureCard = ({ icon, title, sub, color, bgColor, route, delay, unreadCou
 
   return (
     <Animated.View entering={FadeInDown.delay(delay).springify()} style={animatedStyle}>
-      <TouchableOpacity 
+      <TouchableOpacity
         style={[styles.featureCard, { backgroundColor: bgColor }]}
         onPress={() => router.push(route as any)}
         onPressIn={handlePressIn}
@@ -145,7 +145,7 @@ const FeatureCard = ({ icon, title, sub, color, bgColor, route, delay, unreadCou
           <Ionicons name={icon} size={24} color="#fff" />
           {title === 'Notifications' && unreadCount !== undefined && unreadCount > 0 && (
             <View style={styles.notiBadge}>
-               <Text style={styles.notiBadgeText}>{unreadCount}</Text>
+              <Text style={styles.notiBadgeText}>{unreadCount}</Text>
             </View>
           )}
         </View>
@@ -186,263 +186,263 @@ export default function EmployeeDashboard() {
         <Animated.View entering={FadeInDown.duration(800).springify()} style={{ flex: 1 }}>
           <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
 
-          {/* Header */}
-          <View style={styles.header}>
-            <View style={styles.logoContainer}>
-              <Image
-
-                source={require('../../assets/images/logo.png')}
-                style={styles.headerLogo}
-                resizeMode="contain"
-              />
-            </View>
-            <TouchableOpacity style={styles.profileCircle} onPress={() => router.replace('/(auth)/sign-in')}>
-              <Ionicons name="person-outline" size={18} color="#374151" />
-            </TouchableOpacity>
-          </View>
-
-          {/* Welcome Banner */}
-          <View style={styles.bannerContainer}>
-            <View style={styles.bannerBadge}>
-              <Text style={styles.bannerBadgeText}>JAN 28, 2026</Text>
-            </View>
-            <Text style={styles.bannerTitle}>Welcome, Sneha Desai!</Text>
-            <Text style={styles.bannerSubtitle}>
-              Sneha Desai joined the Engineering team on Jan 20, 2026. Let's give her a warm welcome!
-            </Text>
-            <TouchableOpacity style={styles.sendWelcomeBtn}>
-              <Text style={styles.sendWelcomeText}>Send Welcome </Text>
-              <Ionicons name="paper-plane" size={12} color="#2e4ce6" />
-            </TouchableOpacity>
-          </View>
-
-          {/* Check-In Section */}
-          <Text style={styles.sectionHeader}>Check-In</Text>
-          <SwipeToCheckIn />
-
-          {/* Leave Balance Section */}
-          <View style={styles.sectionHeaderRow}>
-            <Text style={styles.sectionHeader}>Leave Balance</Text>
-            <TouchableOpacity>
-              <Text style={styles.historyLink}>History</Text>
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.leaveGrid}>
-            <CircularProgress value={6} total={10} color="#3b82f6" label="Privilege Leave" subLabel="AVAILABLE" />
-            <CircularProgress value={6} total={10} color="#6366f1" label="Casual Leave" subLabel="AVAILABLE" />
-            <CircularProgress value={6} total={10} color="#22c55e" label="Sick Leave" subLabel="AVAILABLE" />
-            <View style={[styles.leaveCard, styles.darkCard]}>
-              <View style={styles.darkCircle}>
-                <Text style={styles.darkCircleValue}>18</Text>
-              </View>
-              <Text style={[styles.leaveTypeLabel, { color: '#fff' }]}>Total Balance</Text>
-              <Text style={styles.leaveTypeSubDark}>DAYS</Text>
-            </View>
-          </View>
-
-          <View style={styles.statsRowGrid}>
-            <View style={styles.statBadge}>
-              <View style={styles.statBadgeContent}>
-                <Text style={styles.statBadgeLabel}>EARLY OUT RECORD</Text>
-                <Text style={styles.statBadgeValue}>0</Text>
-              </View>
-            </View>
-            <View style={[styles.statBadge, { backgroundColor: '#fef3c7', borderColor: '#fde68a' }]}>
-              <View style={styles.statBadgeContent}>
-                <Text style={styles.statBadgeLabel}>LATE IN</Text>
-                <Text style={[styles.statBadgeValue, { color: '#d97706' }]}>0/5</Text>
-              </View>
-            </View>
-            <View style={styles.statBadge}>
-              <View style={styles.statBadgeContent}>
-                <Text style={styles.statBadgeLabel}>EARLY OUT</Text>
-                <Text style={styles.statBadgeValue}>0/5</Text>
-              </View>
-            </View>
-            <View style={styles.statBadge}>
-              <View style={styles.statBadgeContent}>
-                <Text style={styles.statBadgeLabel}>HALF DAY</Text>
-                <Text style={styles.statBadgeValue}>0</Text>
-              </View>
-            </View>
-          </View>
-
-          {/* Attendance Summary */}
-          <Text style={styles.sectionHeader}>Attendance Summary</Text>
-          <View style={styles.attendanceSummaryContainer}>
-            <View style={styles.attendanceItem}>
-              <View style={[styles.attIconWrap, { backgroundColor: '#dcfce7' }]}>
-                <Ionicons name="person-circle" size={24} color="#22c55e" />
-              </View>
-              <Text style={styles.attNumber}>22</Text>
-              <Text style={styles.attLabel}>PRESENT</Text>
-            </View>
-            <View style={styles.attendanceItem}>
-              <View style={[styles.attIconWrap, { backgroundColor: '#fee2e2' }]}>
-                <Ionicons name="calendar" size={20} color="#ef4444" />
-              </View>
-              <Text style={styles.attNumber}>2</Text>
-              <Text style={styles.attLabel}>LEAVES</Text>
-            </View>
-            <View style={styles.attendanceItem}>
-              <View style={[styles.attIconWrap, { backgroundColor: '#dbeafe' }]}>
-                <Ionicons name="umbrella" size={20} color="#3b82f6" />
-              </View>
-              <Text style={styles.attNumber}>1</Text>
-              <Text style={styles.attLabel}>HOLIDAY</Text>
-            </View>
-          </View>
-          {/* Quick Features Section */}
-          <Text style={styles.sectionHeader}>Quick Actions</Text>
-          <View style={styles.featuresGrid}>
-            <FeatureCard 
-              icon="calendar-outline" 
-              title="Leave Requests" 
-              sub="Manage" 
-              color="#3b82f6" 
-              bgColor="#eff6ff" 
-              route="/(employee)/leave" 
-              delay={100} 
-            />
-            <FeatureCard 
-              icon="laptop-outline" 
-              title="Upcoming WFH" 
-              sub="Schedule" 
-              color="#8b5cf6" 
-              bgColor="#f5f3ff" 
-              route="/(employee)/upcoming-wfh" 
-              delay={200} 
-            />
-            <FeatureCard 
-              icon="megaphone-outline" 
-              title="Events" 
-              sub="Explore" 
-              color="#f97316" 
-              bgColor="#fff7ed" 
-              route="/(employee)/events" 
-              delay={300} 
-            />
-            <FeatureCard 
-              icon="cash-outline" 
-              title="Payroll" 
-              sub="Salary Slips" 
-              color="#4f46e5" 
-              bgColor="#f5f3ff" 
-              route="/(employee)/payroll" 
-              delay={400} 
-            />
-            <FeatureCard 
-              icon="trending-up-outline" 
-              title="Performance" 
-              sub="Metrics" 
-              color="#6366f1" 
-              bgColor="#f5f3ff" 
-              route="/(employee)/performance" 
-              delay={500} 
-            />
-            <FeatureCard 
-              icon="notifications-outline" 
-              title="Notifications" 
-              sub="Alerts" 
-              color="#ef4444" 
-              bgColor="#fef2f2" 
-              route="/(employee)/notifications" 
-              delay={600} 
-              unreadCount={unreadCount}
-            />
-          </View>
-
-          {/* Missed Punches Carousel */}
-          <Text style={[styles.sectionHeader, { marginTop: 12, marginBottom: 16 }]}>Missed Punches</Text>
-          <ScrollView 
-            ref={scrollViewRef}
-            horizontal 
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.missedPunchesCarousel}
-            snapToInterval={212} // card width (200) + gap (12)
-            decelerationRate="fast"
-          >
-            <View style={styles.missedPunchCard}>
-              <View style={styles.missedPunchRow}>
-                <Text style={styles.missedPunchDate}>Mar 2, 2026</Text>
-                <Ionicons name="warning-outline" size={16} color="#ef4444" />
-              </View>
-              <Text style={styles.missedPunchTitle}>Missing Out</Text>
-              <Text style={styles.missedPunchAction}>APPLY PUNCH</Text>
-            </View>
-            <View style={styles.missedPunchCard}>
-              <View style={styles.missedPunchRow}>
-                <Text style={styles.missedPunchDate}>Mar 3, 2026</Text>
-                <Ionicons name="warning-outline" size={16} color="#ef4444" />
-              </View>
-              <Text style={styles.missedPunchTitle}>Missing Out</Text>
-              <Text style={styles.missedPunchAction}>APPLY PUNCH</Text>
-            </View>
-            <View style={styles.missedPunchCard}>
-              <View style={styles.missedPunchRow}>
-                <Text style={styles.missedPunchDate}>Mar 4, 2026</Text>
-                <Ionicons name="warning-outline" size={16} color="#ef4444" />
-              </View>
-              <Text style={styles.missedPunchTitle}>Missing Out</Text>
-              <Text style={styles.missedPunchAction}>APPLY PUNCH</Text>
-            </View>
-            <View style={styles.missedPunchCard}>
-              <View style={styles.missedPunchRow}>
-                <Text style={styles.missedPunchDate}>Mar 5, 2026</Text>
-                <Ionicons name="warning-outline" size={16} color="#ef4444" />
-              </View>
-              <Text style={styles.missedPunchTitle}>Missing Out</Text>
-              <Text style={styles.missedPunchAction}>APPLY PUNCH</Text>
-            </View>
-          </ScrollView>
-
-
-          {/* Employee of the Month */}
-          <View style={styles.eomCard}>
-            <View style={styles.eomContent}>
-              <View style={styles.eomAvatarWrap}>
+            {/* Header */}
+            <View style={styles.header}>
+              <View style={styles.logoContainer}>
                 <Image
-                  source={{ uri: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop' }}
-                  style={styles.eomAvatar}
+
+                  source={require('../../assets/images/logo.png')}
+                  style={styles.headerLogo}
+                  resizeMode="contain"
                 />
-                <View style={styles.eomBadge}>
-                  <Ionicons name="star" size={10} color="#fff" />
+              </View>
+              <TouchableOpacity style={styles.profileCircle} onPress={() => router.replace('/(auth)/sign-in')}>
+                <Ionicons name="person-outline" size={18} color="#374151" />
+              </TouchableOpacity>
+            </View>
+
+            {/* Welcome Banner */}
+            <View style={styles.bannerContainer}>
+              <View style={styles.bannerBadge}>
+                <Text style={styles.bannerBadgeText}>JAN 28, 2026</Text>
+              </View>
+              <Text style={styles.bannerTitle}>Welcome, Sneha Desai!</Text>
+              <Text style={styles.bannerSubtitle}>
+                Sneha Desai joined the Engineering team on Jan 20, 2026. Let's give her a warm welcome!
+              </Text>
+              <TouchableOpacity style={styles.sendWelcomeBtn}>
+                <Text style={styles.sendWelcomeText}>Send Welcome </Text>
+                <Ionicons name="paper-plane" size={12} color="#2e4ce6" />
+              </TouchableOpacity>
+            </View>
+
+            {/* Check-In Section */}
+            <Text style={styles.sectionHeader}>Check-In</Text>
+            <SwipeToCheckIn />
+
+            {/* Leave Balance Section */}
+            <View style={styles.sectionHeaderRow}>
+              <Text style={styles.sectionHeader}>Leave Balance</Text>
+              <TouchableOpacity>
+                <Text style={styles.historyLink}>History</Text>
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.leaveGrid}>
+              <CircularProgress value={6} total={10} color="#3b82f6" label="Privilege Leave" subLabel="AVAILABLE" />
+              <CircularProgress value={6} total={10} color="#6366f1" label="Casual Leave" subLabel="AVAILABLE" />
+              <CircularProgress value={6} total={10} color="#22c55e" label="Sick Leave" subLabel="AVAILABLE" />
+              <View style={[styles.leaveCard, styles.darkCard]}>
+                <View style={styles.darkCircle}>
+                  <Text style={styles.darkCircleValue}>18</Text>
+                </View>
+                <Text style={[styles.leaveTypeLabel, { color: '#fff' }]}>Total Balance</Text>
+                <Text style={styles.leaveTypeSubDark}>DAYS</Text>
+              </View>
+            </View>
+
+            <View style={styles.statsRowGrid}>
+              <View style={styles.statBadge}>
+                <View style={styles.statBadgeContent}>
+                  <Text style={styles.statBadgeLabel}>EARLY OUT RECORD</Text>
+                  <Text style={styles.statBadgeValue}>0</Text>
                 </View>
               </View>
-              <View>
-                <Text style={styles.eomLabel}>EMPLOYEE OF THE MONTH</Text>
-                <Text style={styles.eomName}>Siddharth Rao</Text>
-                <Text style={styles.eomRole}>Senior Product Designer</Text>
+              <View style={[styles.statBadge, { backgroundColor: '#fef3c7', borderColor: '#fde68a' }]}>
+                <View style={styles.statBadgeContent}>
+                  <Text style={styles.statBadgeLabel}>LATE IN</Text>
+                  <Text style={[styles.statBadgeValue, { color: '#d97706' }]}>0/5</Text>
+                </View>
+              </View>
+              <View style={styles.statBadge}>
+                <View style={styles.statBadgeContent}>
+                  <Text style={styles.statBadgeLabel}>EARLY OUT</Text>
+                  <Text style={styles.statBadgeValue}>0/5</Text>
+                </View>
+              </View>
+              <View style={styles.statBadge}>
+                <View style={styles.statBadgeContent}>
+                  <Text style={styles.statBadgeLabel}>HALF DAY</Text>
+                  <Text style={styles.statBadgeValue}>0</Text>
+                </View>
               </View>
             </View>
-            {/* background watermark star */}
-            <Ionicons name="ribbon" size={100} color="rgba(255,255,255,0.05)" style={styles.eomWatermark} />
-          </View>
 
-          {/* Birthdays */}
-          <View style={styles.birthdayCard}>
-            <View style={styles.birthdayHeader}>
-              <Text style={styles.birthdayTitle}>Birthdays</Text>
-              <View style={styles.birthdayTag}>
-                <Text style={styles.birthdayTagText}>3 This Week</Text>
+            {/* Attendance Summary */}
+            <Text style={styles.sectionHeader}>Attendance Summary</Text>
+            <View style={styles.attendanceSummaryContainer}>
+              <View style={styles.attendanceItem}>
+                <View style={[styles.attIconWrap, { backgroundColor: '#dcfce7' }]}>
+                  <Ionicons name="person-circle" size={24} color="#22c55e" />
+                </View>
+                <Text style={styles.attNumber}>22</Text>
+                <Text style={styles.attLabel}>PRESENT</Text>
+              </View>
+              <View style={styles.attendanceItem}>
+                <View style={[styles.attIconWrap, { backgroundColor: '#fee2e2' }]}>
+                  <Ionicons name="calendar" size={20} color="#ef4444" />
+                </View>
+                <Text style={styles.attNumber}>2</Text>
+                <Text style={styles.attLabel}>LEAVES</Text>
+              </View>
+              <View style={styles.attendanceItem}>
+                <View style={[styles.attIconWrap, { backgroundColor: '#dbeafe' }]}>
+                  <Ionicons name="umbrella" size={20} color="#3b82f6" />
+                </View>
+                <Text style={styles.attNumber}>1</Text>
+                <Text style={styles.attLabel}>HOLIDAY</Text>
               </View>
             </View>
-            <View style={styles.avatarsRow}>
-              <Image source={{ uri: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=50&h=50&fit=crop' }} style={[styles.avatarOverlap, { zIndex: 3 }]} />
-              <Image source={{ uri: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=50&h=50&fit=crop' }} style={[styles.avatarOverlap, { zIndex: 2, marginLeft: -12 }]} />
-              <Image source={{ uri: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=50&h=50&fit=crop' }} style={[styles.avatarOverlap, { zIndex: 1, marginLeft: -12 }]} />
-              <View style={[styles.avatarOverlap, styles.avatarMore, { marginLeft: -12 }]}>
-                <Text style={styles.avatarMoreText}>+3</Text>
+            {/* Quick Features Section */}
+            <Text style={styles.sectionHeader}>Quick Actions</Text>
+            <View style={styles.featuresGrid}>
+              <FeatureCard
+                icon="calendar-outline"
+                title="Leave Requests"
+                sub="Manage"
+                color="#3b82f6"
+                bgColor="#eff6ff"
+                route="/(employee)/leave"
+                delay={100}
+              />
+              <FeatureCard
+                icon="laptop-outline"
+                title="Upcoming WFH"
+                sub="Schedule"
+                color="#8b5cf6"
+                bgColor="#f5f3ff"
+                route="/(employee)/upcoming-wfh"
+                delay={200}
+              />
+              <FeatureCard
+                icon="megaphone-outline"
+                title="Events"
+                sub="Explore"
+                color="#f97316"
+                bgColor="#fff7ed"
+                route="/(employee)/events"
+                delay={300}
+              />
+              <FeatureCard
+                icon="cash-outline"
+                title="Payroll"
+                sub="Salary Slips"
+                color="#4f46e5"
+                bgColor="#f5f3ff"
+                route="/(employee)/payroll"
+                delay={400}
+              />
+              <FeatureCard
+                icon="trending-up-outline"
+                title="Performance"
+                sub="Metrics"
+                color="#6366f1"
+                bgColor="#f5f3ff"
+                route="/(employee)/performance"
+                delay={500}
+              />
+              <FeatureCard
+                icon="notifications-outline"
+                title="Notifications"
+                sub="Alerts"
+                color="#ef4444"
+                bgColor="#fef2f2"
+                route="/(employee)/notifications"
+                delay={600}
+                unreadCount={unreadCount}
+              />
+            </View>
+
+            {/* Missed Punches Carousel */}
+            <Text style={[styles.sectionHeader, { marginTop: 12, marginBottom: 16 }]}>Missed Punches</Text>
+            <ScrollView
+              ref={scrollViewRef}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.missedPunchesCarousel}
+              snapToInterval={212} // card width (200) + gap (12)
+              decelerationRate="fast"
+            >
+              <View style={styles.missedPunchCard}>
+                <View style={styles.missedPunchRow}>
+                  <Text style={styles.missedPunchDate}>Mar 2, 2026</Text>
+                  <Ionicons name="warning-outline" size={16} color="#ef4444" />
+                </View>
+                <Text style={styles.missedPunchTitle}>Missing Out</Text>
+                <Text style={styles.missedPunchAction}>APPLY PUNCH</Text>
+              </View>
+              <View style={styles.missedPunchCard}>
+                <View style={styles.missedPunchRow}>
+                  <Text style={styles.missedPunchDate}>Mar 3, 2026</Text>
+                  <Ionicons name="warning-outline" size={16} color="#ef4444" />
+                </View>
+                <Text style={styles.missedPunchTitle}>Missing Out</Text>
+                <Text style={styles.missedPunchAction}>APPLY PUNCH</Text>
+              </View>
+              <View style={styles.missedPunchCard}>
+                <View style={styles.missedPunchRow}>
+                  <Text style={styles.missedPunchDate}>Mar 4, 2026</Text>
+                  <Ionicons name="warning-outline" size={16} color="#ef4444" />
+                </View>
+                <Text style={styles.missedPunchTitle}>Missing Out</Text>
+                <Text style={styles.missedPunchAction}>APPLY PUNCH</Text>
+              </View>
+              <View style={styles.missedPunchCard}>
+                <View style={styles.missedPunchRow}>
+                  <Text style={styles.missedPunchDate}>Mar 5, 2026</Text>
+                  <Ionicons name="warning-outline" size={16} color="#ef4444" />
+                </View>
+                <Text style={styles.missedPunchTitle}>Missing Out</Text>
+                <Text style={styles.missedPunchAction}>APPLY PUNCH</Text>
+              </View>
+            </ScrollView>
+
+
+            {/* Employee of the Month */}
+            <View style={styles.eomCard}>
+              <View style={styles.eomContent}>
+                <View style={styles.eomAvatarWrap}>
+                  <Image
+                    source={{ uri: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop' }}
+                    style={styles.eomAvatar}
+                  />
+                  <View style={styles.eomBadge}>
+                    <Ionicons name="star" size={10} color="#fff" />
+                  </View>
+                </View>
+                <View>
+                  <Text style={styles.eomLabel}>EMPLOYEE OF THE MONTH</Text>
+                  <Text style={styles.eomName}>Siddharth Rao</Text>
+                  <Text style={styles.eomRole}>Senior Product Designer</Text>
+                </View>
+              </View>
+              {/* background watermark star */}
+              <Ionicons name="ribbon" size={100} color="rgba(255,255,255,0.05)" style={styles.eomWatermark} />
+            </View>
+
+            {/* Birthdays */}
+            <View style={styles.birthdayCard}>
+              <View style={styles.birthdayHeader}>
+                <Text style={styles.birthdayTitle}>Birthdays</Text>
+                <View style={styles.birthdayTag}>
+                  <Text style={styles.birthdayTagText}>3 This Week</Text>
+                </View>
+              </View>
+              <View style={styles.avatarsRow}>
+                <Image source={{ uri: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=50&h=50&fit=crop' }} style={[styles.avatarOverlap, { zIndex: 3 }]} />
+                <Image source={{ uri: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=50&h=50&fit=crop' }} style={[styles.avatarOverlap, { zIndex: 2, marginLeft: -12 }]} />
+                <Image source={{ uri: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=50&h=50&fit=crop' }} style={[styles.avatarOverlap, { zIndex: 1, marginLeft: -12 }]} />
+                <View style={[styles.avatarOverlap, styles.avatarMore, { marginLeft: -12 }]}>
+                  <Text style={styles.avatarMoreText}>+3</Text>
+                </View>
               </View>
             </View>
-          </View>
-          <View style={{ height: 100 }} />
-        </ScrollView>
-      </Animated.View>
-      <BottomNav />
-    </SafeAreaView>
-  </GestureHandlerRootView>
+            <View style={{ height: 100 }} />
+          </ScrollView>
+        </Animated.View>
+        <BottomNav />
+      </SafeAreaView>
+    </GestureHandlerRootView>
   );
 }
 
@@ -468,9 +468,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   headerLogo: {
-    width: 140,
-    height: 42,
-    marginLeft: -20, // Flush to the edge if container padding is 20
+    width: 50,
+    height: 58,
+    marginLeft: 2,
+    borderRadius: 10,
+    backgroundColor: "red",
   },
   profileCircle: {
     width: 36,
