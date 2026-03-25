@@ -19,23 +19,23 @@ import Animated, { FadeInDown, FadeInRight, Layout } from 'react-native-reanimat
 
 const { width } = Dimensions.get('window');
 
-const ModuleCard = ({ 
-  title, 
-  icon, 
-  iconColor, 
-  options, 
-  index 
-}: { 
-  title: string, 
-  icon: string, 
-  iconColor: string, 
+const ModuleCard = ({
+  title,
+  icon,
+  iconColor,
+  options,
+  index
+}: {
+  title: string,
+  icon: string,
+  iconColor: string,
   options: { label: string, route: string }[],
   index: number
 }) => {
   return (
-    <Animated.View 
-        entering={FadeInDown.delay(index * 100).duration(600)}
-        style={styles.moduleCard}
+    <Animated.View
+      entering={FadeInDown.delay(index * 100).duration(600)}
+      style={styles.moduleCard}
     >
       <View style={styles.moduleHeader}>
         <View style={[styles.moduleIconContainer, { backgroundColor: `${iconColor}15` }]}>
@@ -43,11 +43,11 @@ const ModuleCard = ({
         </View>
         <Text style={styles.moduleTitle}>{title}</Text>
       </View>
-      
+
       <View style={styles.optionsContainer}>
         {options.map((opt, idx) => (
-          <TouchableOpacity 
-            key={idx} 
+          <TouchableOpacity
+            key={idx}
             style={styles.optionButton}
             onPress={() => router.push(opt.route as any)}
           >
@@ -167,7 +167,7 @@ const HRDashboard = () => {
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-        
+
         {/* Search Bar */}
         <Animated.View entering={FadeInDown.duration(600)} style={styles.searchContainer}>
           <Ionicons name="search-outline" size={20} color="#9ca3af" />
@@ -189,7 +189,7 @@ const HRDashboard = () => {
         >
           <Text style={styles.welcomeMain}>Welcome Back, HR Manager</Text>
           <Text style={styles.welcomeSub}>Here is today's HR overview</Text>
-          
+
           <View style={styles.statsSplit}>
             <View style={styles.statGroup}>
               <Text style={styles.statLabel}>TOTAL</Text>
@@ -212,7 +212,7 @@ const HRDashboard = () => {
         <Text style={styles.sectionTitle}>HR Operations</Text>
         <View style={styles.moduleGrid}>
           {HR_MODULES.map((module, index) => (
-            <ModuleCard 
+            <ModuleCard
               key={index}
               index={index}
               {...module}
@@ -230,7 +230,7 @@ const HRDashboard = () => {
             <Text style={styles.gridLabel}>TODAY'S RATE</Text>
             <Text style={styles.gridValue}>{stats.attendanceRate}</Text>
             <View style={styles.progressBarBg}>
-               <View style={[styles.progressBarFill, { width: stats.attendanceRate as any }]} />
+              <View style={[styles.progressBarFill, { width: stats.attendanceRate as any }]} />
             </View>
           </View>
 
@@ -256,8 +256,8 @@ const HRDashboard = () => {
             <View style={styles.leaveHeader}>
               <Image source={{ uri: leave.avatar }} style={styles.leaveAvatar} />
               <View style={{ flex: 1 }}>
-                  <Text style={styles.leaveName}>{leave.employeeName}</Text>
-                  <Text style={styles.leaveMeta}>{leave.type} • 3 Days ({leave.startDate}-{leave.endDate})</Text>
+                <Text style={styles.leaveName}>{leave.employeeName}</Text>
+                <Text style={styles.leaveMeta}>{leave.type} • 3 Days ({leave.startDate}-{leave.endDate})</Text>
               </View>
               <Text style={styles.leaveTime}>2h ago</Text>
             </View>
@@ -473,7 +473,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingVertical: 8,
-    borderBottomWidth:1,
+    borderBottomWidth: 1,
     borderBottomColor: '#f9fafb',
   },
   optionText: {

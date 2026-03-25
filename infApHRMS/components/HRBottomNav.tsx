@@ -1,37 +1,88 @@
 import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Dimensions, Platform } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Platform, Dimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router, usePathname } from 'expo-router';
 import Animated, {
   useAnimatedStyle,
   withSpring,
   useSharedValue,
-  withTiming
+  withTiming,
+  interpolateColor
 } from 'react-native-reanimated';
 
 const { width } = Dimensions.get('window');
 
 const NAV_ITEMS = [
-  { icon: 'grid-outline', activeIcon: 'grid', label: 'Dashboard', route: '/(hr)' },
-  { icon: 'people-outline', activeIcon: 'people', label: 'Employees', route: '/(hr)/employee-management' },
-  { icon: 'cash-outline', activeIcon: 'cash', label: 'Finance', route: '/(hr)/finance' },
-  { icon: 'settings-outline', activeIcon: 'settings', label: 'Settings', route: '/(hr)/analytics' },
+  {
+    icon: 'grid-outline',
+    activeIcon: 'grid',
+    label: 'Dashboard',
+    route: '/(hr)/'
+  },
+  {
+    icon: 'people-outline',
+    activeIcon: 'people',
+    label: 'Employees',
+    route: '/(hr)/employee-management'
+  },
+  {
+    icon: 'add-circle-outline',
+    activeIcon: 'add-circle',
+    label: 'Add',
+    route: '/(hr)/add-employee'
+  },
+  {
+    icon: 'cash-outline',
+    activeIcon: 'cash',
+    label: 'Finance',
+    route: '/(hr)/finance'
+  },
+  {
+    icon: 'settings-outline',
+    activeIcon: 'settings',
+    label: 'Settings',
+    route: '/(hr)/analytics'
+  },
 ];
 
 const NavItem = ({ item, isActive }: { item: typeof NAV_ITEMS[0], isActive: boolean }) => {
+  const scale = useSharedValue(1);
+  const opacity = useSharedValue(0.6);
+
+  useEffect(() => {
+    scale.value = withSpring(isActive ? 1.15 : 1);
+    opacity.value = withTiming(isActive ? 1 : 0.6);
+  }, [isActive]);
+
+  const animatedIconStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  const animatedTextStyle = useAnimatedStyle(() => ({
+    opacity: opacity.value,
+  }));
+
   return (
     <TouchableOpacity
       style={styles.navItem}
       onPress={() => router.push(item.route as any)}
+      activeOpacity={0.7}
     >
-      <Ionicons
-        name={(isActive ? item.activeIcon : item.icon) as any}
-        size={24}
-        color={isActive ? '#5a55d2' : '#9ca3af'}
-      />
-      <Text style={[styles.navLabel, isActive && styles.navLabelActive]}>
+      <Animated.View style={[animatedIconStyle, isActive && styles.iconGlow]}>
+        <Ionicons
+          name={(isActive ? item.activeIcon : item.icon) as any}
+          size={24}
+          color={isActive ? '#4f46e5' : '#94a3b8'}
+        />
+      </Animated.View>
+      <Animated.Text style={[styles.navLabel, isActive && styles.navLabelActive, animatedTextStyle]}>
         {item.label}
-      </Text>
+      </Animated.Text>
+      {isActive && (
+        <Animated.View
+          style={styles.activeIndicator}
+        />
+      )}
     </TouchableOpacity>
   );
 };
@@ -41,23 +92,17 @@ export const HRBottomNav = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.navBar}>
-        <NavItem item={NAV_ITEMS[0]} isActive={pathname === '/(hr)' || pathname === '/(hr)/'} />
-        <NavItem item={NAV_ITEMS[1]} isActive={pathname.includes('employee')} />
+      <View style={styles.floatingNav}>
+        {NAV_ITEMS.map((item, i) => {
+          const isActive = pathname === item.route ||
+            (item.route === '/(hr)/' && (pathname === '/(hr)' || pathname === '/(hr)/')) ||
+            (item.route === '/(hr)/employee-management' && pathname.includes('employee') && !pathname.includes('add-employee')) ||
+            (item.route === '/(hr)/add-employee' && pathname.includes('add-employee')) ||
+            (item.route === '/(hr)/finance' && pathname.includes('finance')) ||
+            (item.route === '/(hr)/analytics' && pathname.includes('analytics'));
 
-        {/* Floating Add Button */}
-        <View style={styles.fabContainer}>
-          <TouchableOpacity
-            style={styles.fab}
-            onPress={() => router.push('/(hr)/add-employee' as any)}
-            activeOpacity={0.8}
-          >
-            <Ionicons name="add" size={32} color="#fff" />
-          </TouchableOpacity>
-        </View>
-
-        <NavItem item={NAV_ITEMS[2]} isActive={pathname.includes('finance')} />
-        <NavItem item={NAV_ITEMS[3]} isActive={pathname.includes('analytics')} />
+          return <NavItem key={i} item={item} isActive={isActive} />;
+        })}
       </View>
     </View>
   );
@@ -66,57 +111,58 @@ export const HRBottomNav = () => {
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    bottom: 0,
+    bottom: 32,
     left: 0,
     right: 0,
     alignItems: 'center',
-    paddingBottom: Platform.OS === 'ios' ? 20 : 10,
-    backgroundColor: 'transparent',
+    justifyContent: 'center',
+    paddingBottom: Platform.OS === 'ios' ? 24 : 0,
+    zIndex: 1000,
   },
-  navBar: {
+  floatingNav: {
     flexDirection: 'row',
-    backgroundColor: '#fff',
-    width: width,
+    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+    width: width * 0.9,
     height: 70,
-    borderTopWidth: 1,
-    borderTopColor: '#f3f4f6',
-    alignItems: 'center',
+    borderRadius: 35,
     justifyContent: 'space-around',
+    alignItems: 'center',
     paddingHorizontal: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.15,
+    shadowRadius: 20,
+    elevation: 15,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.5)',
   },
   navItem: {
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
+    height: '100%',
   },
   navLabel: {
     fontSize: 10,
     fontWeight: '700',
-    color: '#9ca3af',
+    color: '#94a3b8',
     marginTop: 4,
   },
   navLabelActive: {
-    color: '#5a55d2',
+    color: '#4f46e5',
   },
-  fabContainer: {
-    width: 60,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: -30, // Negative margin to make it float
+  activeIndicator: {
+    position: 'absolute',
+    bottom: 8,
+    width: 4,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: '#4f46e5',
   },
-  fab: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: '#5a55d2',
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#5a55d2',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.3,
+  iconGlow: {
+    shadowColor: '#4f46e5',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.5,
     shadowRadius: 10,
-    elevation: 8,
-    borderWidth: 4,
-    borderColor: '#fff',
-  },
+  }
 });

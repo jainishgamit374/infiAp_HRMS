@@ -1,26 +1,66 @@
 import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Platform, Animated } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Platform, Dimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router, usePathname } from 'expo-router';
+import Animated, {
+  useAnimatedStyle,
+  withSpring,
+  useSharedValue,
+  withTiming,
+  interpolateColor
+} from 'react-native-reanimated';
+
+const { width } = Dimensions.get('window');
 
 const NAV_ITEMS = [
-  { id: 'home', label: 'HOME', icon: 'home-outline', activeIcon: 'home', route: '/(admin)' },
-  { id: 'staff', label: 'STAFF', icon: 'people-outline', activeIcon: 'people', route: '/(admin)/staff' },
-  { id: 'alerts', label: 'ALERTS', icon: 'notifications-outline', activeIcon: 'notifications', route: '/(admin)/notifications' },
-  { id: 'stats', label: 'STATS', icon: 'stats-chart-outline', activeIcon: 'stats-chart', route: '/(admin)/stats' },
-  { id: 'admin', label: 'ADMIN', icon: 'shield-outline', activeIcon: 'shield', route: '/(admin)/settings' },
+  {
+    icon: 'home-outline',
+    activeIcon: 'home',
+    label: 'Home',
+    route: '/(admin)/'
+  },
+  {
+    icon: 'people-outline',
+    activeIcon: 'people',
+    label: 'Staff',
+    route: '/(admin)/staff'
+  },
+  {
+    icon: 'notifications-outline',
+    activeIcon: 'notifications',
+    label: 'Alerts',
+    route: '/(admin)/notifications'
+  },
+  {
+    icon: 'bar-chart-outline',
+    activeIcon: 'bar-chart',
+    label: 'Stats',
+    route: '/(admin)/stats'
+  },
+  {
+    icon: 'shield-outline',
+    activeIcon: 'shield',
+    label: 'Admin',
+    route: '/(admin)/settings'
+  },
 ];
 
-const NavItem = ({ item, isActive }: { item: any, isActive: boolean }) => {
-  const scaleAnim = React.useRef(new Animated.Value(1)).current;
+const NavItem = ({ item, isActive }: { item: typeof NAV_ITEMS[0], isActive: boolean }) => {
+  const scale = useSharedValue(1);
+  const opacity = useSharedValue(0.6);
 
   useEffect(() => {
-    Animated.spring(scaleAnim, {
-      toValue: isActive ? 1.15 : 1,
-      useNativeDriver: true,
-      friction: 4,
-    }).start();
+    scale.value = withSpring(isActive ? 1.15 : 1);
+    opacity.value = withTiming(isActive ? 1 : 0.6);
   }, [isActive]);
+
+  const animatedIconStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  const animatedTextStyle = useAnimatedStyle(() => ({
+    opacity: opacity.value,
+  }));
 
   return (
     <TouchableOpacity
@@ -28,17 +68,21 @@ const NavItem = ({ item, isActive }: { item: any, isActive: boolean }) => {
       onPress={() => router.push(item.route as any)}
       activeOpacity={0.7}
     >
-      <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
+      <Animated.View style={[animatedIconStyle, isActive && styles.iconGlow]}>
         <Ionicons
           name={(isActive ? item.activeIcon : item.icon) as any}
           size={24}
           color={isActive ? '#4f46e5' : '#94a3b8'}
         />
       </Animated.View>
-      <Text style={[styles.navText, isActive && styles.activeNavText]}>
+      <Animated.Text style={[styles.navLabel, isActive && styles.navLabelActive, animatedTextStyle]}>
         {item.label}
-      </Text>
-      {isActive && <View style={styles.activeIndicator} />}
+      </Animated.Text>
+      {isActive && (
+        <Animated.View
+          style={styles.activeIndicator}
+        />
+      )}
     </TouchableOpacity>
   );
 };
@@ -48,46 +92,74 @@ export const AdminBottomNav = () => {
 
   return (
     <View style={styles.container}>
-      {NAV_ITEMS.map((item) => (
-        <NavItem key={item.id} item={item} isActive={pathname === item.route} />
-      ))}
+      <View style={styles.floatingNav}>
+        {NAV_ITEMS.map((item, i) => {
+          const isActive = pathname === item.route ||
+            (item.route === '/(admin)/' && (pathname === '/(admin)' || pathname === '/(admin)/')) ||
+            (item.route !== '/(admin)/' && pathname.startsWith(item.route));
+
+          return <NavItem key={i} item={item} isActive={isActive} />;
+        })}
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    backgroundColor: '#8c2424ff',
-    paddingTop: 12,
-    paddingBottom: Platform.OS === 'ios' ? 30 : 12,
-    borderTopWidth: 1,
-    borderTopColor: '#f1f5f9',
-    justifyContent: 'space-around',
     position: 'absolute',
-    bottom: 0,
+    bottom: 32,
     left: 0,
     right: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingBottom: Platform.OS === 'ios' ? 24 : 0,
+    zIndex: 1000,
+  },
+  floatingNav: {
+    flexDirection: 'row',
+    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+    width: width * 0.9,
+    height: 70,
+    borderRadius: 35,
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.15,
+    shadowRadius: 20,
+    elevation: 15,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.5)',
   },
   navItem: {
     alignItems: 'center',
-    gap: 4,
-    minWidth: 60,
+    justifyContent: 'center',
+    flex: 1,
+    height: '100%',
   },
-  navText: {
+  navLabel: {
     fontSize: 10,
     fontWeight: '700',
     color: '#94a3b8',
-    letterSpacing: 0.5,
+    marginTop: 4,
   },
-  activeNavText: {
+  navLabelActive: {
     color: '#4f46e5',
   },
   activeIndicator: {
+    position: 'absolute',
+    bottom: 8,
     width: 4,
     height: 4,
     borderRadius: 2,
     backgroundColor: '#4f46e5',
-    marginTop: 2,
   },
+  iconGlow: {
+    shadowColor: '#4f46e5',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.5,
+    shadowRadius: 10,
+  }
 });

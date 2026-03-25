@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import {
   View,
   Text,
@@ -8,14 +8,202 @@ import {
   SafeAreaView,
   Platform,
   Image,
+  Alert,
+  Modal,
+  TextInput,
+  ActivityIndicator,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { BottomNav } from '../../components/BottomNav';
 import { useUser } from '../../context/UserContext';
+import Animated, { FadeInDown, FadeIn, SlideInRight } from 'react-native-reanimated';
+
+// ── Types ──
+interface AttendanceRecord {
+  id: string;
+  date: string;
+  checkIn: string;
+  checkOut: string;
+  status: 'Present' | 'Absent' | 'Late' | 'Half Day';
+  hoursWorked: string;
+  department: string;
+}
+
+interface CorrectionRequest {
+  id: string;
+  date: string;
+  originalTime: string;
+  requestedTime: string;
+  reason: string;
+  status: 'Pending' | 'Approved' | 'Rejected';
+  type: 'Check-In' | 'Check-Out';
+  employee: string;
+}
+
+// ── Mock Data ──
+const DEPARTMENTS = ['All', 'Engineering', 'Design', 'Product', 'Sales', 'HR'];
+
+const generateRecords = (): AttendanceRecord[] => {
+  const statuses: AttendanceRecord['status'][] = ['Present', 'Present', 'Present', 'Late', 'Present', 'Half Day', 'Absent'];
+  const records: AttendanceRecord[] = [];
+  const depts = ['Engineering', 'Design', 'Product', 'Sales', 'HR'];
+  for (let i = 0; i < 30; i++) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    const status = statuses[i % statuses.length];
+    records.push({
+      id: `rec-${i}`,
+      date: d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+      checkIn: status === 'Absent' ? '--' : (status === 'Late' ? '10:15 AM' : '09:05 AM'),
+      checkOut: status === 'Absent' ? '--' : (status === 'Half Day' ? '01:00 PM' : '06:02 PM'),
+      status,
+      hoursWorked: status === 'Absent' ? '0h' : (status === 'Half Day' ? '4h' : (status === 'Late' ? '6h 45m' : '8h 57m')),
+      department: depts[i % depts.length],
+    });
+  }
+  return records;
+};
+
+const INITIAL_CORRECTIONS: CorrectionRequest[] = [
+  { id: 'c1', date: 'Mar 20, 2026', originalTime: '10:15 AM', requestedTime: '09:05 AM', reason: 'Biometric failed, was present on time', status: 'Pending', type: 'Check-In', employee: 'You' },
+  { id: 'c2', date: 'Mar 18, 2026', originalTime: '--', requestedTime: '06:00 PM', reason: 'Forgot to check out', status: 'Pending', type: 'Check-Out', employee: 'You' },
+  { id: 'c3', date: 'Mar 15, 2026', originalTime: '09:30 AM', requestedTime: '09:00 AM', reason: 'System delay', status: 'Approved', type: 'Check-In', employee: 'You' },
+  { id: 'c4', date: 'Mar 12, 2026', originalTime: '10:00 AM', requestedTime: '09:00 AM', reason: 'Network issue', status: 'Rejected', type: 'Check-In', employee: 'You' },
+];
+
+// ── Tab types ──
+type TimeTab = 'Daily' | 'Weekly' | 'Monthly';
+type CorrectionTab = 'Pending' | 'Approved' | 'Rejected';
 
 export default function AttendancePage() {
   const { user } = useUser();
+
+  // State
+  const [allRecords] = useState<AttendanceRecord[]>(generateRecords);
+  const [corrections, setCorrections] = useState<CorrectionRequest[]>(INITIAL_CORRECTIONS);
+  const [activeTab, setActiveTab] = useState<TimeTab>('Daily');
+  const [selectedDept, setSelectedDept] = useState('All');
+  const [correctionTab, setCorrectionTab] = useState<CorrectionTab>('Pending');
+  const [reportLoading, setReportLoading] = useState(false);
+  const [reportVisible, setReportVisible] = useState(false);
+  const [detailModalVisible, setDetailModalVisible] = useState(false);
+  const [selectedCorrection, setSelectedCorrection] = useState<CorrectionRequest | null>(null);
+  const [rejectModalVisible, setRejectModalVisible] = useState(false);
+  const [rejectReason, setRejectReason] = useState('');
+  const [rejectTargetId, setRejectTargetId] = useState<string | null>(null);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [checkedIn, setCheckedIn] = useState(true);
+  const [checkedOut, setCheckedOut] = useState(false);
+
+  // ── Filtered Records ──
+  const filteredRecords = useMemo(() => {
+    let recs = [...allRecords];
+    // Time filter
+    if (activeTab === 'Daily') recs = recs.slice(0, 1);
+    else if (activeTab === 'Weekly') recs = recs.slice(0, 7);
+    else recs = recs.slice(0, 30);
+    // Department filter
+    if (selectedDept !== 'All') recs = recs.filter(r => r.department === selectedDept);
+    return recs;
+  }, [allRecords, activeTab, selectedDept]);
+
+  // ── Statistics ──
+  const stats = useMemo(() => {
+    const total = filteredRecords.length;
+    const present = filteredRecords.filter(r => r.status === 'Present').length;
+    const late = filteredRecords.filter(r => r.status === 'Late').length;
+    const absent = filteredRecords.filter(r => r.status === 'Absent').length;
+    const halfDay = filteredRecords.filter(r => r.status === 'Half Day').length;
+    const attendanceRate = total > 0 ? Math.round(((present + late + halfDay) / total) * 100) : 0;
+    return { total, present, late, absent, halfDay, attendanceRate };
+  }, [filteredRecords]);
+
+  // ── Correction Filters ──
+  const filteredCorrections = useMemo(() =>
+    corrections.filter(c => c.status === correctionTab),
+    [corrections, correctionTab]
+  );
+
+  // ── Handlers ──
+  const handleApprove = useCallback((id: string) => {
+    setCorrections(prev => prev.map(c => c.id === id ? { ...c, status: 'Approved' as const } : c));
+    setSelectedIds(prev => prev.filter(sid => sid !== id));
+    Alert.alert('✅ Approved', 'Correction request has been approved.');
+  }, []);
+
+  const handleRejectPress = useCallback((id: string) => {
+    setRejectTargetId(id);
+    setRejectReason('');
+    setRejectModalVisible(true);
+  }, []);
+
+  const handleRejectConfirm = useCallback(() => {
+    if (!rejectReason.trim()) {
+      Alert.alert('Required', 'Please provide a reason for rejection.');
+      return;
+    }
+    if (rejectTargetId) {
+      setCorrections(prev => prev.map(c => c.id === rejectTargetId ? { ...c, status: 'Rejected' as const } : c));
+      setSelectedIds(prev => prev.filter(sid => sid !== rejectTargetId));
+    }
+    setRejectModalVisible(false);
+    setRejectTargetId(null);
+    setRejectReason('');
+    Alert.alert('❌ Rejected', 'Correction request has been rejected.');
+  }, [rejectReason, rejectTargetId]);
+
+  const handleReview = useCallback((correction: CorrectionRequest) => {
+    setSelectedCorrection(correction);
+    setDetailModalVisible(true);
+  }, []);
+
+  const handleBulkApprove = useCallback(() => {
+    if (selectedIds.length === 0) {
+      Alert.alert('Select Items', 'Please select at least one request to approve.');
+      return;
+    }
+    setCorrections(prev => prev.map(c => selectedIds.includes(c.id) ? { ...c, status: 'Approved' as const } : c));
+    setSelectedIds([]);
+    Alert.alert('✅ Bulk Approved', `${selectedIds.length} requests approved.`);
+  }, [selectedIds]);
+
+  const toggleSelect = useCallback((id: string) => {
+    setSelectedIds(prev => prev.includes(id) ? prev.filter(sid => sid !== id) : [...prev, id]);
+  }, []);
+
+  const handleGenerateReport = useCallback(() => {
+    setReportLoading(true);
+    setTimeout(() => {
+      setReportLoading(false);
+      setReportVisible(true);
+    }, 1500);
+  }, []);
+
+  const handleCheckIn = useCallback(() => {
+    if (!checkedIn) {
+      setCheckedIn(true);
+      Alert.alert('✅ Checked In', `Check-in recorded at ${new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}`);
+    }
+  }, [checkedIn]);
+
+  const handleCheckOut = useCallback(() => {
+    if (checkedIn && !checkedOut) {
+      setCheckedOut(true);
+      Alert.alert('✅ Checked Out', `Check-out recorded at ${new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}`);
+    }
+  }, [checkedIn, checkedOut]);
+
+  // ── Status color helpers ──
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'Present': return { bg: '#dcfce7', text: '#16a34a' };
+      case 'Late': return { bg: '#fef3c7', text: '#d97706' };
+      case 'Absent': return { bg: '#fee2e2', text: '#dc2626' };
+      case 'Half Day': return { bg: '#dbeafe', text: '#2563eb' };
+      default: return { bg: '#f1f5f9', text: '#64748b' };
+    }
+  };
 
   return (
     <SafeAreaView style={styles.root}>
@@ -26,7 +214,7 @@ export default function AttendancePage() {
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Attendance</Text>
         <View style={styles.headerRight}>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.headerBtn}
             onPress={() => router.push('/(employee)/attendance-history')}
           >
@@ -37,82 +225,249 @@ export default function AttendancePage() {
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        {/* Success Toast */}
-        <View style={styles.toast}>
-          <View style={styles.toastIcon}>
-            <Ionicons name="checkmark-circle" size={18} color="#22c55e" />
-          </View>
-          <Text style={styles.toastText}>Check-in successful at 09:05 AM</Text>
-        </View>
+        {/* Check-in Toast */}
+        {checkedIn && (
+          <Animated.View entering={FadeInDown.duration(400)} style={styles.toast}>
+            <View style={styles.toastIcon}>
+              <Ionicons name="checkmark-circle" size={18} color="#22c55e" />
+            </View>
+            <Text style={styles.toastText}>Check-in successful at 09:05 AM</Text>
+          </Animated.View>
+        )}
 
         {/* Today's Details Card */}
-        <View style={styles.detailsCard}>
+        <Animated.View entering={FadeInDown.delay(100).duration(500)} style={styles.detailsCard}>
           <View style={styles.detailsHeader}>
             <View>
               <Text style={styles.detailsSub}>Today's Details</Text>
-              <Text style={styles.detailsDate}>March 25, 2026</Text>
+              <Text style={styles.detailsDate}>{new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</Text>
             </View>
-            <View style={styles.statusBadge}>
-              <Text style={styles.statusText}>PRESENT</Text>
+            <View style={[styles.statusBadge, { backgroundColor: checkedOut ? '#dbeafe' : '#dcfce7' }]}>
+              <Text style={[styles.statusText, { color: checkedOut ? '#2563eb' : '#16a34a' }]}>{checkedOut ? 'COMPLETED' : 'PRESENT'}</Text>
             </View>
           </View>
-
           <View style={styles.checkRow}>
             <View style={styles.checkItem}>
               <Text style={styles.checkLabel}>CHECK-IN</Text>
-              <Text style={styles.checkTime}>09:05 AM</Text>
-              <Text style={styles.checkStatus}>On Time</Text>
+              <Text style={styles.checkTime}>{checkedIn ? '09:05 AM' : '--'}</Text>
+              <Text style={styles.checkStatus}>{checkedIn ? 'On Time' : 'Pending'}</Text>
             </View>
             <View style={styles.checkItem}>
               <Text style={styles.checkLabel}>CHECK-OUT</Text>
-              <Text style={styles.checkTime}>06:02 PM</Text>
-              <Text style={styles.checkStatusCompleted}>Completed</Text>
+              <Text style={styles.checkTime}>{checkedOut ? '06:02 PM' : '--'}</Text>
+              <Text style={checkedOut ? styles.checkStatusCompleted : styles.checkStatus}>{checkedOut ? 'Completed' : 'Pending'}</Text>
             </View>
           </View>
-        </View>
-
-        {/* Work Hours Summary */}
-        <View style={styles.summaryCard}>
-          <Text style={styles.sectionTitle}>WORK HOURS SUMMARY</Text>
-          <View style={styles.summaryGrid}>
-            <View style={styles.summaryItem}>
-              <Text style={[styles.summaryPercent, { color: '#4f46e5' }]}>85%</Text>
-              <Text style={styles.summaryValue}>7h 30m</Text>
-              <Text style={styles.summaryLabel}>WORKED</Text>
-            </View>
-            <View style={styles.summaryItem}>
-              <Text style={[styles.summaryPercent, { color: '#6366f1' }]}>30m</Text>
-              <Text style={styles.summaryValue}>30m</Text>
-              <Text style={styles.summaryLabel}>BREAK</Text>
-            </View>
-            <View style={styles.summaryItem}>
-              <Text style={[styles.summaryPercent, { color: '#ef4444' }]}>30m</Text>
-              <Text style={styles.summaryValue}>30m</Text>
-              <Text style={styles.summaryLabel}>REMAINING</Text>
-            </View>
-          </View>
-        </View>
+        </Animated.View>
 
         {/* Action Buttons */}
         <View style={styles.actionRow}>
-          <TouchableOpacity 
-            style={[styles.actionBtn, styles.actionBtnActive]} 
-            onPress={() => router.push('/(employee)/attendance-logging')}
+          <TouchableOpacity
+            style={[styles.actionBtn, !checkedIn && styles.actionBtnActive]}
+            onPress={handleCheckIn}
+            disabled={checkedIn}
           >
-            <Ionicons name="log-in-outline" size={24} color="#fff" />
-            <Text style={styles.actionBtnTextActive}>Check In</Text>
+            <Ionicons name="log-in-outline" size={24} color={checkedIn ? '#94a3b8' : '#fff'} />
+            <Text style={checkedIn ? styles.actionBtnTextDisabled : styles.actionBtnTextActive}>{checkedIn ? 'Checked In ✓' : 'Check In'}</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.actionBtn}>
-            <Ionicons name="log-out-outline" size={24} color="#4f46e5" />
-            <Text style={styles.actionBtnText}>Check Out</Text>
+          <TouchableOpacity
+            style={[styles.actionBtn, checkedIn && !checkedOut && styles.actionBtnActive]}
+            onPress={handleCheckOut}
+            disabled={checkedOut || !checkedIn}
+          >
+            <Ionicons name="log-out-outline" size={24} color={checkedIn && !checkedOut ? '#fff' : '#94a3b8'} />
+            <Text style={checkedIn && !checkedOut ? styles.actionBtnTextActive : styles.actionBtnTextDisabled}>{checkedOut ? 'Checked Out ✓' : 'Check Out'}</Text>
           </TouchableOpacity>
         </View>
 
+        {/* ═══ TIME TABS ═══ */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>ATTENDANCE RECORDS</Text>
+          <View style={styles.tabRow}>
+            {(['Daily', 'Weekly', 'Monthly'] as TimeTab[]).map(tab => (
+              <TouchableOpacity
+                key={tab}
+                style={[styles.tabBtn, activeTab === tab && styles.tabBtnActive]}
+                onPress={() => setActiveTab(tab)}
+              >
+                <Text style={[styles.tabBtnText, activeTab === tab && styles.tabBtnTextActive]}>{tab}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+
+          {/* Department Filter */}
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.deptFilter}>
+            {DEPARTMENTS.map(dept => (
+              <TouchableOpacity
+                key={dept}
+                style={[styles.deptChip, selectedDept === dept && styles.deptChipActive]}
+                onPress={() => setSelectedDept(dept)}
+              >
+                <Text style={[styles.deptChipText, selectedDept === dept && styles.deptChipTextActive]}>{dept}</Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+
+          {/* Stats Summary */}
+          <View style={styles.statsGrid}>
+            <View style={[styles.statCard, { borderLeftColor: '#4f46e5' }]}>
+              <Text style={styles.statValue}>{stats.attendanceRate}%</Text>
+              <Text style={styles.statLabel}>Attendance</Text>
+            </View>
+            <View style={[styles.statCard, { borderLeftColor: '#22c55e' }]}>
+              <Text style={styles.statValue}>{stats.present}</Text>
+              <Text style={styles.statLabel}>Present</Text>
+            </View>
+            <View style={[styles.statCard, { borderLeftColor: '#d97706' }]}>
+              <Text style={styles.statValue}>{stats.late}</Text>
+              <Text style={styles.statLabel}>Late</Text>
+            </View>
+            <View style={[styles.statCard, { borderLeftColor: '#dc2626' }]}>
+              <Text style={styles.statValue}>{stats.absent}</Text>
+              <Text style={styles.statLabel}>Absent</Text>
+            </View>
+          </View>
+
+          {/* Records List */}
+          {filteredRecords.length === 0 ? (
+            <View style={styles.emptyState}>
+              <Ionicons name="document-text-outline" size={48} color="#cbd5e1" />
+              <Text style={styles.emptyText}>No records found for this filter</Text>
+            </View>
+          ) : (
+            filteredRecords.map((rec, idx) => {
+              const sc = getStatusColor(rec.status);
+              return (
+                <Animated.View key={rec.id} entering={FadeInDown.delay(idx * 50).duration(300)} style={styles.recordCard}>
+                  <View style={styles.recordLeft}>
+                    <Text style={styles.recordDate}>{rec.date}</Text>
+                    <Text style={styles.recordDept}>{rec.department}</Text>
+                  </View>
+                  <View style={styles.recordCenter}>
+                    <Text style={styles.recordTime}>{rec.checkIn} - {rec.checkOut}</Text>
+                    <Text style={styles.recordHours}>{rec.hoursWorked}</Text>
+                  </View>
+                  <View style={[styles.recordBadge, { backgroundColor: sc.bg }]}>
+                    <Text style={[styles.recordBadgeText, { color: sc.text }]}>{rec.status}</Text>
+                  </View>
+                </Animated.View>
+              );
+            })
+          )}
+
+          {/* Generate Report */}
+          <TouchableOpacity style={styles.generateBtn} onPress={handleGenerateReport} disabled={reportLoading}>
+            {reportLoading ? (
+              <ActivityIndicator color="#fff" size="small" />
+            ) : (
+              <>
+                <Ionicons name="document-text-outline" size={20} color="#fff" />
+                <Text style={styles.generateBtnText}>Generate Report</Text>
+              </>
+            )}
+          </TouchableOpacity>
+        </View>
+
+        {/* ═══ CORRECTION REQUESTS ═══ */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>CORRECTION REQUESTS</Text>
+          <View style={styles.tabRow}>
+            {(['Pending', 'Approved', 'Rejected'] as CorrectionTab[]).map(tab => {
+              const count = corrections.filter(c => c.status === tab).length;
+              return (
+                <TouchableOpacity
+                  key={tab}
+                  style={[styles.tabBtn, correctionTab === tab && styles.tabBtnActive]}
+                  onPress={() => setCorrectionTab(tab)}
+                >
+                  <Text style={[styles.tabBtnText, correctionTab === tab && styles.tabBtnTextActive]}>{tab} ({count})</Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+
+          {/* Bulk Action */}
+          {correctionTab === 'Pending' && filteredCorrections.length > 0 && (
+            <View style={styles.bulkRow}>
+              <TouchableOpacity style={styles.bulkBtn} onPress={handleBulkApprove}>
+                <Ionicons name="checkmark-done" size={18} color="#fff" />
+                <Text style={styles.bulkBtnText}>Approve Selected ({selectedIds.length})</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+
+          {/* Correction List */}
+          {filteredCorrections.length === 0 ? (
+            <View style={styles.emptyState}>
+              <Ionicons name="checkmark-circle-outline" size={48} color="#cbd5e1" />
+              <Text style={styles.emptyText}>No {correctionTab.toLowerCase()} requests</Text>
+            </View>
+          ) : (
+            filteredCorrections.map((correction, idx) => {
+              const sc = getStatusColor(correction.status === 'Pending' ? 'Late' : correction.status === 'Approved' ? 'Present' : 'Absent');
+              return (
+                <Animated.View key={correction.id} entering={FadeInDown.delay(idx * 80).duration(300)} style={styles.correctionCard}>
+                  {correctionTab === 'Pending' && (
+                    <TouchableOpacity style={styles.checkbox} onPress={() => toggleSelect(correction.id)}>
+                      <Ionicons
+                        name={selectedIds.includes(correction.id) ? 'checkbox' : 'square-outline'}
+                        size={22}
+                        color={selectedIds.includes(correction.id) ? '#4f46e5' : '#cbd5e1'}
+                      />
+                    </TouchableOpacity>
+                  )}
+                  <View style={styles.correctionBody}>
+                    <View style={styles.correctionHeader}>
+                      <View>
+                        <Text style={styles.correctionDate}>{correction.date}</Text>
+                        <Text style={styles.correctionType}>{correction.type} Correction</Text>
+                      </View>
+                      <View style={[styles.recordBadge, { backgroundColor: sc.bg }]}>
+                        <Text style={[styles.recordBadgeText, { color: sc.text }]}>{correction.status}</Text>
+                      </View>
+                    </View>
+                    <View style={styles.correctionTimes}>
+                      <View style={styles.correctionTimeItem}>
+                        <Text style={styles.correctionTimeLabel}>Original</Text>
+                        <Text style={styles.correctionTimeValue}>{correction.originalTime}</Text>
+                      </View>
+                      <Ionicons name="arrow-forward" size={16} color="#94a3b8" />
+                      <View style={styles.correctionTimeItem}>
+                        <Text style={styles.correctionTimeLabel}>Requested</Text>
+                        <Text style={[styles.correctionTimeValue, { color: '#4f46e5' }]}>{correction.requestedTime}</Text>
+                      </View>
+                    </View>
+                    <Text style={styles.correctionReason} numberOfLines={2}>Reason: {correction.reason}</Text>
+
+                    {/* Action Buttons */}
+                    {correction.status === 'Pending' && (
+                      <View style={styles.correctionActions}>
+                        <TouchableOpacity style={styles.approveBtn} onPress={() => handleApprove(correction.id)}>
+                          <Ionicons name="checkmark" size={16} color="#fff" />
+                          <Text style={styles.approveBtnText}>Approve</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.rejectBtn} onPress={() => handleRejectPress(correction.id)}>
+                          <Ionicons name="close" size={16} color="#ef4444" />
+                          <Text style={styles.rejectBtnText}>Reject</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.reviewBtn} onPress={() => handleReview(correction)}>
+                          <Ionicons name="eye-outline" size={16} color="#4f46e5" />
+                          <Text style={styles.reviewBtnText}>Review</Text>
+                        </TouchableOpacity>
+                      </View>
+                    )}
+                  </View>
+                </Animated.View>
+              );
+            })
+          )}
+        </View>
+
         {/* Shift & Schedule */}
-        <View style={styles.shiftCard}>
+        <Animated.View entering={FadeInDown.delay(200).duration(500)} style={styles.shiftCard}>
           <View style={styles.shiftHeader}>
-             <Ionicons name="time-outline" size={20} color="#4f46e5" />
-             <Text style={styles.shiftTitle}>Shift & Schedule</Text>
+            <Ionicons name="time-outline" size={20} color="#4f46e5" />
+            <Text style={styles.shiftTitle}>Shift & Schedule</Text>
           </View>
           <View style={styles.shiftBody}>
             <View style={styles.shiftInfo}>
@@ -127,63 +482,147 @@ export default function AttendancePage() {
               <Text style={styles.shiftDays}>Fixed 60 mins</Text>
             </View>
           </View>
-        </View>
-
-        {/* Today's Timeline */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>TODAY'S TIMELINE</Text>
-          <View style={styles.timeline}>
-             {[
-               { title: 'Checked In', source: 'Web Dashboard', time: '09:05 AM', icon: 'person', color: '#4f46e5' },
-               { title: 'Break Started', source: 'Lunch Break', time: '01:05 PM', icon: 'cafe', color: '#6366f1' },
-               { title: 'Break Ended', source: 'Resumed Work', time: '01:35 PM', icon: 'play-circle', color: '#6366f1' },
-               { title: 'Checked Out', source: 'Mobile App', time: '06:02 PM', icon: 'exit', color: '#94a3b8' },
-             ].map((item, idx, arr) => (
-               <View key={idx} style={styles.timelineItem}>
-                 <View style={styles.timelineIndicator}>
-                   <View style={[styles.timelineDot, { backgroundColor: item.color }]} />
-                   {idx < arr.length - 1 && <View style={styles.timelineLine} />}
-                 </View>
-                 <View style={styles.timelineContent}>
-                   <View>
-                     <Text style={styles.timelineTitle}>{item.title}</Text>
-                     <Text style={styles.timelineSource}>{item.source}</Text>
-                   </View>
-                   <Text style={styles.timelineTime}>{item.time}</Text>
-                 </View>
-               </View>
-             ))}
-          </View>
-        </View>
+        </Animated.View>
 
         {/* Quick Actions */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>QUICK ACTIONS</Text>
-          <TouchableOpacity style={styles.quickActionItem}>
+          <TouchableOpacity style={styles.quickActionItem} onPress={() => router.push('/(employee)/attendance-history')}>
             <View style={[styles.quickActionIcon, { backgroundColor: '#eef2ff' }]}>
-               <Ionicons name="clipboard-outline" size={20} color="#4f46e5" />
+              <Ionicons name="clipboard-outline" size={20} color="#4f46e5" />
             </View>
             <Text style={styles.quickActionText}>View Attendance History</Text>
             <Ionicons name="chevron-forward" size={20} color="#cbd5e1" />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.quickActionItem}>
+          <TouchableOpacity style={styles.quickActionItem} onPress={() => router.push('/(employee)/attendance-logging')}>
             <View style={[styles.quickActionIcon, { backgroundColor: '#fff7ed' }]}>
-               <Ionicons name="create-outline" size={20} color="#f97316" />
+              <Ionicons name="create-outline" size={20} color="#f97316" />
             </View>
             <Text style={styles.quickActionText}>Attendance Correction</Text>
             <Ionicons name="chevron-forward" size={20} color="#cbd5e1" />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.quickActionItem}>
+          <TouchableOpacity style={styles.quickActionItem} onPress={() => router.push('/(employee)/leave' as any)}>
             <View style={[styles.quickActionIcon, { backgroundColor: '#fef2f2' }]}>
-               <Ionicons name="calendar-outline" size={20} color="#ef4444" />
+              <Ionicons name="calendar-outline" size={20} color="#ef4444" />
             </View>
             <Text style={styles.quickActionText}>Apply Leave</Text>
             <Ionicons name="chevron-forward" size={20} color="#cbd5e1" />
           </TouchableOpacity>
         </View>
 
-        <View style={{ height: 100 }} />
+        <View style={{ height: 120 }} />
       </ScrollView>
+
+      {/* ═══ REPORT MODAL ═══ */}
+      <Modal visible={reportVisible} transparent animationType="slide">
+        <View style={styles.modalOverlay}>
+          <Animated.View entering={FadeInDown.duration(400)} style={styles.reportModal}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>📊 Attendance Report</Text>
+              <TouchableOpacity onPress={() => setReportVisible(false)}>
+                <Ionicons name="close-circle" size={28} color="#94a3b8" />
+              </TouchableOpacity>
+            </View>
+            <Text style={styles.reportSubTitle}>{activeTab} — {selectedDept} Department</Text>
+
+            <View style={styles.reportGrid}>
+              <View style={styles.reportItem}>
+                <Text style={styles.reportValue}>{stats.attendanceRate}%</Text>
+                <Text style={styles.reportLabel}>Attendance Rate</Text>
+              </View>
+              <View style={styles.reportItem}>
+                <Text style={styles.reportValue}>{stats.present + stats.late}</Text>
+                <Text style={styles.reportLabel}>Total Working Days</Text>
+              </View>
+              <View style={styles.reportItem}>
+                <Text style={styles.reportValue}>{stats.late}</Text>
+                <Text style={styles.reportLabel}>Late Entries</Text>
+              </View>
+              <View style={styles.reportItem}>
+                <Text style={styles.reportValue}>{stats.absent}</Text>
+                <Text style={styles.reportLabel}>Absent Days</Text>
+              </View>
+            </View>
+
+            <View style={styles.exportRow}>
+              <TouchableOpacity style={styles.exportBtn} onPress={() => { Alert.alert('📄 PDF', 'Report exported as PDF'); setReportVisible(false); }}>
+                <Ionicons name="document-outline" size={18} color="#4f46e5" />
+                <Text style={styles.exportBtnText}>PDF</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.exportBtn} onPress={() => { Alert.alert('📋 CSV', 'Report exported as CSV'); setReportVisible(false); }}>
+                <Ionicons name="grid-outline" size={18} color="#4f46e5" />
+                <Text style={styles.exportBtnText}>CSV</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.exportBtn} onPress={() => { Alert.alert('🔗 Share', 'Report sharing initiated'); setReportVisible(false); }}>
+                <Ionicons name="share-outline" size={18} color="#4f46e5" />
+                <Text style={styles.exportBtnText}>Share</Text>
+              </TouchableOpacity>
+            </View>
+          </Animated.View>
+        </View>
+      </Modal>
+
+      {/* ═══ REJECTION REASON MODAL ═══ */}
+      <Modal visible={rejectModalVisible} transparent animationType="fade">
+        <View style={styles.modalOverlay}>
+          <View style={styles.rejectModal}>
+            <Text style={styles.modalTitle}>Rejection Reason</Text>
+            <TextInput
+              style={styles.rejectInput}
+              placeholder="Enter reason for rejection..."
+              placeholderTextColor="#94a3b8"
+              value={rejectReason}
+              onChangeText={setRejectReason}
+              multiline
+              numberOfLines={3}
+            />
+            <View style={styles.rejectModalActions}>
+              <TouchableOpacity style={styles.cancelModalBtn} onPress={() => setRejectModalVisible(false)}>
+                <Text style={styles.cancelModalText}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.confirmRejectBtn} onPress={handleRejectConfirm}>
+                <Text style={styles.confirmRejectText}>Reject</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/* ═══ CORRECTION DETAIL MODAL ═══ */}
+      <Modal visible={detailModalVisible} transparent animationType="slide">
+        <View style={styles.modalOverlay}>
+          <View style={styles.detailModal}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Correction Detail</Text>
+              <TouchableOpacity onPress={() => setDetailModalVisible(false)}>
+                <Ionicons name="close-circle" size={28} color="#94a3b8" />
+              </TouchableOpacity>
+            </View>
+            {selectedCorrection && (
+              <>
+                <View style={styles.detailRow}><Text style={styles.detailLabel}>Date</Text><Text style={styles.detailValue}>{selectedCorrection.date}</Text></View>
+                <View style={styles.detailRow}><Text style={styles.detailLabel}>Type</Text><Text style={styles.detailValue}>{selectedCorrection.type}</Text></View>
+                <View style={styles.detailRow}><Text style={styles.detailLabel}>Original Time</Text><Text style={styles.detailValue}>{selectedCorrection.originalTime}</Text></View>
+                <View style={styles.detailRow}><Text style={styles.detailLabel}>Requested Time</Text><Text style={[styles.detailValue, { color: '#4f46e5' }]}>{selectedCorrection.requestedTime}</Text></View>
+                <View style={styles.detailRow}><Text style={styles.detailLabel}>Difference</Text><Text style={styles.detailValue}>~1h 10m</Text></View>
+                <View style={styles.detailRow}><Text style={styles.detailLabel}>Reason</Text><Text style={styles.detailValue}>{selectedCorrection.reason}</Text></View>
+                {selectedCorrection.status === 'Pending' && (
+                  <View style={styles.correctionActions}>
+                    <TouchableOpacity style={styles.approveBtn} onPress={() => { handleApprove(selectedCorrection.id); setDetailModalVisible(false); }}>
+                      <Ionicons name="checkmark" size={16} color="#fff" />
+                      <Text style={styles.approveBtnText}>Approve</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.rejectBtn} onPress={() => { handleRejectPress(selectedCorrection.id); setDetailModalVisible(false); }}>
+                      <Ionicons name="close" size={16} color="#ef4444" />
+                      <Text style={styles.rejectBtnText}>Reject</Text>
+                    </TouchableOpacity>
+                  </View>
+                )}
+              </>
+            )}
+          </View>
+        </View>
+      </Modal>
 
       <BottomNav />
     </SafeAreaView>
@@ -191,335 +630,150 @@ export default function AttendancePage() {
 }
 
 const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-    backgroundColor: '#f8fafc',
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    backgroundColor: '#fff',
-    marginTop: Platform.OS === 'android' ? 30 : 0,
-  },
-  headerBtn: {
-    padding: 4,
-  },
-  headerTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#0f172a',
-  },
-  headerRight: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
-  headerAvatar: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    borderWidth: 1,
-    borderColor: '#e2e8f0',
-  },
-  scrollContent: {
-    paddingBottom: 20,
-  },
-  toast: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#f0fdf4',
-    margin: 20,
-    padding: 12,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: '#dcfce7',
-  },
-  toastIcon: {
-    marginRight: 8,
-  },
-  toastText: {
-    fontSize: 14,
-    color: '#166534',
-    fontWeight: '600',
-  },
-  detailsCard: {
-    backgroundColor: '#fff',
-    marginHorizontal: 20,
-    borderRadius: 24,
-    padding: 24,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.03,
-    shadowRadius: 10,
-    elevation: 2,
-    marginBottom: 20,
-  },
-  detailsHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    marginBottom: 20,
-  },
-  detailsSub: {
-    fontSize: 13,
-    color: '#94a3b8',
-    fontWeight: '500',
-    marginBottom: 4,
-  },
-  detailsDate: {
-    fontSize: 24,
-    fontWeight: '800',
-    color: '#1e293b',
-  },
-  statusBadge: {
-    backgroundColor: '#dcfce7',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 12,
-  },
-  statusText: {
-    fontSize: 11,
-    fontWeight: '800',
-    color: '#16a34a',
-  },
-  checkRow: {
-    flexDirection: 'row',
-    gap: 12,
-  },
-  checkItem: {
-    flex: 1,
-    backgroundColor: '#f8fafc',
-    padding: 16,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: '#f1f5f9',
-  },
-  checkLabel: {
-    fontSize: 10,
-    fontWeight: '800',
-    color: '#94a3b8',
-    marginBottom: 8,
-    letterSpacing: 0.5,
-  },
-  checkTime: {
-    fontSize: 16,
-    fontWeight: '800',
-    color: '#1e293b',
-    marginBottom: 4,
-  },
-  checkStatus: {
-    fontSize: 11,
-    color: '#10b981',
-    fontWeight: '600',
-  },
-  checkStatusCompleted: {
-    fontSize: 11,
-    color: '#64748b',
-    fontWeight: '600',
-  },
-  summaryCard: {
-    backgroundColor: '#fff',
-    marginHorizontal: 20,
-    borderRadius: 24,
-    padding: 24,
-    marginBottom: 20,
-  },
-  sectionTitle: {
-    fontSize: 12,
-    fontWeight: '800',
-    color: '#1e293b',
-    letterSpacing: 0.5,
-    marginBottom: 20,
-  },
-  summaryGrid: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  summaryItem: {
-    alignItems: 'center',
-  },
-  summaryPercent: {
-    fontSize: 13,
-    fontWeight: '700',
-    marginBottom: 16,
-  },
-  summaryValue: {
-    fontSize: 16,
-    fontWeight: '800',
-    color: '#1e293b',
-    marginBottom: 4,
-  },
-  summaryLabel: {
-    fontSize: 10,
-    color: '#94a3b8',
-    fontWeight: '700',
-  },
-  actionRow: {
-    flexDirection: 'row',
-    marginHorizontal: 20,
-    gap: 12,
-    marginBottom: 20,
-  },
-  actionBtn: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 16,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: '#e2e8f0',
-    backgroundColor: '#fff',
-    gap: 8,
-  },
-  actionBtnActive: {
-    backgroundColor: '#4f46e5',
-    borderColor: '#4f46e5',
-    shadowColor: '#4f46e5',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 10,
-    elevation: 4,
-  },
-  actionBtnText: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#4f46e5',
-  },
-  actionBtnTextActive: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#fff',
-  },
-  shiftCard: {
-    backgroundColor: '#eff6ff',
-    marginHorizontal: 20,
-    borderRadius: 24,
-    padding: 20,
-    marginBottom: 24,
-  },
-  shiftHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    marginBottom: 16,
-  },
-  shiftTitle: {
-    fontSize: 15,
-    fontWeight: '700',
-    color: '#1e293b',
-  },
-  shiftBody: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  shiftInfo: {
-    flex: 1,
-  },
-  shiftLabel: {
-    fontSize: 13,
-    color: '#64748b',
-    fontWeight: '600',
-    marginBottom: 4,
-  },
-  shiftTime: {
-    fontSize: 14,
-    fontWeight: '800',
-    color: '#1e293b',
-    marginBottom: 4,
-  },
-  shiftDays: {
-    fontSize: 12,
-    color: '#94a3b8',
-    fontWeight: '500',
-  },
-  shiftDivider: {
-    width: 1,
-    height: 40,
-    backgroundColor: '#dbeafe',
-    marginHorizontal: 16,
-  },
-  section: {
-    paddingHorizontal: 20,
-    marginBottom: 24,
-  },
-  timeline: {
-    marginTop: 8,
-  },
-  timelineItem: {
-    flexDirection: 'row',
-    marginBottom: 16,
-  },
-  timelineIndicator: {
-    alignItems: 'center',
-    marginRight: 16,
-    width: 16,
-  },
-  timelineDot: {
-    width: 14,
-    height: 14,
-    borderRadius: 7,
-    zIndex: 1,
-    borderWidth: 2,
-    borderColor: '#fff',
-  },
-  timelineLine: {
-    width: 2,
-    position: 'absolute',
-    top: 14,
-    bottom: -16,
-    backgroundColor: '#e2e8f0',
-  },
-  timelineContent: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-    padding: 16,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: '#f1f5f9',
-  },
-  timelineTitle: {
-    fontSize: 14,
-    fontWeight: '700',
-    color: '#1e293b',
-    marginBottom: 2,
-  },
-  timelineSource: {
-    fontSize: 12,
-    color: '#94a3b8',
-    fontWeight: '500',
-  },
-  timelineTime: {
-    fontSize: 13,
-    fontWeight: '700',
-    color: '#64748b',
-  },
-  quickActionItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-    padding: 12,
-    borderRadius: 16,
-    marginBottom: 12,
-    gap: 12,
-  },
-  quickActionIcon: {
-    width: 40,
-    height: 40,
-    borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  quickActionText: {
-    flex: 1,
-    fontSize: 14,
-    fontWeight: '700',
-    color: '#1e293b',
-  },
+  root: { flex: 1, backgroundColor: '#f8fafc' },
+  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, paddingVertical: 12, backgroundColor: '#fff', marginTop: Platform.OS === 'android' ? 30 : 0 },
+  headerBtn: { padding: 4 },
+  headerTitle: { fontSize: 18, fontWeight: '700', color: '#0f172a' },
+  headerRight: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  headerAvatar: { width: 36, height: 36, borderRadius: 18, borderWidth: 1, borderColor: '#e2e8f0' },
+  scrollContent: { paddingBottom: 20 },
+
+  // Toast
+  toast: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#f0fdf4', margin: 20, padding: 12, borderRadius: 12, borderWidth: 1, borderColor: '#dcfce7' },
+  toastIcon: { marginRight: 8 },
+  toastText: { fontSize: 14, color: '#166534', fontWeight: '600' },
+
+  // Details
+  detailsCard: { backgroundColor: '#fff', marginHorizontal: 20, borderRadius: 24, padding: 24, shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.03, shadowRadius: 10, elevation: 2, marginBottom: 20 },
+  detailsHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 },
+  detailsSub: { fontSize: 13, color: '#94a3b8', fontWeight: '500', marginBottom: 4 },
+  detailsDate: { fontSize: 22, fontWeight: '800', color: '#1e293b' },
+  statusBadge: { paddingHorizontal: 12, paddingVertical: 6, borderRadius: 12 },
+  statusText: { fontSize: 11, fontWeight: '800' },
+  checkRow: { flexDirection: 'row', gap: 12 },
+  checkItem: { flex: 1, backgroundColor: '#f8fafc', padding: 16, borderRadius: 16, borderWidth: 1, borderColor: '#f1f5f9' },
+  checkLabel: { fontSize: 10, fontWeight: '800', color: '#94a3b8', marginBottom: 8, letterSpacing: 0.5 },
+  checkTime: { fontSize: 16, fontWeight: '800', color: '#1e293b', marginBottom: 4 },
+  checkStatus: { fontSize: 11, color: '#10b981', fontWeight: '600' },
+  checkStatusCompleted: { fontSize: 11, color: '#64748b', fontWeight: '600' },
+
+  // Action Buttons
+  actionRow: { flexDirection: 'row', marginHorizontal: 20, gap: 12, marginBottom: 20 },
+  actionBtn: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingVertical: 16, borderRadius: 16, borderWidth: 1, borderColor: '#e2e8f0', backgroundColor: '#fff', gap: 8 },
+  actionBtnActive: { backgroundColor: '#4f46e5', borderColor: '#4f46e5', shadowColor: '#4f46e5', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.2, shadowRadius: 10, elevation: 4 },
+  actionBtnTextActive: { fontSize: 15, fontWeight: '700', color: '#fff' },
+  actionBtnTextDisabled: { fontSize: 15, fontWeight: '700', color: '#94a3b8' },
+
+  // Section
+  section: { paddingHorizontal: 20, marginBottom: 24 },
+  sectionTitle: { fontSize: 12, fontWeight: '800', color: '#1e293b', letterSpacing: 0.5, marginBottom: 16 },
+
+  // Tabs
+  tabRow: { flexDirection: 'row', gap: 8, marginBottom: 16 },
+  tabBtn: { paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20, backgroundColor: '#f1f5f9' },
+  tabBtnActive: { backgroundColor: '#4f46e5' },
+  tabBtnText: { fontSize: 13, fontWeight: '700', color: '#64748b' },
+  tabBtnTextActive: { color: '#fff' },
+
+  // Department Filter
+  deptFilter: { marginBottom: 16 },
+  deptChip: { paddingHorizontal: 14, paddingVertical: 6, borderRadius: 16, backgroundColor: '#f8fafc', borderWidth: 1, borderColor: '#e2e8f0', marginRight: 8 },
+  deptChipActive: { backgroundColor: '#eef2ff', borderColor: '#4f46e5' },
+  deptChipText: { fontSize: 12, fontWeight: '600', color: '#64748b' },
+  deptChipTextActive: { color: '#4f46e5' },
+
+  // Stats
+  statsGrid: { flexDirection: 'row', gap: 8, marginBottom: 16 },
+  statCard: { flex: 1, backgroundColor: '#fff', borderRadius: 12, padding: 12, borderLeftWidth: 3, alignItems: 'center' },
+  statValue: { fontSize: 18, fontWeight: '800', color: '#1e293b' },
+  statLabel: { fontSize: 9, fontWeight: '700', color: '#94a3b8', marginTop: 4, textTransform: 'uppercase' },
+
+  // Records
+  recordCard: { flexDirection: 'row', backgroundColor: '#fff', borderRadius: 16, padding: 14, marginBottom: 8, alignItems: 'center', borderWidth: 1, borderColor: '#f1f5f9' },
+  recordLeft: { flex: 1 },
+  recordDate: { fontSize: 13, fontWeight: '700', color: '#1e293b' },
+  recordDept: { fontSize: 11, color: '#94a3b8', fontWeight: '500', marginTop: 2 },
+  recordCenter: { flex: 1, alignItems: 'center' },
+  recordTime: { fontSize: 11, fontWeight: '600', color: '#64748b' },
+  recordHours: { fontSize: 12, fontWeight: '800', color: '#1e293b', marginTop: 2 },
+  recordBadge: { paddingHorizontal: 10, paddingVertical: 4, borderRadius: 10 },
+  recordBadgeText: { fontSize: 10, fontWeight: '800' },
+
+  // Generate Report
+  generateBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: '#4f46e5', paddingVertical: 14, borderRadius: 16, gap: 8, marginTop: 8, shadowColor: '#4f46e5', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.2, shadowRadius: 10, elevation: 4 },
+  generateBtnText: { fontSize: 15, fontWeight: '700', color: '#fff' },
+
+  // Corrections
+  correctionCard: { flexDirection: 'row', backgroundColor: '#fff', borderRadius: 16, padding: 16, marginBottom: 12, borderWidth: 1, borderColor: '#f1f5f9' },
+  checkbox: { marginRight: 12, justifyContent: 'center' },
+  correctionBody: { flex: 1 },
+  correctionHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 },
+  correctionDate: { fontSize: 14, fontWeight: '700', color: '#1e293b' },
+  correctionType: { fontSize: 11, color: '#94a3b8', fontWeight: '600', marginTop: 2 },
+  correctionTimes: { flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 10 },
+  correctionTimeItem: { alignItems: 'center' },
+  correctionTimeLabel: { fontSize: 10, fontWeight: '700', color: '#94a3b8', marginBottom: 4 },
+  correctionTimeValue: { fontSize: 14, fontWeight: '800', color: '#1e293b' },
+  correctionReason: { fontSize: 12, color: '#64748b', fontWeight: '500', marginBottom: 12 },
+  correctionActions: { flexDirection: 'row', gap: 8 },
+  approveBtn: { flexDirection: 'row', alignItems: 'center', gap: 4, backgroundColor: '#22c55e', paddingHorizontal: 14, paddingVertical: 8, borderRadius: 10 },
+  approveBtnText: { fontSize: 12, fontWeight: '700', color: '#fff' },
+  rejectBtn: { flexDirection: 'row', alignItems: 'center', gap: 4, backgroundColor: '#fef2f2', paddingHorizontal: 14, paddingVertical: 8, borderRadius: 10, borderWidth: 1, borderColor: '#fee2e2' },
+  rejectBtnText: { fontSize: 12, fontWeight: '700', color: '#ef4444' },
+  reviewBtn: { flexDirection: 'row', alignItems: 'center', gap: 4, backgroundColor: '#eef2ff', paddingHorizontal: 14, paddingVertical: 8, borderRadius: 10, borderWidth: 1, borderColor: '#c7d2fe' },
+  reviewBtnText: { fontSize: 12, fontWeight: '700', color: '#4f46e5' },
+
+  // Bulk
+  bulkRow: { marginBottom: 12 },
+  bulkBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, backgroundColor: '#22c55e', paddingVertical: 10, borderRadius: 12 },
+  bulkBtnText: { fontSize: 13, fontWeight: '700', color: '#fff' },
+
+  // Empty
+  emptyState: { alignItems: 'center', paddingVertical: 32 },
+  emptyText: { fontSize: 14, color: '#94a3b8', fontWeight: '600', marginTop: 12 },
+
+  // Shift
+  shiftCard: { backgroundColor: '#eff6ff', marginHorizontal: 20, borderRadius: 24, padding: 20, marginBottom: 24 },
+  shiftHeader: { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 16 },
+  shiftTitle: { fontSize: 15, fontWeight: '700', color: '#1e293b' },
+  shiftBody: { flexDirection: 'row', alignItems: 'center' },
+  shiftInfo: { flex: 1 },
+  shiftLabel: { fontSize: 13, color: '#64748b', fontWeight: '600', marginBottom: 4 },
+  shiftTime: { fontSize: 14, fontWeight: '800', color: '#1e293b', marginBottom: 4 },
+  shiftDays: { fontSize: 12, color: '#94a3b8', fontWeight: '500' },
+  shiftDivider: { width: 1, height: 40, backgroundColor: '#dbeafe', marginHorizontal: 16 },
+
+  // Quick Actions
+  quickActionItem: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#fff', padding: 12, borderRadius: 16, marginBottom: 12, gap: 12 },
+  quickActionIcon: { width: 40, height: 40, borderRadius: 10, justifyContent: 'center', alignItems: 'center' },
+  quickActionText: { flex: 1, fontSize: 14, fontWeight: '700', color: '#1e293b' },
+
+  // Modals
+  modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'flex-end' },
+  reportModal: { backgroundColor: '#fff', borderTopLeftRadius: 24, borderTopRightRadius: 24, padding: 24 },
+  modalHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 },
+  modalTitle: { fontSize: 18, fontWeight: '800', color: '#1e293b' },
+  reportSubTitle: { fontSize: 13, color: '#94a3b8', fontWeight: '600', marginBottom: 20 },
+  reportGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 12, marginBottom: 24 },
+  reportItem: { width: '47%', backgroundColor: '#f8fafc', borderRadius: 16, padding: 16, alignItems: 'center' },
+  reportValue: { fontSize: 24, fontWeight: '800', color: '#1e293b' },
+  reportLabel: { fontSize: 11, color: '#94a3b8', fontWeight: '700', marginTop: 4 },
+  exportRow: { flexDirection: 'row', gap: 12, paddingBottom: Platform.OS === 'ios' ? 30 : 10 },
+  exportBtn: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, paddingVertical: 14, borderRadius: 14, borderWidth: 1, borderColor: '#e2e8f0', backgroundColor: '#f8fafc' },
+  exportBtnText: { fontSize: 14, fontWeight: '700', color: '#4f46e5' },
+
+  // Reject Modal
+  rejectModal: { backgroundColor: '#fff', borderTopLeftRadius: 24, borderTopRightRadius: 24, padding: 24 },
+  rejectInput: { borderWidth: 1, borderColor: '#e2e8f0', borderRadius: 12, padding: 12, fontSize: 14, color: '#1e293b', minHeight: 80, textAlignVertical: 'top', marginVertical: 16 },
+  rejectModalActions: { flexDirection: 'row', gap: 12, paddingBottom: Platform.OS === 'ios' ? 30 : 10 },
+  cancelModalBtn: { flex: 1, paddingVertical: 14, borderRadius: 12, backgroundColor: '#f1f5f9', alignItems: 'center' },
+  cancelModalText: { fontSize: 14, fontWeight: '700', color: '#64748b' },
+  confirmRejectBtn: { flex: 1, paddingVertical: 14, borderRadius: 12, backgroundColor: '#ef4444', alignItems: 'center' },
+  confirmRejectText: { fontSize: 14, fontWeight: '700', color: '#fff' },
+
+  // Detail Modal
+  detailModal: { backgroundColor: '#fff', borderTopLeftRadius: 24, borderTopRightRadius: 24, padding: 24, paddingBottom: Platform.OS === 'ios' ? 40 : 24 },
+  detailRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: '#f1f5f9' },
+  detailLabel: { fontSize: 13, fontWeight: '600', color: '#94a3b8' },
+  detailValue: { fontSize: 14, fontWeight: '700', color: '#1e293b' },
 });
