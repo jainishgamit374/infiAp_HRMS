@@ -81,8 +81,8 @@ const HRDashboard = () => {
       iconColor: '#10b981',
       options: [
         { label: 'Check-in Records', route: '/(hr)/attendance' },
-        { label: 'Monthly Report', route: '/(hr)/attendance' },
-        { label: 'Reports', route: '/(hr)/attendance' },
+        { label: 'Corrections', route: '/(hr)/attendance/corrections' },
+        { label: 'Reports', route: '/(hr)/attendance/reports' },
       ]
     },
     {
