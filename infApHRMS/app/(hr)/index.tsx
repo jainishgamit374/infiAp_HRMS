@@ -100,9 +100,9 @@ const HRDashboard = () => {
       icon: 'rocket',
       iconColor: '#ec4899',
       options: [
-        { label: 'Candidates', route: '/(hr)/recruitment' },
-        { label: 'Applications', route: '/(hr)/recruitment' },
-        { label: 'Interviews', route: '/(hr)/recruitment' },
+        { label: 'Dashboard', route: '/(hr)/recruitment' },
+        { label: 'Candidates', route: '/(hr)/recruitment/candidate-tracking' },
+        { label: 'Applications', route: '/(hr)/recruitment/review-applications' },
       ]
     },
     {
@@ -110,9 +110,9 @@ const HRDashboard = () => {
       icon: 'speedometer',
       iconColor: '#8b5cf6',
       options: [
-        { label: 'Performance', route: '/(hr)/performance' },
-        { label: 'Feedback', route: '/(hr)/performance' },
-        { label: 'Reports', route: '/(hr)/performance' },
+        { label: 'Dashboard', route: '/(hr)/performance' },
+        { label: 'Feedback', route: '/(hr)/performance/feedbacks' },
+        { label: 'Reports', route: '/(hr)/performance/reports' },
       ]
     },
     {
@@ -121,8 +121,8 @@ const HRDashboard = () => {
       iconColor: '#06b6d4',
       options: [
         { label: 'Payroll', route: '/(hr)/finance' },
-        { label: 'Salary', route: '/(hr)/finance' },
-        { label: 'Payslips', route: '/(hr)/finance' },
+        { label: 'Salary Processing', route: '/(hr)/finance/salary-processing' },
+        { label: 'Payslips', route: '/(hr)/finance/payslips' },
       ]
     },
     {
@@ -130,9 +130,9 @@ const HRDashboard = () => {
       icon: 'exit',
       iconColor: '#ef4444',
       options: [
-        { label: 'Resignation', route: '/(hr)/resignation' },
-        { label: 'Requests', route: '/(hr)/resignation' },
-        { label: 'Exit Process', route: '/(hr)/resignation' },
+        { label: 'Submit', route: '/(hr)/resignation' },
+        { label: 'Requests', route: '/(hr)/resignation/requests' },
+        { label: 'Exit Process', route: '/(hr)/resignation/exit-process' },
       ]
     },
     {
@@ -141,8 +141,8 @@ const HRDashboard = () => {
       iconColor: '#5a55d2',
       options: [
         { label: 'Reports', route: '/(hr)/analytics' },
-        { label: 'Attendance', route: '/(hr)/analytics' },
-        { label: 'Insights', route: '/(hr)/analytics' },
+        { label: 'Attendance', route: '/(hr)/analytics/attendance-analytics' },
+        { label: 'Performance', route: '/(hr)/analytics/performance-insights' },
       ]
     }
   ];
