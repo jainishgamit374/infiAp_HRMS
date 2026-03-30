@@ -1,18 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  SafeAreaView,
-  TextInput,
-  Switch,
-  Platform,
-  KeyboardAvoidingView,
-  Modal,
-  FlatList,
-} from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Switch, Platform, KeyboardAvoidingView, Modal, FlatList } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router, useLocalSearchParams } from 'expo-router';
 import Animated, { 
@@ -22,6 +9,7 @@ import Animated, {
   withSpring 
 } from 'react-native-reanimated';
 import { useLeave } from '../../context/LeaveContext';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function EditLeave() {
   const { id } = useLocalSearchParams();

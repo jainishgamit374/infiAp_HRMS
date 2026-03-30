@@ -5,45 +5,15 @@ import { router } from 'expo-router';
 import Animated, { FadeInDown, FadeInRight } from 'react-native-reanimated';
 import { HRBottomNav } from '@/components/HRBottomNav';
 
-const MOCK_REQUESTS = [
-  {
-    id: 'REQ-01',
-    name: 'Alexander Wright',
-    role: 'Software Engineer',
-    empId: 'ID: 1042',
-    avatar: 'https://i.pravatar.cc/150?u=a042581f4e290267041',
-    date: 'Oct 24, 2023',
-    originalTime: '09:15 AM',
-    requestedCorrection: '08:30 AM',
-    status: 'Pending'
-  },
-  {
-    id: 'REQ-02',
-    name: 'Sarah Jenkins',
-    role: 'UX Designer',
-    empId: 'ID: 1069',
-    avatar: 'https://i.pravatar.cc/150?u=a042581f4e290267042',
-    date: 'Oct 23, 2023',
-    originalTime: '06:05 PM',
-    requestedCorrection: '06:45 PM',
-    status: 'Pending'
-  },
-  {
-    id: 'REQ-03',
-    name: 'David Miller',
-    role: 'Data Analyst',
-    empId: 'ID: 1121',
-    avatar: 'https://i.pravatar.cc/150?u=a042581f4e290267043',
-    date: 'Oct 23, 2023',
-    originalTime: '09:00 AM',
-    requestedCorrection: '08:45 AM',
-    status: 'Pending'
-  }
-];
+import { useHR } from '@/context/HRContext';
 
 export default function AttendanceCorrections() {
+  const { correctionRequests, approveCorrection, approveBulkCorrections } = useHR();
   const [activeTab, setActiveTab] = useState('Pending');
   const tabs = ['Pending', 'Approved', 'Rejected'];
+
+  const displayedRequests = correctionRequests.filter(req => req.status === activeTab);
+  const pendingRequests = correctionRequests.filter(req => req.status === 'Pending');
 
   return (
     <View style={styles.container}>
@@ -83,15 +53,17 @@ export default function AttendanceCorrections() {
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
         
         <View style={styles.listHeader}>
-          <Text style={styles.sectionTitle}>Pending Requests ({MOCK_REQUESTS.length})</Text>
-          <TouchableOpacity>
-            <Text style={styles.selectAllText}>Select All</Text>
-          </TouchableOpacity>
+          <Text style={styles.sectionTitle}>{activeTab === 'Pending' ? 'Pending Requests' : `${activeTab} Requests`} ({displayedRequests.length})</Text>
+          {activeTab === 'Pending' && (
+            <TouchableOpacity>
+              <Text style={styles.selectAllText}>Select All</Text>
+            </TouchableOpacity>
+          )}
         </View>
 
         {/* Requests List */}
         <View style={styles.listContainer}>
-          {MOCK_REQUESTS.map((req, index) => (
+          {displayedRequests.map((req, index) => (
             <Animated.View key={req.id} entering={FadeInRight.delay(index * 100).duration(500)}>
               <TouchableOpacity activeOpacity={0.8} style={styles.card} onPress={() => router.push(`/(hr)/attendance/correction-request/${req.id}`)}>
                 <View style={styles.cardHeader}>
@@ -122,24 +94,39 @@ export default function AttendanceCorrections() {
                   <TouchableOpacity style={styles.reviewBtn} onPress={() => router.push(`/(hr)/attendance/correction-request/${req.id}`)}>
                     <Text style={styles.reviewBtnText}>Review</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity style={styles.approveBtn}>
-                    <Text style={styles.approveBtnText}>Approve</Text>
-                  </TouchableOpacity>
+                  {req.status === 'Pending' && (
+                    <TouchableOpacity style={styles.approveBtn} onPress={() => { approveCorrection(req.id); router.push('/(hr)/attendance/correction-success'); }}>
+                      <Text style={styles.approveBtnText}>Approve</Text>
+                    </TouchableOpacity>
+                  )}
                 </View>
               </TouchableOpacity>
             </Animated.View>
           ))}
+          {displayedRequests.length === 0 && (
+            <View style={{ padding: 20, alignItems: 'center' }}>
+              <Text style={{ color: '#9ca3af' }}>No {activeTab.toLowerCase()} requests.</Text>
+            </View>
+          )}
         </View>
         <View style={{ height: 120 }} />
       </ScrollView>
 
       {/* Bulk Action Sticky Bottom */}
-      <View style={styles.stickyBottom}>
-        <TouchableOpacity style={styles.bulkBtn}>
-          <Ionicons name="checkmark-done" size={20} color="#ffffff" />
-          <Text style={styles.bulkBtnText}>Bulk Approve ({MOCK_REQUESTS.length} Requests)</Text>
-        </TouchableOpacity>
-      </View>
+      {activeTab === 'Pending' && pendingRequests.length > 0 && (
+        <View style={styles.stickyBottom}>
+          <TouchableOpacity 
+            style={styles.bulkBtn} 
+            onPress={() => {
+              approveBulkCorrections(pendingRequests.map(r => r.id));
+              router.push('/(hr)/attendance/correction-success');
+            }}
+          >
+            <Ionicons name="checkmark-done" size={20} color="#ffffff" />
+            <Text style={styles.bulkBtnText}>Bulk Approve ({pendingRequests.length} Requests)</Text>
+          </TouchableOpacity>
+        </View>
+      )}
       
       <HRBottomNav />
     </View>

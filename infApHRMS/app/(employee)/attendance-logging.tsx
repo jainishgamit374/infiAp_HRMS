@@ -1,16 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  SafeAreaView,
-  Platform,
-  Image,
-  Dimensions,
-  ActivityIndicator,
-  ScrollView,
-} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Platform, Image, Dimensions, ActivityIndicator, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import Animated, {
@@ -22,6 +11,7 @@ import Animated, {
   interpolate,
 } from 'react-native-reanimated';
 import { BottomNav } from '../../components/BottomNav';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const { width } = Dimensions.get('window');
 

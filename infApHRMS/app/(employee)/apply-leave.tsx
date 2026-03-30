@@ -1,18 +1,5 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  SafeAreaView,
-  TextInput,
-  Switch,
-  Platform,
-  KeyboardAvoidingView,
-  Modal,
-  FlatList,
-} from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Switch, Platform, KeyboardAvoidingView, Modal, FlatList } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import Animated, { 
@@ -23,6 +10,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { BottomNav } from '../../components/BottomNav';
 import { useLeave } from '../../context/LeaveContext';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function ApplyLeave() {
   const { applyLeave, balances } = useLeave();

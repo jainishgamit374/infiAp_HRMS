@@ -1,18 +1,10 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  SafeAreaView,
-  TouchableOpacity,
-  ScrollView,
-  StatusBar,
-  Modal,
-} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, StatusBar, Modal } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { BottomNav } from '../../components/BottomNav';
 import Animated, { FadeInDown, SlideInUp } from 'react-native-reanimated';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const HISTORY_DATA = [
   { id: '1', month: 'September 2023', salary: '$3,450.00', date: 'Sept 30', status: 'Paid', year: '2023' },

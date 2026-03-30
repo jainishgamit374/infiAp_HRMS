@@ -1,15 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  SafeAreaView,
-  Platform,
-  Image,
-  Dimensions,
-} from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform, Image, Dimensions } from 'react-native';
 
 const { width } = Dimensions.get('window');
 import { Ionicons } from '@expo/vector-icons';
@@ -18,6 +8,7 @@ import { BottomNav } from '../../components/BottomNav';
 import { useNotifications } from '../../context/NotificationContext';
 import { GestureHandlerRootView, GestureDetector, Gesture } from 'react-native-gesture-handler';
 import Animated, { useSharedValue, useAnimatedStyle, withSpring, runOnJS, withTiming, withDelay, FadeInDown } from 'react-native-reanimated';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 // Helper for dates
 const TODAY = new Date();

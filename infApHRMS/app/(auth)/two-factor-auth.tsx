@@ -1,17 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  SafeAreaView,
-  Animated,
-  Easing,
-  Platform,
-  Image,
-} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Animated, Easing, Platform, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Link, router, useLocalSearchParams } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const ROLE_DASHBOARD_MAP: Record<string, string> = {
   employee: '/(employee)/',

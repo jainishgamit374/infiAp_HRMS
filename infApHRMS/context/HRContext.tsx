@@ -26,6 +26,25 @@ export interface LeaveRequest {
   reason?: string;
 }
 
+export interface CorrectionRequest {
+  id: string;
+  name: string;
+  role: string;
+  empId: string;
+  avatar: string;
+  date: string;
+  originalIn?: string;
+  originalOut?: string;
+  originalTotal?: string;
+  originalTime?: string;
+  requestedIn?: string;
+  requestedOut?: string;
+  requestedTotal?: string;
+  requestedCorrection?: string;
+  reason?: string;
+  status: 'Pending' | 'Approved' | 'Rejected';
+}
+
 export interface Activity {
   id: string;
   type: string;
@@ -50,6 +69,7 @@ interface HRContextType {
   employees: Employee[];
   leaves: LeaveRequest[];
   pendingLeaves: LeaveRequest[];
+  correctionRequests: CorrectionRequest[];
   activities: Activity[];
   stats: HRStats;
   addEmployee: (employee: Omit<Employee, 'id'>) => void;
@@ -58,6 +78,9 @@ interface HRContextType {
   rejectLeave: (id: string) => void;
   approveBulkLeaves: (ids: string[]) => void;
   rejectBulkLeaves: (ids: string[]) => void;
+  approveCorrection: (id: string) => void;
+  rejectCorrection: (id: string) => void;
+  approveBulkCorrections: (ids: string[]) => void;
 }
 
 const HRContext = createContext<HRContextType | undefined>(undefined);
@@ -80,10 +103,68 @@ const INITIAL_ACTIVITIES: Activity[] = [
   { id: '2', type: 'Leave Approved', description: "Michael Chen's request for sick leave", time: '09:15 AM', status: 'success' },
 ];
 
+const INITIAL_CORRECTIONS: CorrectionRequest[] = [
+  {
+    id: 'REQ-01',
+    name: 'Alexander Wright',
+    role: 'Software Engineer',
+    empId: 'INF-1042',
+    avatar: 'https://i.pravatar.cc/150?u=a042581f4e290267041',
+    date: 'Oct 24, 2023',
+    originalTime: '09:15 AM',
+    requestedCorrection: '08:30 AM',
+    originalIn: '09:15 AM',
+    originalOut: '--:--',
+    originalTotal: '0h 00m',
+    requestedIn: '08:30 AM',
+    requestedOut: '05:30 PM',
+    requestedTotal: '9h 00m',
+    reason: '"Forgot to check in at morning"',
+    status: 'Pending'
+  },
+  {
+    id: 'REQ-02',
+    name: 'Sneha Desai',
+    role: 'Senior Software Engineer',
+    empId: 'INF-202',
+    avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026704d',
+    date: 'Oct 24, 2023',
+    originalTime: '06:05 PM',
+    requestedCorrection: '06:45 PM',
+    originalIn: '09:02 AM',
+    originalOut: '--:--',
+    originalTotal: '4h 00m',
+    requestedIn: '09:02 AM',
+    requestedOut: '06:45 PM',
+    requestedTotal: '9h 43m',
+    reason: '"Forgot to check out due to client meeting"',
+    status: 'Pending'
+  },
+  {
+    id: 'REQ-03',
+    name: 'David Miller',
+    role: 'Data Analyst',
+    empId: 'INF-1121',
+    avatar: 'https://i.pravatar.cc/150?u=a042581f4e290267043',
+    date: 'Oct 23, 2023',
+    originalTime: '09:00 AM',
+    requestedCorrection: '08:45 AM',
+    originalIn: '09:00 AM',
+    originalOut: '05:00 PM',
+    originalTotal: '8h 00m',
+    requestedIn: '08:45 AM',
+    requestedOut: '05:00 PM',
+    requestedTotal: '8h 15m',
+    reason: '"Came early for deployment"',
+    status: 'Pending'
+  }
+];
+
 export const HRProvider = ({ children }: { children: ReactNode }) => {
   const [employees, setEmployees] = useState<Employee[]>(INITIAL_EMPLOYEES);
   const [leaves, setLeaves] = useState<LeaveRequest[]>(INITIAL_LEAVES);
   const [activities, setActivities] = useState<Activity[]>(INITIAL_ACTIVITIES);
+  const [correctionRequests, setCorrectionRequests] = useState<CorrectionRequest[]>(INITIAL_CORRECTIONS);
   
   const pendingLeaves = leaves.filter(l => l.status === 'Pending');
 
@@ -169,11 +250,51 @@ export const HRProvider = ({ children }: { children: ReactNode }) => {
     }, ...activities]);
   };
 
+  const approveCorrection = (id: string) => {
+    setCorrectionRequests(prev => prev.map(r => r.id === id ? { ...r, status: 'Approved' } : r));
+    const req = correctionRequests.find(r => r.id === id);
+    if (req) {
+      setActivities([{
+        id: Date.now().toString(),
+        type: 'Correction Approved',
+        description: `Approved attendance correction for ${req.name}`,
+        time: 'Just now',
+        status: 'success'
+      }, ...activities]);
+    }
+  };
+
+  const rejectCorrection = (id: string) => {
+    setCorrectionRequests(prev => prev.map(r => r.id === id ? { ...r, status: 'Rejected' } : r));
+    const req = correctionRequests.find(r => r.id === id);
+    if (req) {
+      setActivities([{
+        id: Date.now().toString(),
+        type: 'Correction Rejected',
+        description: `Rejected attendance correction for ${req.name}`,
+        time: 'Just now',
+        status: 'warning'
+      }, ...activities]);
+    }
+  };
+
+  const approveBulkCorrections = (ids: string[]) => {
+    setCorrectionRequests(prev => prev.map(r => ids.includes(r.id) ? { ...r, status: 'Approved' } : r));
+    setActivities([{
+      id: Date.now().toString(),
+      type: 'Bulk Correction Approval',
+      description: `Approved ${ids.length} correction requests`,
+      time: 'Just now',
+      status: 'success'
+    }, ...activities]);
+  };
+
   return (
     <HRContext.Provider value={{ 
       employees, 
       leaves,
       pendingLeaves, 
+      correctionRequests,
       activities, 
       stats,
       addEmployee, 
@@ -181,7 +302,10 @@ export const HRProvider = ({ children }: { children: ReactNode }) => {
       approveLeave, 
       rejectLeave,
       approveBulkLeaves,
-      rejectBulkLeaves
+      rejectBulkLeaves,
+      approveCorrection,
+      rejectCorrection,
+      approveBulkCorrections
     }}>
       {children}
     </HRContext.Provider>

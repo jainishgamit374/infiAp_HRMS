@@ -1,17 +1,10 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  SafeAreaView,
-  ScrollView,
-  Platform,
-} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Platform } from 'react-native';
 import { useLocalSearchParams, router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useLeave } from '../../context/LeaveContext';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function LeaveDetails() {
   const { id } = useLocalSearchParams();

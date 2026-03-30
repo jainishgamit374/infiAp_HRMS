@@ -6,6 +6,8 @@ export default function AttendanceLayout() {
       <Stack.Screen name="index" />
       <Stack.Screen name="[id]" />
       <Stack.Screen name="reports" />
+      <Stack.Screen name="report-success" />
+      <Stack.Screen name="report/[id]" />
       <Stack.Screen name="corrections" />
       <Stack.Screen name="correction-request/[id]" />
       <Stack.Screen name="correction-success" />

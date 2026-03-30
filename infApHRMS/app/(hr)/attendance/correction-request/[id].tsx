@@ -3,22 +3,29 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Platform }
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, router } from 'expo-router';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import { useHR } from '@/context/HRContext';
 
 export default function CorrectionRequest() {
   const { id } = useLocalSearchParams();
+  const { correctionRequests, approveCorrection, rejectCorrection } = useHR();
 
-  // Mock Request Data based on ID
-  const request = {
-    id: id || 'REQ-02',
-    name: 'Sneha Desai',
-    role: 'Senior Software Engineer',
-    empId: 'EMP ID: INF-202',
-    avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026704d',
-    date: 'October 24, 2023',
-    reason: '"Forgot to check out due to client meeting"',
-    original: { in: '09:02 AM', out: '--:--', total: '4h 00m' },
-    requested: { in: '09:02 AM', out: '06:45 PM', total: '9h 43m' }
-  };
+  const request = correctionRequests.find(r => r.id === id);
+
+  if (!request) {
+    return (
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
+            <Ionicons name="arrow-back" size={24} color="#1f2937" />
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>Correction Request</Text>
+        </View>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <Text style={{ color: '#9ca3af' }}>Request not found.</Text>
+        </View>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -77,15 +84,15 @@ export default function CorrectionRequest() {
               <Text style={styles.cardTitle}>ORIGINAL</Text>
               <View style={styles.timeRow}>
                 <Text style={styles.timeLabel}>In</Text>
-                <Text style={styles.timeValue}>{request.original.in}</Text>
+                <Text style={styles.timeValue}>{request.originalIn || '--:--'}</Text>
               </View>
               <View style={styles.timeRow}>
                 <Text style={styles.timeLabel}>Out</Text>
-                <Text style={[styles.timeValue, { color: '#ef4444' }]}>{request.original.out}</Text>
+                <Text style={[styles.timeValue, { color: '#ef4444' }]}>{request.originalOut || '--:--'}</Text>
               </View>
               <View style={styles.totalRow}>
                 <Text style={styles.totalLabel}>Total</Text>
-                <Text style={styles.totalValue}>{request.original.total}</Text>
+                <Text style={styles.totalValue}>{request.originalTotal || '0h 00m'}</Text>
               </View>
             </View>
 
@@ -94,15 +101,15 @@ export default function CorrectionRequest() {
               <Text style={[styles.cardTitle, { color: '#4f46e5' }]}>REQUESTED</Text>
               <View style={styles.timeRow}>
                 <Text style={styles.timeLabel}>In</Text>
-                <Text style={styles.timeValue}>{request.requested.in}</Text>
+                <Text style={styles.timeValue}>{request.requestedIn || '--:--'}</Text>
               </View>
               <View style={styles.timeRow}>
                 <Text style={styles.timeLabel}>Out</Text>
-                <Text style={[styles.timeValue, { color: '#22c55e' }]}>{request.requested.out}</Text>
+                <Text style={[styles.timeValue, { color: '#22c55e' }]}>{request.requestedOut || '--:--'}</Text>
               </View>
               <View style={styles.totalRow}>
                 <Text style={styles.totalLabel}>Total</Text>
-                <Text style={[styles.totalValue, { color: '#4f46e5' }]}>{request.requested.total}</Text>
+                <Text style={[styles.totalValue, { color: '#4f46e5' }]}>{request.requestedTotal || '0h 00m'}</Text>
               </View>
             </View>
           </View>
@@ -115,16 +122,18 @@ export default function CorrectionRequest() {
       </ScrollView>
 
       {/* Action Footer */}
-      <View style={styles.footerActions}>
-        <TouchableOpacity style={styles.rejectBtn} onPress={() => router.back()}>
-          <Ionicons name="close-outline" size={20} color="#374151" />
-          <Text style={styles.rejectBtnText}>Reject</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.approveBtn} onPress={() => router.push('/(hr)/attendance/correction-success')}>
-          <Ionicons name="checkmark-outline" size={20} color="#ffffff" />
-          <Text style={styles.approveBtnText}>Approve Request</Text>
-        </TouchableOpacity>
-      </View>
+      {request.status === 'Pending' && (
+        <View style={styles.footerActions}>
+          <TouchableOpacity style={styles.rejectBtn} onPress={() => { rejectCorrection(request.id); router.back(); }}>
+            <Ionicons name="close-outline" size={20} color="#374151" />
+            <Text style={styles.rejectBtnText}>Reject</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.approveBtn} onPress={() => { approveCorrection(request.id); router.push('/(hr)/attendance/correction-success'); }}>
+            <Ionicons name="checkmark-outline" size={20} color="#ffffff" />
+            <Text style={styles.approveBtnText}>Approve Request</Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
   );
 }

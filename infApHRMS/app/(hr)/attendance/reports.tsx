@@ -9,6 +9,19 @@ export default function AttendanceReports() {
   const [activeTab, setActiveTab] = useState('Daily');
   const tabs = ['Daily', 'Weekly', 'Monthly', 'Department'];
 
+  const REPORTS_DATA = [
+    { id: '1', type: 'Daily', name: 'Oct_24_Daily_Log.pdf', date: 'Generated 1 hour ago', format: 'pdf' },
+    { id: '2', type: 'Weekly', name: 'Week42_Attendance.xlsx', date: 'Generated 2 days ago', format: 'excel' },
+    { id: '3', type: 'Monthly', name: 'Sept_Attendance_Final.pdf', date: 'Generated 2 hours ago', format: 'pdf' },
+    { id: '4', type: 'Monthly', name: 'Aug_Attendance_Final.pdf', date: 'Generated 1 month ago', format: 'pdf' },
+    { id: '5', type: 'Department', name: 'Sales_Sept_Report.pdf', date: 'Generated 3 hours ago', format: 'pdf' },
+    { id: '6', type: 'Department', name: 'Eng_Sept_Report.xlsx', date: 'Generated 4 hours ago', format: 'excel' },
+    { id: '7', type: 'Daily', name: 'Oct_23_Daily_Log.pdf', date: 'Generated 1 day ago', format: 'pdf' },
+  ];
+
+  const displayedReports = REPORTS_DATA.filter(r => r.type === activeTab);
+
+
   return (
     <View style={styles.container}>
       {/* Header */}
@@ -60,20 +73,28 @@ export default function AttendanceReports() {
         <Animated.View entering={FadeInDown.delay(200).duration(500)} style={styles.section}>
           <Text style={styles.sectionTitle}>Report Filters</Text>
           
-          <Text style={styles.inputLabel}>Date Range</Text>
+          <Text style={styles.inputLabel}>
+            {activeTab === 'Daily' ? 'Select Date' : 
+             activeTab === 'Weekly' ? 'Select Week' : 
+             activeTab === 'Monthly' ? 'Select Month' : 'Time Period'}
+          </Text>
           <TouchableOpacity style={styles.inputWrapper}>
-            <Text style={styles.inputText}>Oct 01, 2023 - Oct 31, 2023</Text>
+            <Text style={styles.inputText}>
+              {activeTab === 'Daily' ? 'Oct 24, 2023' : 
+               activeTab === 'Weekly' ? 'Oct 16 - Oct 22, 2023' : 
+               activeTab === 'Monthly' ? 'September 2023' : 'September 2023'}
+            </Text>
             <Ionicons name="calendar-outline" size={20} color="#9ca3af" />
           </TouchableOpacity>
 
-          <Text style={styles.inputLabel}>Department</Text>
+          <Text style={styles.inputLabel}>Department Selection</Text>
           <TouchableOpacity style={styles.inputWrapper}>
-            <Text style={styles.inputText}>All Departments</Text>
+            <Text style={styles.inputText}>{activeTab === 'Department' ? 'Select Departments...' : 'All Departments'}</Text>
             <Ionicons name="chevron-down" size={20} color="#9ca3af" />
           </TouchableOpacity>
 
           {/* Action Buttons */}
-          <TouchableOpacity style={styles.generateBtn}>
+          <TouchableOpacity style={styles.generateBtn} onPress={() => router.push('/(hr)/attendance/report-success')}>
             <Ionicons name="document-text-outline" size={20} color="#ffffff" />
             <Text style={styles.generateBtnText}>Generate Report</Text>
           </TouchableOpacity>
@@ -92,19 +113,25 @@ export default function AttendanceReports() {
 
         {/* Recent Generations */}
         <Animated.View entering={FadeInDown.delay(300).duration(500)} style={styles.section}>
-          <Text style={styles.sectionTitle}>RECENT GENERATIONS</Text>
-          <View style={styles.fileCard}>
-            <View style={styles.fileIcon}>
-              <Ionicons name="document-text" size={24} color="#ef4444" />
+          <Text style={styles.sectionTitle}>RECENT {activeTab.toUpperCase()} GENERATIONS</Text>
+          {displayedReports.length === 0 ? (
+            <View style={{ padding: 20, alignItems: 'center' }}>
+               <Text style={{ color: '#9ca3af' }}>No reports generated recently.</Text>
             </View>
-            <View style={styles.fileInfo}>
-              <Text style={styles.fileName}>Sept_Sales_Final.pdf</Text>
-              <Text style={styles.fileDate}>Generated 2 hours ago</Text>
-            </View>
-            <TouchableOpacity style={styles.downloadBtn}>
-              <Ionicons name="download-outline" size={20} color="#4f46e5" />
+          ) : displayedReports.map((report) => (
+            <TouchableOpacity key={report.id} style={styles.fileCard} onPress={() => router.push(`/(hr)/attendance/report/${report.id}`)}>
+              <View style={[styles.fileIcon, report.format === 'excel' && { backgroundColor: '#dcfce7' }]}>
+                <Ionicons name={report.format === 'pdf' ? 'document-text' : 'grid'} size={24} color={report.format === 'pdf' ? '#ef4444' : '#16a34a'} />
+              </View>
+              <View style={styles.fileInfo}>
+                <Text style={styles.fileName}>{report.name}</Text>
+                <Text style={styles.fileDate}>{report.date}</Text>
+              </View>
+              <TouchableOpacity style={styles.downloadBtn}>
+                <Ionicons name="download-outline" size={20} color="#4f46e5" />
+              </TouchableOpacity>
             </TouchableOpacity>
-          </View>
+          ))}
         </Animated.View>
 
         <View style={{ height: 100 }} />
@@ -157,7 +184,7 @@ const styles = StyleSheet.create({
   secondaryBtn: { flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingVertical: 12, borderRadius: 16, borderWidth: 1, borderColor: '#e5e7eb', backgroundColor: '#ffffff' },
   secondaryBtnText: { fontSize: 14, fontWeight: '600', color: '#4b5563', marginLeft: 6 },
 
-  fileCard: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#ffffff', borderWidth: 1, borderColor: '#f3f4f6', borderRadius: 16, padding: 16 },
+  fileCard: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#ffffff', borderWidth: 1, borderColor: '#f3f4f6', borderRadius: 16, padding: 16, marginBottom: 12 },
   fileIcon: { width: 40, height: 40, borderRadius: 10, backgroundColor: '#fef2f2', justifyContent: 'center', alignItems: 'center', marginRight: 16 },
   fileInfo: { flex: 1 },
   fileName: { fontSize: 14, fontWeight: '700', color: '#111827', marginBottom: 4 },

@@ -1,19 +1,8 @@
 import React, { useState, useMemo } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  SafeAreaView,
-  TouchableOpacity,
-  ScrollView,
-  Dimensions,
-  Platform,
-  Modal,
-  TextInput,
-  KeyboardAvoidingView,
-} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Dimensions, Platform, Modal, TextInput, KeyboardAvoidingView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Animated, { 
   FadeInDown, 
   FadeIn, 

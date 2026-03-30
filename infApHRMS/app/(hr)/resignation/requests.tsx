@@ -8,6 +8,9 @@ import { HRBottomNav } from '@/components/HRBottomNav';
 
 export default function ResignationRequests() {
   const { requests, approveResignation, rejectResignation } = useResignation();
+  const [activeTab, setActiveTab] = React.useState<'All' | 'Pending' | 'Approved' | 'Rejected'>('All');
+
+  const displayedRequests = activeTab === 'All' ? requests : requests.filter(r => r.status === activeTab);
 
   const getStatusStyle = (s: string) => {
     if (s === 'Approved') return { bg: '#ecfdf5', text: '#10b981' };
@@ -23,8 +26,22 @@ export default function ResignationRequests() {
         <View style={{ width: 24 }} />
       </View>
 
+      <View style={styles.tabsContainer}>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.tabsScroll}>
+          {['All', 'Pending', 'Approved', 'Rejected'].map((tab) => (
+            <TouchableOpacity 
+              key={tab} 
+              style={[styles.tab, activeTab === tab && styles.activeTab]}
+              onPress={() => setActiveTab(tab as any)}
+            >
+              <Text style={[styles.tabText, activeTab === tab && styles.activeTabText]}>{tab}</Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      </View>
+
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        {requests.map((req, idx) => {
+        {displayedRequests.map((req, idx) => {
           const sc = getStatusStyle(req.status);
           return (
             <Animated.View key={req.id} entering={FadeInUp.delay(idx * 80).duration(400)} style={styles.card}>
@@ -38,7 +55,7 @@ export default function ResignationRequests() {
                   <Text style={[styles.badgeText, { color: sc.text }]}>{req.status}</Text>
                 </View>
               </View>
-              <Text style={styles.reason}>"{req.reason}"</Text>
+              <Text style={styles.reason}>&quot;{req.reason}&quot;</Text>
               <View style={styles.metaRow}>
                 <Text style={styles.meta}>Submitted: {req.submittedDate}</Text>
                 <Text style={styles.meta}>Last Day: {req.lastWorkingDate}</Text>
@@ -69,6 +86,12 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fcfcfd' },
   header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, paddingTop: Platform.OS === 'ios' ? 60 : 40, paddingBottom: 16, backgroundColor: '#fff' },
   headerTitle: { fontSize: 18, fontWeight: '700', color: '#111827' },
+  tabsContainer: { backgroundColor: '#fff', paddingBottom: 12, borderBottomWidth: 1, borderBottomColor: '#f3f4f6' },
+  tabsScroll: { paddingHorizontal: 20, gap: 12 },
+  tab: { paddingVertical: 8, paddingHorizontal: 16, borderRadius: 20, backgroundColor: '#f9fafb', borderWidth: 1, borderColor: '#e5e7eb' },
+  activeTab: { backgroundColor: '#5a55d2', borderColor: '#5a55d2' },
+  tabText: { fontSize: 13, fontWeight: '600', color: '#6b7280' },
+  activeTabText: { color: '#fff' },
   content: { padding: 20, paddingBottom: 100 },
   card: { backgroundColor: '#fff', padding: 20, borderRadius: 20, borderWidth: 1, borderColor: '#f3f4f6', marginBottom: 16 },
   cardTop: { flexDirection: 'row', alignItems: 'center', marginBottom: 12 },

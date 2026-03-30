@@ -1,18 +1,9 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  SafeAreaView,
-  Platform,
-  Image,
-  TextInput,
-} from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform, Image, TextInput } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useUser } from '../../context/UserContext';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function EditProfilePage() {
   const { user, updateUser } = useUser();

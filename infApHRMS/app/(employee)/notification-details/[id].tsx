@@ -1,18 +1,10 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  SafeAreaView,
-  TouchableOpacity,
-  ScrollView,
-  Dimensions,
-  Platform,
-} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Dimensions, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router, useLocalSearchParams } from 'expo-router';
 import { BottomNav } from '../../../components/BottomNav';
 import { useNotifications } from '../../../context/NotificationContext';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Animated, { 
   FadeInDown, 
   FadeIn, 

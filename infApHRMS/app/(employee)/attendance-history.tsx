@@ -1,16 +1,9 @@
 import React, { useState, useMemo } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  SafeAreaView,
-  Platform,
-} from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { BottomNav } from '../../components/BottomNav';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function AttendanceHistory() {
   const [currentDate, setCurrentDate] = useState(new Date());

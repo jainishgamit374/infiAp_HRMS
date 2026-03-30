@@ -75,9 +75,6 @@ const EmployeeManagement = () => {
         <TouchableOpacity style={styles.headerIcon} onPress={() => router.push('/(hr)/bulk-import' as any)}>
           <Ionicons name="cloud-upload-outline" size={24} color="#1f2937" />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.headerIcon}>
-          <Image source={{ uri: 'https://i.pravatar.cc/150?u=hrmanager' }} style={styles.headerAvatar} />
-        </TouchableOpacity>
       </View>
 
       {/* Search Bar */}
@@ -129,16 +126,7 @@ const EmployeeManagement = () => {
         showsVerticalScrollIndicator={false}
       />
 
-      {/* Add Employee FAB */}
-      <TouchableOpacity 
-        style={styles.fab}
-        onPress={() => router.push('/(hr)/add-employee' as any)}
-      >
-        <View style={styles.fabIcon}>
-          <Ionicons name="add" size={24} color="#fff" />
-        </View>
-        <Text style={styles.fabText}>Add Employee</Text>
-      </TouchableOpacity>
+
 
       <HRBottomNav />
     </View>

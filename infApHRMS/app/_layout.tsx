@@ -18,7 +18,6 @@ export default function RootLayout() {
     if (Platform.OS === 'android') {
       // Hide the Android navigation bar and enable immersive mode
       NavigationBar.setVisibilityAsync("hidden");
-      NavigationBar.setBehaviorAsync("overlay-swipe");
     }
   }, []);
 

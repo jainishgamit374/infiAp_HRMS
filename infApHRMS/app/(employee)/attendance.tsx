@@ -1,23 +1,11 @@
 import React, { useState, useCallback, useMemo } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  SafeAreaView,
-  Platform,
-  Image,
-  Alert,
-  Modal,
-  TextInput,
-  ActivityIndicator,
-} from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform, Image, Alert, Modal, TextInput, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { BottomNav } from '../../components/BottomNav';
 import { useUser } from '../../context/UserContext';
 import Animated, { FadeInDown, FadeIn, SlideInRight } from 'react-native-reanimated';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 // ── Types ──
 interface AttendanceRecord {

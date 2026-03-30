@@ -10,7 +10,7 @@ const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 const LeaveManagementScreen = () => {
   const { leaves, pendingLeaves, approveLeave, rejectLeave, approveBulkLeaves, rejectBulkLeaves } = useHR();
-  const [activeTab, setActiveTab] = useState<'All Requests' | 'Pending' | 'Department'>('All Requests');
+  const [activeTab, setActiveTab] = useState<'All Requests' | 'Pending' | 'Approved' | 'Rejected'>('All Requests');
   const [selectedLeaves, setSelectedLeaves] = useState<string[]>([]);
 
   const stats = useMemo(() => {
@@ -21,9 +21,9 @@ const LeaveManagementScreen = () => {
       today: leaves.filter(l => l.status === 'Approved').length,
     }
   }, [leaves]);
-
-  const displayedLeaves = activeTab === 'Pending' ? pendingLeaves : leaves;
-
+  const displayedLeaves = activeTab === 'All Requests' 
+    ? leaves 
+    : leaves.filter(l => l.status === activeTab);
   const toggleSelection = (id: string) => {
     if (selectedLeaves.includes(id)) {
       setSelectedLeaves(prev => prev.filter(lId => lId !== id));
@@ -73,14 +73,17 @@ const LeaveManagementScreen = () => {
 
         {/* Filters Row */}
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filtersWrapper} contentContainerStyle={styles.filtersContainer}>
-           <TouchableOpacity style={styles.filterPillActive} onPress={() => setActiveTab('All Requests')}>
-              <Text style={styles.filterTextActive}>All Requests</Text>
+           <TouchableOpacity style={activeTab === 'All Requests' ? styles.filterPillActive : styles.filterPill} onPress={() => setActiveTab('All Requests')}>
+              <Text style={activeTab === 'All Requests' ? styles.filterTextActive : styles.filterText}>All Requests</Text>
            </TouchableOpacity>
-           <TouchableOpacity style={styles.filterPill} onPress={() => setActiveTab('Pending')}>
-              <Text style={styles.filterText}>Pending <Ionicons name="chevron-down" size={12} color="#6b7280" /></Text>
+           <TouchableOpacity style={activeTab === 'Pending' ? styles.filterPillActive : styles.filterPill} onPress={() => setActiveTab('Pending')}>
+              <Text style={activeTab === 'Pending' ? styles.filterTextActive : styles.filterText}>Pending</Text>
            </TouchableOpacity>
-           <TouchableOpacity style={styles.filterPill} onPress={() => setActiveTab('Department')}>
-              <Text style={styles.filterText}>Department <Ionicons name="filter" size={12} color="#6b7280" /></Text>
+           <TouchableOpacity style={activeTab === 'Approved' ? styles.filterPillActive : styles.filterPill} onPress={() => setActiveTab('Approved')}>
+              <Text style={activeTab === 'Approved' ? styles.filterTextActive : styles.filterText}>Approved</Text>
+           </TouchableOpacity>
+           <TouchableOpacity style={activeTab === 'Rejected' ? styles.filterPillActive : styles.filterPill} onPress={() => setActiveTab('Rejected')}>
+              <Text style={activeTab === 'Rejected' ? styles.filterTextActive : styles.filterText}>Rejected</Text>
            </TouchableOpacity>
         </ScrollView>
 
@@ -161,7 +164,7 @@ const LeaveManagementScreen = () => {
                      <View style={styles.durationPill}><Text style={styles.durationText}>3 Days</Text></View>
                    </View>
                    
-                   <Text style={styles.reasonText} numberOfLines={2}>"{leave.reason || 'Family vacation planned long ago. Handover document shared.'}"</Text>
+                   <Text style={styles.reasonText} numberOfLines={2}>&quot;{leave.reason || 'Family vacation planned long ago. Handover document shared.'}&quot;</Text>
                 </View>
               </View>
 
