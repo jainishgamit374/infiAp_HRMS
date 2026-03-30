@@ -16,6 +16,9 @@ import { useHR } from '@/context/HRContext';
 import { HRBottomNav } from '@/components/HRBottomNav';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInDown, FadeInRight, Layout } from 'react-native-reanimated';
+import Header from '@/components/layout/Header';
+import { useSidebar } from '@/context/SidebarContext';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const { width } = Dimensions.get('window');
 
@@ -148,20 +151,12 @@ const HRDashboard = () => {
   ];
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#fcfcfd' }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#fcfcfd' }}>
       {/* Top Bar */}
-      <View style={styles.topBar}>
-        <Image
-          source={require('../../assets/images/logo.png')}
-          style={styles.headerLogo}
-          resizeMode="contain"
-        />
-        <View style={styles.topRight}>
-          <TouchableOpacity style={styles.menuBtn}>
-            <Ionicons name="menu-outline" size={28} color="#1f2937" />
-          </TouchableOpacity>
-        </View>
-      </View>
+      <Header 
+        title="HR Command Center"
+        subtitle="Manage Workforce & Operations"
+      />
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
 
@@ -291,33 +286,13 @@ const HRDashboard = () => {
       </ScrollView>
 
       <HRBottomNav />
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  topBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+  scrollContent: {
     paddingHorizontal: 20,
-    paddingTop: Platform.OS === 'ios' ? 60 : 40,
-    paddingBottom: 20,
-    backgroundColor: '#fff',
-  },
-  menuBtn: {
-    padding: 4,
-  },
-  headerLogo: {
-    width: 58,
-    height: 58,
-    borderRadius: 10,
-  },
-  platformName: {
-    fontSize: 20,
-    fontWeight: '800',
-    color: '#5a55d2',
-    letterSpacing: -0.5,
   },
   topRight: {
     flexDirection: 'row',
@@ -352,9 +327,6 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     borderRadius: 11,
-  },
-  scrollContent: {
-    paddingHorizontal: 20,
   },
   searchContainer: {
     flexDirection: 'row',

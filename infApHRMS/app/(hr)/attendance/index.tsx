@@ -4,6 +4,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import Animated, { FadeInDown, FadeInRight } from 'react-native-reanimated';
 import { HRBottomNav } from '@/components/HRBottomNav';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import Header from '@/components/layout/Header';
 
 const MOCK_RECORDS = [
   {
@@ -66,22 +68,13 @@ export default function AttendanceMain() {
   );
 
   return (
-    <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.headerBtn} onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={24} color="#1f2937" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Attendance</Text>
-        <View style={styles.headerRight}>
-          <TouchableOpacity style={styles.headerBtn}>
-            <Ionicons name="search-outline" size={22} color="#1f2937" />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.headerBtn}>
-            <Ionicons name="filter-outline" size={22} color="#1f2937" />
-          </TouchableOpacity>
-        </View>
-      </View>
+    <SafeAreaView style={styles.container}>
+      {/* Unified Header */}
+      <Header 
+        title="Attendance Dashboard" 
+        subtitle="Track & Manage Presence"
+        showBack={true} 
+      />
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
         
@@ -149,7 +142,7 @@ export default function AttendanceMain() {
 
       {/* Since the user has requested a HR Bottom Nav logic */}
       <HRBottomNav />
-    </View>
+    </SafeAreaView>
   );
 }
 

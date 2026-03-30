@@ -9,6 +9,8 @@ import {
   Platform,
   Dimensions,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import Header from '../../components/layout/Header';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { AdminBottomNav } from '../../components/AdminBottomNav';
@@ -138,23 +140,13 @@ export default function AdminDashboard() {
   };
 
   return (
-    <View style={styles.mainContainer}>
+    <SafeAreaView style={styles.mainContainer}>
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         {/* Header */}
-        <Animated.View style={[styles.header, { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }]}>
-          <View>
-            <Text style={styles.greetingText}>Welcome Back,</Text>
-            <Text style={styles.adminName}>Admin 👋</Text>
-          </View>
-          <TouchableOpacity 
-            style={styles.profileButton}
-            onPress={() => router.push('/(admin)/profile')}
-          >
-            <View style={styles.profileImagePlaceholder}>
-              <Text style={styles.profileInitial}>AD</Text>
-            </View>
-          </TouchableOpacity>
-        </Animated.View>
+        <Header 
+          title="Admin Dashboard"
+          subtitle="System Overview & Management"
+        />
 
         {/* Summary Stats with Animated Counters */}
         <Animated.View style={[styles.statsContainer, { opacity: staggerAnims[0] }]}>
@@ -288,7 +280,7 @@ export default function AdminDashboard() {
         </Animated.View>
       </ScrollView>
       <AdminBottomNav />
-    </View>
+    </SafeAreaView>
   );
 }
 

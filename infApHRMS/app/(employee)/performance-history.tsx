@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { BottomNav } from '../../components/BottomNav';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Header from '../../components/layout/Header';
 import Animated, { 
   FadeInDown, 
   FadeInRight,
@@ -88,16 +89,12 @@ export default function PerformanceHistory() {
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
       
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.headerIcon} onPress={() => router.back()}>
-          <Ionicons name="arrow-back-outline" size={28} color="#1e293b" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Performance History</Text>
-        <TouchableOpacity style={styles.headerIcon}>
-          <Ionicons name="download-outline" size={24} color="#1e293b" />
-        </TouchableOpacity>
-      </View>
+      {/* Unified Header */}
+      <Header 
+        title="Performance History" 
+        subtitle="Track your career growth & ratings"
+        showBack={true} 
+      />
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         

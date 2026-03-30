@@ -15,6 +15,8 @@ import { router } from 'expo-router';
 import { useHR } from '@/context/HRContext';
 import { HRBottomNav } from '@/components/HRBottomNav';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import Header from '@/components/layout/Header';
 
 const AddEmployee = () => {
   const { addEmployee } = useHR();
@@ -65,15 +67,14 @@ const AddEmployee = () => {
   );
 
   return (
-    <View style={{ flex: 1 }}>
-      <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-        {/* Header */}
-        <Animated.View entering={FadeInDown.duration(600)} style={styles.header}>
-          <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-            <Ionicons name="arrow-back" size={24} color="#1f2937" />
-          </TouchableOpacity>
-          <Text style={styles.title}>Add Employee</Text>
-        </Animated.View>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+      <ScrollView style={styles.container} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+        {/* Unified Header */}
+        <Header 
+          title="Add Employee" 
+          subtitle="Register new staff member"
+          showBack={true} 
+        />
 
         {/* Photo Upload Section */}
         <Animated.View entering={FadeInDown.delay(100).duration(600)} style={styles.photoSection}>
@@ -114,7 +115,7 @@ const AddEmployee = () => {
         <View style={{ height: 100 }} />
       </ScrollView>
       <HRBottomNav />
-    </View>
+    </SafeAreaView>
   );
 };
 

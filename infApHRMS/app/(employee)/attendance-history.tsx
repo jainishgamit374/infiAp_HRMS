@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { BottomNav } from '../../components/BottomNav';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Header from '../../components/layout/Header';
 
 export default function AttendanceHistory() {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -66,16 +67,12 @@ export default function AttendanceHistory() {
 
   return (
     <SafeAreaView style={styles.root}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.headerBtn} onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={24} color="#1e293b" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Attendance</Text>
-        <TouchableOpacity style={styles.headerBtn}>
-          <Ionicons name="notifications-outline" size={24} color="#1e293b" />
-        </TouchableOpacity>
-      </View>
+      {/* Unified Header */}
+      <Header 
+        title="Attendance History" 
+        subtitle="View your presence & time logs"
+        showBack={true} 
+      />
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* Stats Row */}

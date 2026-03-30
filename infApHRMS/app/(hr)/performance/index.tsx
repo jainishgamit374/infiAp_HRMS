@@ -5,6 +5,8 @@ import { router } from 'expo-router';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { usePerformance, PerformanceEmployee } from './_layout';
 import { HRBottomNav } from '@/components/HRBottomNav';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import Header from '@/components/layout/Header';
 
 export default function PerformanceDashboard() {
   const { employees } = usePerformance();
@@ -39,26 +41,13 @@ export default function PerformanceDashboard() {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <View style={styles.headerTitleRow}>
-          <TouchableOpacity 
-            style={styles.logoBox}
-            onPress={() => router.push('/(hr)')}
-          >
-            <Ionicons name="apps" size={20} color="#fff" />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Performance</Text>
-        </View>
-        <View style={styles.headerIcons}>
-          <TouchableOpacity style={styles.iconBtn}>
-            <Ionicons name="search" size={22} color="#111827" />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.iconBtn}>
-            <Ionicons name="options-outline" size={22} color="#111827" />
-          </TouchableOpacity>
-        </View>
-      </View>
+    <SafeAreaView style={styles.container}>
+      {/* Unified Header */}
+      <Header 
+        title="Performance" 
+        subtitle="Track & Review Growth"
+        showBack={true} 
+      />
 
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         {/* Top 2x2 Stats Summary */}
@@ -158,7 +147,7 @@ export default function PerformanceDashboard() {
           <Text style={styles.navText}>CONFIG</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 

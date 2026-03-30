@@ -5,6 +5,8 @@ import { router } from 'expo-router';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useResignation, ResignationRequest } from './_layout';
 import { HRBottomNav } from '@/components/HRBottomNav';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import Header from '@/components/layout/Header';
 
 export default function SubmitResignation() {
   const { requests, submitResignation } = useResignation();
@@ -32,12 +34,13 @@ export default function SubmitResignation() {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()}><Ionicons name="arrow-back" size={24} color="#111827" /></TouchableOpacity>
-        <Text style={styles.headerTitle}>Resignation</Text>
-        <View style={{ width: 24 }} />
-      </View>
+    <SafeAreaView style={styles.container}>
+      {/* Unified Header */}
+      <Header 
+        title="Resignation" 
+        subtitle="Manage Exit Process"
+        showBack={true} 
+      />
 
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         {/* Summary */}
@@ -76,7 +79,7 @@ export default function SubmitResignation() {
         </Animated.View>
       </ScrollView>
       <HRBottomNav />
-    </View>
+    </SafeAreaView>
   );
 }
 

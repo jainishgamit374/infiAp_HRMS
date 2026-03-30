@@ -1,28 +1,43 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { router } from 'expo-router';
 import { MainAdminBottomNav } from '../../components/MainAdminBottomNav';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import Header from '../../components/layout/Header';
+import { Ionicons } from '@expo/vector-icons';
 
 const MainAdminDashboard = () => {
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Main Admin Dashboard</Text>
-      <TouchableOpacity 
-        style={styles.btn} 
-        onPress={() => router.push('/(main-admin)/system-alerts')}
-      >
-        <Text style={styles.btnText}>View System Alerts</Text>
-      </TouchableOpacity>
+    <SafeAreaView style={styles.container}>
+      <Header 
+        title="Main Admin Dashboard"
+        subtitle="Platform Performance & Alerts"
+      />
+      
+      <View style={styles.content}>
+        <Text style={styles.text}>Main Admin Dashboard</Text>
+        <TouchableOpacity 
+          style={styles.btn} 
+          onPress={() => router.push('/(main-admin)/system-alerts')}
+        >
+          <Text style={styles.btnText}>View System Alerts</Text>
+        </TouchableOpacity>
+      </View>
+
       <MainAdminBottomNav />
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#fff',
+  },
+  content: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    padding: 20,
   },
   text: {
     fontSize: 24,

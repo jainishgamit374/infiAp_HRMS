@@ -5,6 +5,7 @@ import { router } from 'expo-router';
 import { BottomNav } from '../../components/BottomNav';
 import { useUser } from '../../context/UserContext';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Header from '../../components/layout/Header';
 
 export default function ProfileSettingsPage() {
   const { user, updateSettings } = useUser();
@@ -43,16 +44,12 @@ export default function ProfileSettingsPage() {
 
   return (
     <SafeAreaView style={styles.root}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.headerBtn} onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={24} color="#1e293b" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Profile Settings</Text>
-        <TouchableOpacity style={styles.headerBtn}>
-          <Ionicons name="ellipsis-vertical" size={24} color="#1e293b" />
-        </TouchableOpacity>
-      </View>
+      {/* Unified Header */}
+      <Header 
+        title="Settings" 
+        subtitle="App & Account Configuration"
+        showBack={true} 
+      />
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* Profile Summary Card (Mini) */}

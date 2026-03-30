@@ -6,6 +6,7 @@ import { BottomNav } from '../../components/BottomNav';
 import { useUser } from '../../context/UserContext';
 import Animated, { FadeInDown, FadeIn, SlideInRight } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Header from '../../components/layout/Header';
 
 // ── Types ──
 interface AttendanceRecord {
@@ -195,22 +196,12 @@ export default function AttendancePage() {
 
   return (
     <SafeAreaView style={styles.root}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.headerBtn} onPress={() => router.back()}>
-          <Ionicons name="chevron-back" size={24} color="#1e293b" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Attendance</Text>
-        <View style={styles.headerRight}>
-          <TouchableOpacity
-            style={styles.headerBtn}
-            onPress={() => router.push('/(employee)/attendance-history')}
-          >
-            <Ionicons name="calendar-outline" size={24} color="#1e293b" />
-          </TouchableOpacity>
-          <Image source={user.avatar} style={styles.headerAvatar} />
-        </View>
-      </View>
+      {/* Unified Header */}
+      <Header 
+        title="Attendance"
+        subtitle="Track your time & presence"
+        showBack={true}
+      />
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* Check-in Toast */}

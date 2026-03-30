@@ -5,6 +5,8 @@ import { router } from 'expo-router';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useRecruitment, CandidateStatus } from './_layout';
 import { HRBottomNav } from '@/components/HRBottomNav';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import Header from '@/components/layout/Header';
 
 export default function RecruitmentDashboard() {
   const { candidates } = useRecruitment();
@@ -23,26 +25,13 @@ export default function RecruitmentDashboard() {
   const recentCandidates = candidates.filter(c => ['Sarah Connor', 'Marcus Thompson', 'Elena Gilbert', 'Kyle Reese'].includes(c.name));
 
   return (
-    <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={24} color="#111827" />
-        </TouchableOpacity>
-        <View style={styles.headerTitleContainer}>
-          <Text style={styles.headerTitle}>Recruitment</Text>
-          <Text style={styles.headerSubtitle}>InfiAp Dashboard</Text>
-        </View>
-        <TouchableOpacity style={styles.iconBtn}>
-          <Ionicons name="search" size={20} color="#6b7280" />
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.iconBtn, { marginLeft: 8 }]}>
-          <Ionicons name="notifications-outline" size={20} color="#6b7280" />
-        </TouchableOpacity>
-        <TouchableOpacity style={{ marginLeft: 8 }}>
-          <Image source={{ uri: 'https://i.pravatar.cc/150?u=admin' }} style={styles.userAvatar} />
-        </TouchableOpacity>
-      </View>
+    <SafeAreaView style={styles.container}>
+      {/* Unified Header */}
+      <Header 
+        title="Recruitment" 
+        subtitle="Manage Candidates & Jobs"
+        showBack={true} 
+      />
 
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         {/* Search */}
@@ -183,7 +172,7 @@ export default function RecruitmentDashboard() {
         </Animated.View>
       </ScrollView>
       <HRBottomNav />
-    </View>
+    </SafeAreaView>
   );
 }
 

@@ -5,6 +5,8 @@ import { router } from 'expo-router';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { useFinance } from './_layout';
 import { HRBottomNav } from '@/components/HRBottomNav';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import Header from '@/components/layout/Header';
 
 export default function PayrollOverview() {
   const { payroll } = useFinance();
@@ -20,12 +22,13 @@ export default function PayrollOverview() {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()}><Ionicons name="arrow-back" size={24} color="#111827" /></TouchableOpacity>
-        <Text style={styles.headerTitle}>Payroll Overview</Text>
-        <TouchableOpacity><Ionicons name="options-outline" size={22} color="#111827" /></TouchableOpacity>
-      </View>
+    <SafeAreaView style={styles.container}>
+      {/* Unified Header */}
+      <Header 
+        title="Payroll Overview" 
+        subtitle="Manage Salaries & Payslips"
+        showBack={true} 
+      />
 
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         {/* Summary Cards */}
@@ -89,7 +92,7 @@ export default function PayrollOverview() {
         })}
       </ScrollView>
       <HRBottomNav />
-    </View>
+    </SafeAreaView>
   );
 }
 

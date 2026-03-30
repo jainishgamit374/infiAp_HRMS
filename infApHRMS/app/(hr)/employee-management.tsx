@@ -14,6 +14,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useHR, Employee } from '@/context/HRContext';
 import { HRBottomNav } from '@/components/HRBottomNav';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import Header from '@/components/layout/Header';
 import Animated, { FadeInDown, Layout } from 'react-native-reanimated';
 
 const { width } = Dimensions.get('window');
@@ -65,17 +67,13 @@ const EmployeeManagement = () => {
   );
 
   return (
-    <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={24} color="#1f2937" />
-        </TouchableOpacity>
-        <Text style={styles.title}>Employees</Text>
-        <TouchableOpacity style={styles.headerIcon} onPress={() => router.push('/(hr)/bulk-import' as any)}>
-          <Ionicons name="cloud-upload-outline" size={24} color="#1f2937" />
-        </TouchableOpacity>
-      </View>
+    <SafeAreaView style={styles.container}>
+      {/* Unified Header */}
+      <Header 
+        title="Employees" 
+        subtitle="Register & Manage Staff"
+        showBack={true} 
+      />
 
       {/* Search Bar */}
       <View style={styles.searchContainer}>
@@ -129,7 +127,7 @@ const EmployeeManagement = () => {
 
 
       <HRBottomNav />
-    </View>
+    </SafeAreaView>
   );
 };
 

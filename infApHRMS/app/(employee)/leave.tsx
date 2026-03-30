@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { BottomNav } from '../../components/BottomNav';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Header from '../../components/layout/Header';
 
 const { width } = Dimensions.get('window');
 
@@ -37,14 +38,11 @@ export default function LeaveManagement() {
 
   return (
     <SafeAreaView style={styles.root}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.headerBtn} onPress={() => router.back()}>
-          <Ionicons name="chevron-back" size={24} color="#fff" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Leave Management</Text>
-        <View style={{ width: 40 }} />
-      </View>
+      {/* Unified Header */}
+      <Header 
+        title="Leave Management" 
+        showBack={true} 
+      />
 
       <View style={styles.content}>
         {/* Central Icon Section */}

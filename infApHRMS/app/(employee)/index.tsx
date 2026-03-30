@@ -7,8 +7,10 @@ import { router } from 'expo-router';
 import { BottomNav } from '../../components/BottomNav';
 import { useNotifications } from '../../context/NotificationContext';
 import { GestureHandlerRootView, GestureDetector, Gesture } from 'react-native-gesture-handler';
-import Animated, { useSharedValue, useAnimatedStyle, withSpring, runOnJS, withTiming, withDelay, FadeInDown } from 'react-native-reanimated';
+import Animated, { useSharedValue, useAnimatedStyle, withSpring, runOnJS, withTiming, withDelay, FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Header from '../../components/layout/Header';
+import { useUser } from '../../context/UserContext';
 
 // Helper for dates
 const TODAY = new Date();
@@ -149,6 +151,7 @@ const FeatureCard = ({ icon, title, sub, color, bgColor, route, delay, unreadCou
 
 
 export default function EmployeeDashboard() {
+  const { user } = useUser();
   const { notifications } = useNotifications();
   const unreadCount = notifications.filter(n => !n.isRead).length;
 
@@ -178,19 +181,12 @@ export default function EmployeeDashboard() {
           <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
 
             {/* Header */}
-            <View style={styles.header}>
-              <View style={styles.logoContainer}>
-                <Image
+            <Header 
+              title={user.name}
+              subtitle="0+ Years Experience App Developer" 
+            />
 
-                  source={require('../../assets/images/logo.png')}
-                  style={styles.headerLogo}
-                  resizeMode="contain"
-                />
-              </View>
-              <TouchableOpacity style={styles.profileCircle} onPress={() => router.replace('/(auth)/sign-in')}>
-                <Ionicons name="person-outline" size={18} color="#374151" />
-              </TouchableOpacity>
-            </View>
+            <View style={styles.contentPadding}>
 
             {/* Welcome Banner */}
             <View style={styles.bannerContainer}>
@@ -428,6 +424,8 @@ export default function EmployeeDashboard() {
                 </View>
               </View>
             </View>
+          </View>
+            <View style={{ height: 100 }} />
             <View style={{ height: 100 }} />
           </ScrollView>
         </Animated.View>
@@ -443,8 +441,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#f8fafc',
   },
   container: {
-    padding: 20,
-    paddingTop: Platform.OS === 'android' ? 40 : 20,
+    paddingBottom: 20,
+  },
+  contentPadding: {
+    paddingHorizontal: 20,
   },
 
   // Header

@@ -5,6 +5,7 @@ import { router } from 'expo-router';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { AdminBottomNav } from '../../components/AdminBottomNav';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Header from '../../components/layout/Header';
 
 const { width } = Dimensions.get('window');
 
@@ -53,18 +54,12 @@ export default function AdminNotifications() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={24} color="#1e293b" />
-        </TouchableOpacity>
-        <View style={styles.headerCenter}>
-          <Text style={styles.headerTitle}>Notifications</Text>
-          <Text style={styles.headerSub}>Admin Activity Hub</Text>
-        </View>
-        <TouchableOpacity style={styles.iconBtn} onPress={() => alert('Filter options')}>
-          <Ionicons name="options-outline" size={24} color="#64748b" />
-        </TouchableOpacity>
-      </View>
+      {/* Unified Header */}
+      <Header 
+        title="Notifications" 
+        subtitle="Admin Activity Hub"
+        showBack={true} 
+      />
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         {/* Search Bar */}

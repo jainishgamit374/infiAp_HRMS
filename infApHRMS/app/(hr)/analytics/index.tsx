@@ -4,6 +4,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { HRBottomNav } from '@/components/HRBottomNav';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import Header from '@/components/layout/Header';
 
 const METRICS = [
   { label: 'Total Employees', value: '156', change: '+12', color: '#4f46e5', icon: 'people' },
@@ -21,12 +23,13 @@ const REPORTS = [
 
 export default function EmployeeReports() {
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()}><Ionicons name="arrow-back" size={24} color="#111827" /></TouchableOpacity>
-        <Text style={styles.headerTitle}>HR Analytics</Text>
-        <TouchableOpacity><Ionicons name="download-outline" size={22} color="#111827" /></TouchableOpacity>
-      </View>
+    <SafeAreaView style={styles.container}>
+      {/* Unified Header */}
+      <Header 
+        title="HR Analytics" 
+        subtitle="Data-Driven Insights"
+        showBack={true} 
+      />
 
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         {/* Metrics Grid */}
@@ -69,7 +72,7 @@ export default function EmployeeReports() {
         ))}
       </ScrollView>
       <HRBottomNav />
-    </View>
+    </SafeAreaView>
   );
 }
 

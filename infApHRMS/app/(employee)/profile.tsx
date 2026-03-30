@@ -5,25 +5,18 @@ import { router } from 'expo-router';
 import { BottomNav } from '../../components/BottomNav';
 import { useUser } from '../../context/UserContext';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Header from '../../components/layout/Header';
 
 export default function PersonalProfilePage() {
   const { user } = useUser();
 
   return (
     <SafeAreaView style={styles.root}>
-      {/* Custom Header with Settings Icon */}
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.headerBtn} onPress={() => router.back()}>
-          <Ionicons name="chevron-back" size={24} color="#64748b" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>My Profile</Text>
-        <TouchableOpacity 
-          style={styles.headerBtn}
-          onPress={() => router.push('/(employee)/profile-settings')}
-        >
-          <Ionicons name="settings-outline" size={24} color="#64748b" />
-        </TouchableOpacity>
-      </View>
+      {/* New Unified Header */}
+      <Header 
+        title="My Profile" 
+        showBack={true} 
+      />
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* Page Title Section */}

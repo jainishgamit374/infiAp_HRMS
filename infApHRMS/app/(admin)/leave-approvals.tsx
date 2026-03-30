@@ -4,6 +4,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { AdminBottomNav } from '../../components/AdminBottomNav';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import Header from '../../components/layout/Header';
 
 const INITIAL_REQUESTS = [
   { id: '1', name: 'John Doe', type: 'Sick Leave', duration: 'Oct 24 - Oct 26', days: 3, avatar: 'JD', status: 'Pending' },
@@ -19,14 +21,13 @@ export default function LeaveApprovals() {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={24} color="#1e293b" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Leave Approvals</Text>
-        <View style={{ width: 40 }} />
-      </View>
+    <SafeAreaView style={styles.container}>
+      {/* Unified Header */}
+      <Header 
+        title="Leave Approvals" 
+        subtitle="Review employee leave requests"
+        showBack={true} 
+      />
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={styles.statsRow}>
@@ -76,7 +77,7 @@ export default function LeaveApprovals() {
         <View style={{ height: 100 }} />
       </ScrollView>
       <AdminBottomNav />
-    </View>
+    </SafeAreaView>
   );
 }
 

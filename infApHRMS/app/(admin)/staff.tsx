@@ -4,6 +4,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { AdminBottomNav } from '../../components/AdminBottomNav';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import Header from '../../components/layout/Header';
 
 const STAFF = [
   { id: '1', name: 'John Doe', role: 'UI/UX Designer', dept: 'Creative', avatar: 'JD' },
@@ -14,16 +16,13 @@ const STAFF = [
 
 export default function StaffList() {
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.headerIcon} onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={24} color="#1e293b" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Staff Directory</Text>
-        <TouchableOpacity style={styles.headerIcon} onPress={() => router.push('/(admin)/add-employee')}>
-          <Ionicons name="person-add-outline" size={22} color="#4f46e5" />
-        </TouchableOpacity>
-      </View>
+    <SafeAreaView style={styles.container}>
+      {/* Unified Header */}
+      <Header 
+        title="Staff Directory" 
+        subtitle="Manage your workforce"
+        showBack={true} 
+      />
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {STAFF.map((person, idx) => (
@@ -43,7 +42,7 @@ export default function StaffList() {
         <View style={{ height: 100 }} />
       </ScrollView>
       <AdminBottomNav />
-    </View>
+    </SafeAreaView>
   );
 }
 
