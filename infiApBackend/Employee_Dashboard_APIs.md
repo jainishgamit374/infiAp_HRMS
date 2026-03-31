@@ -270,3 +270,47 @@ These endpoints split the profile data for better frontend performance and reusa
 - **Description:** Full breakdown of earnings (Basic + Bonus = Gross) and deductions (Tax + PF) for a specific month.
 - **Includes:** Employee IDs, Department, Payroll Period, and Net Take Home Pay calculation.
 
+---
+
+### 12. Performance Management (POST for GET)
+
+#### Get Employee Performance
+- **Endpoint:** `POST /api/v1/performance/current`
+- **Description:** Returns monthly performance score, core metrics (Efficiency, Quality, Reliability), goals tracking, feedback, and achievements.
+
+#### Get Performance History
+- **Endpoint:** `POST /api/v1/performance/history`
+- **Description:** Historical record of monthly reviews, improvements, and performance metrics (Overall, Project, Work).
+
+#### Get Department Performance Overview
+- **Endpoint:** `POST /api/v1/performance/dept-overview`
+- **Description:** Average team performance, top performer, pending tasks, and pending reviews.
+
+#### Get Monthly Performance Overview
+- **Endpoint:** `POST /api/v1/performance/monthly-overview`
+- **Description:** High-level summary of the month's overall score and trends.
+
+#### Get Recent Achievements
+- **Endpoint:** `POST /api/v1/performance/recent-achievements`
+- **Description:** List of recently earned rewards and recognitions across the team.
+
+#### Get Employee Performance Breakdown
+- **Endpoint:** `POST /api/v1/performance/breakdown`
+- **Description:** Detailed list of employees with their performance scores, department, and joining info.
+
+#### Get Monthly Metrics
+- **Endpoint:** `POST /api/v1/performance/metrics`
+- **Description:** Rates for task completion, goals achieved, and attendance.
+
+#### Get Performance KPIs
+- **Endpoint:** `POST /api/v1/performance/kpis`
+- **Description:** Key performance indicators for the current month.
+
+#### Submit Performance Review
+- **Endpoint:** `POST /api/v1/performance/submit-review`
+- **Description:** Submit a manager's performance evaluation for an employee.
+
+#### Get Performance Review Details
+- **Endpoint:** `POST /api/v1/performance/review-details`
+- **Description:** Detailed view of an individual's performance review, including ratings and tips.
+
