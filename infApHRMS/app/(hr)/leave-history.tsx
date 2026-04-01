@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Image, Platform } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Image, Platform, KeyboardAvoidingView, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useHR, LeaveRequest } from '@/context/HRContext';
@@ -28,7 +28,12 @@ export default function LeaveHistoryScreen() {
         showBack={true}
       />
 
-      <ScrollView contentContainerStyle={styles.content}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={{ flex: 1 }}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+      >
+        <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
         
         {/* Search & Filters */}
         <Animated.View entering={FadeInDown.delay(100)} style={styles.searchContainer}>
@@ -61,11 +66,11 @@ export default function LeaveHistoryScreen() {
              <Text style={styles.reportsTitle}>Generate Report</Text>
            </View>
            <View style={styles.reportsActions}>
-              <TouchableOpacity style={styles.reportBtn}>
+              <TouchableOpacity style={styles.reportBtn} onPress={() => Alert.alert('Export Started', 'Leave history PDF is being generated.')}>
                 <Ionicons name="download-outline" size={16} color="#374151" />
                 <Text style={styles.reportBtnText}>Export PDF</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.reportBtn}>
+              <TouchableOpacity style={styles.reportBtn} onPress={() => Alert.alert('Export Started', 'Leave history Excel sheet is being generated.')}>
                 <Ionicons name="grid-outline" size={16} color="#374151" />
                 <Text style={styles.reportBtnText}>Export Excel</Text>
               </TouchableOpacity>
@@ -99,15 +104,15 @@ export default function LeaveHistoryScreen() {
           </View>
         )}
 
-        <View style={{ height: 100 }} />
-      </ScrollView>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fcfcfd' },
-  content: { padding: 20 },
+  content: { paddingHorizontal: 20, paddingTop: 20, paddingBottom: 120 },
   searchContainer: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#fff', borderRadius: 16, paddingHorizontal: 16, height: 52, marginBottom: 16, borderWidth: 1, borderColor: '#f3f4f6' },
   searchInput: { flex: 1, marginLeft: 10, fontSize: 15, color: '#111827' },
   filterRow: { flexDirection: 'row', gap: 10, marginBottom: 24 },

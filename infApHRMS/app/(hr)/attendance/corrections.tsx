@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Platform }
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import Animated, { FadeInDown, FadeInRight } from 'react-native-reanimated';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { HRBottomNav } from '@/components/HRBottomNav';
 import Header from '@/components/layout/Header';
 
@@ -19,7 +20,7 @@ export default function AttendanceCorrections() {
   return (
     <View style={styles.container}>
       <Header 
-        title="InfiAP Corrections"
+        title="Attendance Corrections"
         subtitle="MANAGER PORTAL"
         showBack={true}
       />
@@ -100,7 +101,6 @@ export default function AttendanceCorrections() {
             </View>
           )}
         </View>
-        <View style={{ height: 120 }} />
       </ScrollView>
 
       {/* Bulk Action Sticky Bottom */}
@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
   tabText: { fontSize: 14, fontWeight: '600', color: '#6b7280' },
   activeTabText: { color: '#22c55e' },
 
-  content: { padding: 20 },
+  content: { paddingHorizontal: 20, paddingTop: 20, paddingBottom: 120 },
   listHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 },
   sectionTitle: { fontSize: 16, fontWeight: '800', color: '#111827' },
   selectAllText: { fontSize: 13, fontWeight: '600', color: '#4f46e5' },

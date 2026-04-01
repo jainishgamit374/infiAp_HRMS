@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Dimensions, Platform, Pressable } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Dimensions, Platform, Pressable, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { BottomNav } from '../../components/BottomNav';
@@ -55,36 +55,42 @@ export default function NotificationsPage() {
       <Header 
         title="Notifications" 
         showBack={true} 
-        rightElement={
-          <TouchableOpacity 
-             onPress={markAllAsRead}
-             activeOpacity={0.7}
-          >
-            <Text style={styles.markAllText}>Mark all as read</Text>
-          </TouchableOpacity>
-        }
       />
 
       {/* Tabs */}
       <View style={styles.tabContainer}>
+        <View style={styles.tabsLeft}>
+          <TouchableOpacity 
+            onPress={() => setFilter('all')}
+            style={[styles.tab, filter === 'all' && styles.activeTab]}
+          >
+            <Text style={[styles.tabText, filter === 'all' && styles.activeTabText]}>All</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            onPress={() => setFilter('unread')}
+            style={[styles.tab, filter === 'unread' && styles.activeTab]}
+          >
+            <View style={styles.unreadTabContent}>
+              <Text style={[styles.tabText, filter === 'unread' && styles.activeTabText]}>Unread</Text>
+              {notifications.filter(n => !n.isRead).length > 0 && (
+                <View style={styles.unreadCountBadge}>
+                  <Text style={styles.unreadCountText}>{notifications.filter(n => !n.isRead).length}</Text>
+                </View>
+              )}
+            </View>
+          </TouchableOpacity>
+        </View>
+
         <TouchableOpacity 
-          onPress={() => setFilter('all')}
-          style={[styles.tab, filter === 'all' && styles.activeTab]}
+          onPress={() => {
+            markAllAsRead();
+            Alert.alert('Success', 'All notifications have been marked as read.');
+          }}
+          activeOpacity={0.7}
+          style={styles.markAllBtn}
         >
-          <Text style={[styles.tabText, filter === 'all' && styles.activeTabText]}>All</Text>
-        </TouchableOpacity>
-        <TouchableOpacity 
-          onPress={() => setFilter('unread')}
-          style={[styles.tab, filter === 'unread' && styles.activeTab]}
-        >
-          <View style={styles.unreadTabContent}>
-            <Text style={[styles.tabText, filter === 'unread' && styles.activeTabText]}>Unread</Text>
-            {notifications.filter(n => !n.isRead).length > 0 && (
-              <View style={styles.unreadCountBadge}>
-                <Text style={styles.unreadCountText}>{notifications.filter(n => !n.isRead).length}</Text>
-              </View>
-            )}
-          </View>
+          <Ionicons name="checkmark-done" size={16} color="#4f46e5" style={{ marginRight: 4 }} />
+          <Text style={styles.markAllText}>Mark all as read</Text>
         </TouchableOpacity>
       </View>
 
@@ -151,10 +157,25 @@ const styles = StyleSheet.create({
   },
   tabContainer: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     paddingHorizontal: 20,
-    paddingVertical: 12,
-    gap: 12,
+    paddingVertical: 14,
     backgroundColor: '#fff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#f1f5f9',
+  },
+  tabsLeft: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  markAllBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    backgroundColor: '#f5f7ff',
+    borderRadius: 12,
   },
   tab: {
     paddingHorizontal: 20,

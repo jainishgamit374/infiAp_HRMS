@@ -186,17 +186,9 @@ export default function FeedbacksList() {
           <Ionicons name="chatbubbles" size={20} color="#4f46e5" />
           <Text style={[styles.navText, { color: '#4f46e5' }]}>REVIEWS</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
-          <Ionicons name="people-outline" size={20} color="#9ca3af" />
-          <Text style={styles.navText}>TEAM</Text>
-        </TouchableOpacity>
         <TouchableOpacity style={styles.navItem} onPress={() => router.push('/(hr)/performance/reports')}>
-          <Ionicons name="stats-chart-outline" size={20} color="#9ca3af" />
-          <Text style={styles.navText}>STATS</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
-          <Ionicons name="settings-outline" size={20} color="#9ca3af" />
-          <Text style={styles.navText}>SETTINGS</Text>
+          <Ionicons name="document-text-outline" size={20} color="#9ca3af" />
+          <Text style={styles.navText}>REPORT</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -210,7 +202,7 @@ const styles = StyleSheet.create({
   tabBtnActive: { borderBottomWidth: 2, borderBottomColor: '#4f46e5' },
   tabText: { fontSize: 14, fontWeight: '600', color: '#6b7280' },
   tabTextActive: { color: '#4f46e5', fontWeight: '800' },
-  content: { padding: 20, paddingBottom: 120 },
+  content: { paddingHorizontal: 20, paddingTop: 20, paddingBottom: 120 },
   cardsRow: { flexDirection: 'row', gap: 16, marginBottom: 32 },
   statCard: { flex: 1, backgroundColor: '#fff', borderRadius: 20, padding: 20, borderWidth: 1, borderColor: '#f3f4f6', shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.02, shadowRadius: 10, elevation: 1 },
   statLabel: { fontSize: 10, fontWeight: '800', color: '#9ca3af', letterSpacing: 0.5, marginBottom: 8 },

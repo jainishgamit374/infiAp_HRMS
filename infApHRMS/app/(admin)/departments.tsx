@@ -209,10 +209,16 @@ export default function DepartmentsPage() {
         </Animated.View>
       )}
 
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={{ flex: 1 }}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
       >
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.scrollContent}
+          keyboardShouldPersistTaps="handled"
+        >
         {/* Overview Stats */}
         <Animated.View entering={FadeInDown.delay(100).springify()} style={styles.statsRow}>
           {STATS.map((stat, index) => (
@@ -299,8 +305,8 @@ export default function DepartmentsPage() {
           </Animated.View>
         )}
 
-        <View style={{ height: 140 }} />
-      </ScrollView>
+        </ScrollView>
+      </KeyboardAvoidingView>
 
       {/* Floating Create Button */}
       <Animated.View entering={ZoomIn.delay(600).springify()}>
@@ -322,8 +328,9 @@ export default function DepartmentsPage() {
         onRequestClose={() => setShowCreateModal(false)}
       >
         <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           style={styles.modalOverlay}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
         >
           <TouchableOpacity
             style={styles.modalBackdrop}

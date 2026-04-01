@@ -68,7 +68,7 @@ export default function AttendanceMain() {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       {/* Unified Header */}
       <Header 
         title="Attendance Dashboard" 
@@ -142,7 +142,7 @@ export default function AttendanceMain() {
 
       {/* Since the user has requested a HR Bottom Nav logic */}
       <HRBottomNav />
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
   headerBtn: { padding: 8 },
   headerTitle: { fontSize: 18, fontWeight: '700', color: '#1f2937' },
   headerRight: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  content: { padding: 20 },
+  content: { paddingHorizontal: 20, paddingTop: 20, paddingBottom: 120 },
   sectionTitle: { fontSize: 20, fontWeight: '700', color: '#111827', marginBottom: 6 },
   sectionSubtitle: { fontSize: 13, color: '#6b7280', lineHeight: 20, marginBottom: 24, paddingRight: 20 },
   cardsGrid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', gap: 12, marginBottom: 32 },

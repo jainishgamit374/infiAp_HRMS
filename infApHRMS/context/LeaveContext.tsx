@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
-export type LeaveStatus = 'PENDING' | 'APPROVED' | 'REJECTED' | 'CANCELLED';
+export type LeaveStatus = 'PENDING' | 'APPROVED' | 'REJECTED' | 'CANCELLED' | 'DRAFT';
 
 export interface LeaveRequest {
   id: string;
@@ -22,7 +22,7 @@ interface LeaveContextType {
     casual: number;
     sick: number;
   };
-  applyLeave: (leave: Omit<LeaveRequest, 'id' | 'status' | 'appliedDate' | 'days'>) => void;
+  applyLeave: (leave: Omit<LeaveRequest, 'id' | 'status' | 'appliedDate' | 'days'>, status?: LeaveStatus) => void;
   updateLeave: (id: string, leave: Partial<Omit<LeaveRequest, 'id' | 'status' | 'appliedDate'>>) => void;
   cancelLeave: (id: string) => void;
   mockReviewLeave: (id: string, status: 'APPROVED' | 'REJECTED', reason?: string) => void;
@@ -85,7 +85,7 @@ export const LeaveProvider = ({ children }: { children: ReactNode }) => {
     sick: 8,
   });
 
-  const applyLeave = (leave: Omit<LeaveRequest, 'id' | 'status' | 'appliedDate' | 'days'>) => {
+  const applyLeave = (leave: Omit<LeaveRequest, 'id' | 'status' | 'appliedDate' | 'days'>, status: LeaveStatus = 'PENDING') => {
     // Calculate days (simple difference for mock)
     const start = new Date(leave.startDate);
     const end = new Date(leave.endDate);
@@ -96,9 +96,9 @@ export const LeaveProvider = ({ children }: { children: ReactNode }) => {
       ...leave,
       id: Math.random().toString(36).substr(2, 9),
       employeeName: 'Jainish Gamit',
-      status: 'PENDING',
+      status: status,
       appliedDate: new Date().toISOString().split('T')[0],
-      days: diffDays,
+      days: diffDays || 0,
     };
 
     setLeaves((prev) => [newLeave, ...prev]);

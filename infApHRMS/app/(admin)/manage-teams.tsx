@@ -8,6 +8,7 @@ import {
   Platform,
   Dimensions,
   TextInput,
+  KeyboardAvoidingView,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
@@ -53,7 +54,12 @@ export default function ManageTeams() {
         }
       />
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={{ flex: 1 }}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+      >
+        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
         {/* Stats Summary */}
         <Animated.View entering={FadeInDown.delay(100).springify()} style={styles.statsRow}>
           <View style={styles.statCard}>
@@ -153,6 +159,7 @@ export default function ManageTeams() {
 
         <View style={{ height: 120 }} />
       </ScrollView>
+      </KeyboardAvoidingView>
       <AdminBottomNav />
     </View>
   );

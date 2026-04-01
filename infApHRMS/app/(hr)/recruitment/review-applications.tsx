@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform, Image, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform, Image, Alert, KeyboardAvoidingView, TextInput } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import Animated, { FadeInDown, FadeInRight } from 'react-native-reanimated';
@@ -10,6 +10,7 @@ import Header from '@/components/layout/Header';
 export default function ReviewApplications() {
   const { candidates, updateStatus } = useRecruitment();
   const [activeTab, setActiveTab] = useState<'Applied' | 'Shortlisted' | 'Interview'>('Applied');
+  const [reason, setReason] = useState('');
 
   const pendingCandidates = useMemo(() => {
     return candidates.filter((c) => c.status === activeTab);
@@ -62,7 +63,12 @@ export default function ReviewApplications() {
         </TouchableOpacity>
       </View>
 
-      <ScrollView contentContainerStyle={styles.listContainer} showsVerticalScrollIndicator={false}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={{ flex: 1 }}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 20}
+      >
+        <ScrollView contentContainerStyle={styles.listContainer} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
         {pendingCandidates.map((candidate, index) => (
           <Animated.View 
             key={candidate.id} 
@@ -149,7 +155,8 @@ export default function ReviewApplications() {
               <Ionicons name="chevron-forward" size={16} color="#4b5563" style={{ marginHorizontal: 8 }} />
            </View>
         </View>
-      </ScrollView>
+        </ScrollView>
+      </KeyboardAvoidingView>
       <HRBottomNav />
     </View>
   );

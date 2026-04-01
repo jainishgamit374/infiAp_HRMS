@@ -22,7 +22,7 @@ export default function PayrollOverview() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       {/* Unified Header */}
       <Header 
         title="Payroll Overview" 
@@ -92,13 +92,13 @@ export default function PayrollOverview() {
         })}
       </ScrollView>
       <HRBottomNav />
-    </SafeAreaView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fcfcfd' },
-  content: { padding: 20, paddingBottom: 100 },
+  content: { paddingHorizontal: 20, paddingTop: 20, paddingBottom: 120 },
   grid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', marginBottom: 24 },
   card: { width: '48%', backgroundColor: '#fff', borderRadius: 20, padding: 20, marginBottom: 12, borderWidth: 1, borderColor: '#f3f4f6' },
   cardLabel: { fontSize: 10, fontWeight: '800', color: '#9ca3af', letterSpacing: 0.5, marginBottom: 6 },

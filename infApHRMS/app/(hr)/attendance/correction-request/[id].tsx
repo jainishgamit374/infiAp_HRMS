@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Platform } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, router } from 'expo-router';
 import Animated, { FadeInDown } from 'react-native-reanimated';
@@ -117,7 +118,6 @@ export default function CorrectionRequest() {
 
         <Text style={styles.footerNote}>Transform your workforce through innovation with AI-powered enterprise technology.</Text>
 
-        <View style={{ height: 100 }} />
       </ScrollView>
 
       {/* Action Footer */}
@@ -140,7 +140,7 @@ export default function CorrectionRequest() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#ffffff' },
   headerRightBtn: { padding: 8 },
-  content: { padding: 20 },
+  content: { paddingHorizontal: 20, paddingTop: 20, paddingBottom: 120 },
   
   employeeCard: { flexDirection: 'row', alignItems: 'center', marginBottom: 32 },
   avatar: { width: 64, height: 64, borderRadius: 32, marginRight: 16 },

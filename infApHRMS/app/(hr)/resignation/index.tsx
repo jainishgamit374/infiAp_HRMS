@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Platform, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Platform, Alert, KeyboardAvoidingView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import Animated, { FadeInDown } from 'react-native-reanimated';
@@ -34,7 +34,7 @@ export default function SubmitResignation() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       {/* Unified Header */}
       <Header 
         title="Resignation" 
@@ -42,50 +42,56 @@ export default function SubmitResignation() {
         showBack={true} 
       />
 
-      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        {/* Summary */}
-        <Animated.View entering={FadeInDown.duration(400)} style={styles.summaryRow}>
-          <View style={[styles.summaryCard, { backgroundColor: '#fffbeb' }]}><Text style={styles.summaryLabel}>Pending</Text><Text style={[styles.summaryVal, { color: '#f59e0b' }]}>{pending}</Text></View>
-          <View style={[styles.summaryCard, { backgroundColor: '#ecfdf5' }]}><Text style={styles.summaryLabel}>Approved</Text><Text style={[styles.summaryVal, { color: '#10b981' }]}>{approved}</Text></View>
-          <View style={[styles.summaryCard, { backgroundColor: '#fef2f2' }]}><Text style={styles.summaryLabel}>Total</Text><Text style={[styles.summaryVal, { color: '#ef4444' }]}>{requests.length}</Text></View>
-        </Animated.View>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={{ flex: 1 }}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+      >
+        <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
+          {/* Summary */}
+          <Animated.View entering={FadeInDown.duration(400)} style={styles.summaryRow}>
+            <View style={[styles.summaryCard, { backgroundColor: '#fffbeb' }]}><Text style={styles.summaryLabel}>Pending</Text><Text style={[styles.summaryVal, { color: '#f59e0b' }]}>{pending}</Text></View>
+            <View style={[styles.summaryCard, { backgroundColor: '#ecfdf5' }]}><Text style={styles.summaryLabel}>Approved</Text><Text style={[styles.summaryVal, { color: '#10b981' }]}>{approved}</Text></View>
+            <View style={[styles.summaryCard, { backgroundColor: '#fef2f2' }]}><Text style={styles.summaryLabel}>Total</Text><Text style={[styles.summaryVal, { color: '#ef4444' }]}>{requests.length}</Text></View>
+          </Animated.View>
 
-        {/* Quick Actions */}
-        <Animated.View entering={FadeInDown.delay(100).duration(400)} style={styles.quickRow}>
-          <TouchableOpacity style={styles.quickBtn} onPress={() => router.push('/(hr)/resignation/requests')}>
-            <Ionicons name="list" size={18} color="#4f46e5" /><Text style={styles.quickBtnText}>View Requests</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.quickBtn} onPress={() => router.push('/(hr)/resignation/exit-process')}>
-            <Ionicons name="exit-outline" size={18} color="#4f46e5" /><Text style={styles.quickBtnText}>Exit Process</Text>
-          </TouchableOpacity>
-        </Animated.View>
+          {/* Quick Actions */}
+          <Animated.View entering={FadeInDown.delay(100).duration(400)} style={styles.quickRow}>
+            <TouchableOpacity style={styles.quickBtn} onPress={() => router.push('/(hr)/resignation/requests')}>
+              <Ionicons name="list" size={18} color="#4f46e5" /><Text style={styles.quickBtnText}>View Requests</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.quickBtn} onPress={() => router.push('/(hr)/resignation/exit-process')}>
+              <Ionicons name="exit-outline" size={18} color="#4f46e5" /><Text style={styles.quickBtnText}>Exit Process</Text>
+            </TouchableOpacity>
+          </Animated.View>
 
-        {/* Submit Form */}
-        <Animated.View entering={FadeInDown.delay(200).duration(400)}>
-          <Text style={styles.formTitle}>Submit New Resignation</Text>
-          <Text style={styles.label}>Employee Name *</Text>
-          <TextInput style={styles.input} placeholder="Full name" value={name} onChangeText={setName} />
-          <Text style={styles.label}>Role</Text>
-          <TextInput style={styles.input} placeholder="e.g. Software Engineer" value={role} onChangeText={setRole} />
-          <Text style={styles.label}>Department</Text>
-          <TextInput style={styles.input} placeholder="e.g. Engineering" value={department} onChangeText={setDepartment} />
-          <Text style={styles.label}>Reason *</Text>
-          <TextInput style={[styles.input, { height: 100 }]} placeholder="Reason for resignation..." multiline textAlignVertical="top" value={reason} onChangeText={setReason} />
-          <Text style={styles.label}>Last Working Date</Text>
-          <TextInput style={styles.input} placeholder="e.g. Apr 30, 2026" value={lastDate} onChangeText={setLastDate} />
-          <TouchableOpacity style={styles.submitBtn} onPress={handleSubmit}>
-            <Text style={styles.submitText}>Submit Resignation</Text>
-          </TouchableOpacity>
-        </Animated.View>
-      </ScrollView>
+          {/* Submit Form */}
+          <Animated.View entering={FadeInDown.delay(200).duration(400)}>
+            <Text style={styles.formTitle}>Submit New Resignation</Text>
+            <Text style={styles.label}>Employee Name *</Text>
+            <TextInput style={styles.input} placeholder="Full name" value={name} onChangeText={setName} />
+            <Text style={styles.label}>Role</Text>
+            <TextInput style={styles.input} placeholder="e.g. Software Engineer" value={role} onChangeText={setRole} />
+            <Text style={styles.label}>Department</Text>
+            <TextInput style={styles.input} placeholder="e.g. Engineering" value={department} onChangeText={setDepartment} />
+            <Text style={styles.label}>Reason *</Text>
+            <TextInput style={[styles.input, { height: 100 }]} placeholder="Reason for resignation..." multiline textAlignVertical="top" value={reason} onChangeText={setReason} />
+            <Text style={styles.label}>Last Working Date</Text>
+            <TextInput style={styles.input} placeholder="e.g. Apr 30, 2026" value={lastDate} onChangeText={setLastDate} />
+            <TouchableOpacity style={styles.submitBtn} onPress={handleSubmit}>
+              <Text style={styles.submitText}>Submit Resignation</Text>
+            </TouchableOpacity>
+          </Animated.View>
+        </ScrollView>
+      </KeyboardAvoidingView>
       <HRBottomNav />
-    </SafeAreaView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fcfcfd' },
-  content: { padding: 20, paddingBottom: 100 },
+  content: { paddingHorizontal: 20, paddingTop: 20, paddingBottom: 120 },
   summaryRow: { flexDirection: 'row', gap: 12, marginBottom: 24 },
   summaryCard: { flex: 1, borderRadius: 16, padding: 16, alignItems: 'center' },
   summaryLabel: { fontSize: 10, fontWeight: '700', color: '#6b7280', letterSpacing: 0.5, marginBottom: 4 },

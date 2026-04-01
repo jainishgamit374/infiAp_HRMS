@@ -151,7 +151,6 @@ export default function AttendanceDetails() {
           ))}
         </View>
 
-        <View style={{ height: 40 }} />
       </ScrollView>
     </View>
   );
@@ -160,7 +159,7 @@ export default function AttendanceDetails() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#ffffff' },
   iconBtn: { padding: 8 },
-  content: { padding: 20 },
+  content: { paddingHorizontal: 20, paddingTop: 20, paddingBottom: 120 },
   
   employeeCard: { flexDirection: 'row', alignItems: 'center', marginBottom: 24 },
   avatar: { width: 56, height: 56, borderRadius: 28, marginRight: 16 },

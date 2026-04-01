@@ -129,10 +129,8 @@ export default function TwoFactorAuth() {
   if (isSuccess) {
     return (
       <SafeAreaView style={styles.container}>
-
+        <View style={{ marginTop: 4 }} />
         <View style={styles.cardCenter}>
-          
-
           <View style={styles.successContent}>
             <View style={styles.successIconOuter}>
               <Animated.View style={[styles.successIconInner, { transform: [{ scale: checkmarkScale }] }]}>
@@ -178,6 +176,7 @@ export default function TwoFactorAuth() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <View style={{ marginTop: 4 }} />
       <View style={styles.cardFull}>
         {/* Header Icon */}
         <View style={styles.headerIconContainer}>
@@ -382,6 +381,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#5a55d2',
     fontWeight: '500',
+    textDecorationLine: 'underline',
   },
   numpadContainer: {
     width: '100%',

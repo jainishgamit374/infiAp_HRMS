@@ -193,7 +193,7 @@ export const HRProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const updateEmployee = (id: string, updates: Partial<Employee>) => {
-    setEmployees(employees.map(e => e.id === id ? { ...e, ...updates } : e));
+    setEmployees(prev => prev.map(e => e.id === id ? { ...e, ...updates } : e));
   };
 
   const approveLeave = (leaveId: string) => {

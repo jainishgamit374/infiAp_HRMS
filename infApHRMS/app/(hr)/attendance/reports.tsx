@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
@@ -101,11 +101,11 @@ export default function AttendanceReports() {
           </TouchableOpacity>
 
           <View style={styles.rowBtns}>
-            <TouchableOpacity style={styles.secondaryBtn}>
+            <TouchableOpacity style={styles.secondaryBtn} onPress={() => Alert.alert('Export Started', 'Attendance PDF report is being generated.')}>
               <Ionicons name="document-outline" size={18} color="#4b5563" />
               <Text style={styles.secondaryBtnText}>PDF</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.secondaryBtn}>
+            <TouchableOpacity style={styles.secondaryBtn} onPress={() => Alert.alert('Share Link Created', 'Secure link to this report has been copied to your clipboard.')}>
               <Ionicons name="share-social-outline" size={18} color="#4b5563" />
               <Text style={styles.secondaryBtnText}>Share</Text>
             </TouchableOpacity>
@@ -128,14 +128,13 @@ export default function AttendanceReports() {
                 <Text style={styles.fileName}>{report.name}</Text>
                 <Text style={styles.fileDate}>{report.date}</Text>
               </View>
-              <TouchableOpacity style={styles.downloadBtn}>
+              <TouchableOpacity style={styles.downloadBtn} onPress={() => Alert.alert('Download Started', `Downloading ${report.name}`)}>
                 <Ionicons name="download-outline" size={20} color="#4f46e5" />
               </TouchableOpacity>
             </TouchableOpacity>
           ))}
         </Animated.View>
 
-        <View style={{ height: 100 }} />
       </ScrollView>
 
       <HRBottomNav />
@@ -146,7 +145,7 @@ export default function AttendanceReports() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#ffffff' },
   iconBtn: { padding: 8 },
-  content: { padding: 20 },
+  content: { paddingHorizontal: 20, paddingTop: 20, paddingBottom: 120 },
   
   tabsContainer: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 24, paddingBottom: 12, borderBottomWidth: 1, borderBottomColor: '#f3f4f6' },
   tab: { paddingVertical: 8, paddingHorizontal: 12 },

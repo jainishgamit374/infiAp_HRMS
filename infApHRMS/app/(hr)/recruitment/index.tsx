@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Platform, Image } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Platform, Image, KeyboardAvoidingView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import Animated, { FadeInDown } from 'react-native-reanimated';
@@ -25,7 +25,7 @@ export default function RecruitmentDashboard() {
   const recentCandidates = candidates.filter(c => ['Sarah Connor', 'Marcus Thompson', 'Elena Gilbert', 'Kyle Reese'].includes(c.name));
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       {/* Unified Header */}
       <Header 
         title="Recruitment" 
@@ -33,7 +33,11 @@ export default function RecruitmentDashboard() {
         showBack={true} 
       />
 
-      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        style={{ flex: 1 }}
+      >
+        <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
         {/* Search */}
         <Animated.View entering={FadeInDown.duration(400)} style={styles.searchBox}>
           <Ionicons name="search" size={20} color="#9ca3af" />
@@ -170,15 +174,16 @@ export default function RecruitmentDashboard() {
             ))}
           </View>
         </Animated.View>
-      </ScrollView>
+        </ScrollView>
+      </KeyboardAvoidingView>
       <HRBottomNav />
-    </SafeAreaView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff' },
-  content: { padding: 20, paddingBottom: 100 },
+  content: { paddingHorizontal: 20, paddingTop: 20, paddingBottom: 120 },
   searchBox: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#f9fafb', borderWidth: 1, borderColor: '#f3f4f6', borderRadius: 12, paddingHorizontal: 16, height: 50, marginBottom: 16 },
   searchInput: { flex: 1, marginLeft: 12, fontSize: 15, color: '#111827' },
   filterTabs: { flexDirection: 'row', gap: 12, marginBottom: 24, paddingBottom: 4 },

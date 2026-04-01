@@ -133,10 +133,11 @@ export default function EditLeave() {
       <KeyboardAvoidingView 
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={{ flex: 1 }}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
       >
         <Header title="Edit Leave" showBack={true} />
 
-        <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+        <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
           {/* Form Fields */}
           <View style={styles.formSection}>
             <Text style={styles.label}>Leave Type</Text>

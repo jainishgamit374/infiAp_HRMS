@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Dimensions, Platform } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Dimensions, Platform, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router, useLocalSearchParams } from 'expo-router';
 import { BottomNav } from '../../../components/BottomNav';
@@ -353,7 +353,7 @@ const NotificationDetails = () => {
                   <Text style={styles.attachmentName}>{notification.attachment.name}</Text>
                   <Text style={styles.attachmentSize}>{notification.attachment.size}</Text>
                </View>
-               <TouchableOpacity style={styles.downloadButton}>
+               <TouchableOpacity style={styles.downloadButton} onPress={() => Alert.alert('Download Started', `Downloading ${notification.attachment?.name || 'file'}`)}>
                   <Ionicons name="download-outline" size={20} color="#94a3b8" />
                </TouchableOpacity>
             </View>

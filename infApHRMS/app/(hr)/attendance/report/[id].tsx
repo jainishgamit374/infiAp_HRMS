@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Platform, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Platform, ScrollView, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router, useLocalSearchParams } from 'expo-router';
 import Animated, { FadeInDown } from 'react-native-reanimated';
@@ -14,7 +14,7 @@ export default function ReportDetailScreen() {
         title="Report Preview"
         showBack={true}
         rightElement={
-          <TouchableOpacity style={styles.headerRightBtn}>
+          <TouchableOpacity style={styles.headerRightBtn} onPress={() => Alert.alert('Share Initiated', 'Report presentation link created.')}>
             <Ionicons name="share-outline" size={24} color="#4f46e5" />
           </TouchableOpacity>
         }
@@ -61,7 +61,7 @@ export default function ReportDetailScreen() {
 
       {/* Floating Action */}
       <View style={styles.footer}>
-         <TouchableOpacity style={styles.downloadBtn}>
+         <TouchableOpacity style={styles.downloadBtn} onPress={() => Alert.alert('Download Started', 'The PDF is downloading to your device.')}>
             <Ionicons name="download-outline" size={20} color="#fff" />
             <Text style={styles.downloadBtnText}>Download File</Text>
          </TouchableOpacity>
@@ -73,7 +73,7 @@ export default function ReportDetailScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fcfcfd' },
   headerRightBtn: { padding: 8 },
-  content: { padding: 20, paddingBottom: 100 },
+  content: { paddingHorizontal: 20, paddingTop: 20, paddingBottom: 120 },
   
   docHeader: { alignItems: 'center', marginBottom: 32 },
   docIcon: { width: 72, height: 72, borderRadius: 20, backgroundColor: '#eef2ff', justifyContent: 'center', alignItems: 'center', marginBottom: 16 },

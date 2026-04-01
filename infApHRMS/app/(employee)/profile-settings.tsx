@@ -43,7 +43,7 @@ export default function ProfileSettingsPage() {
   );
 
   return (
-    <SafeAreaView style={styles.root}>
+    <View style={styles.root}>
       {/* Unified Header */}
       <Header 
         title="Settings" 
@@ -125,7 +125,7 @@ export default function ProfileSettingsPage() {
         <View style={{ height: 40 }} />
       </ScrollView>
       <BottomNav />
-    </SafeAreaView>
+    </View>
   );
 }
 

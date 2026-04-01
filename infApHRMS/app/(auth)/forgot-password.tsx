@@ -12,67 +12,71 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { Link, router } from 'expo-router';
 import { Image } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState('');
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-    >
-      <ScrollView contentContainerStyle={styles.container}>
-        
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#f5f7fa' }}>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+      >
+        <ScrollView contentContainerStyle={styles.container}>
+          <View style={{ marginTop: 4 }} />
 
-        {/* Card */}
-        <View style={styles.card}>
-          <Text style={styles.title}>Reset your password</Text>
-          <Text style={styles.subtitle}>
-            Enter the email address associated with your account and we'll send you a link to reset your password.
-          </Text>
+          {/* Card */}
+          <View style={styles.card}>
+            <Text style={styles.title}>Reset your password</Text>
+            <Text style={styles.subtitle}>
+              Enter the email address associated with your account and we'll send you a link to reset your password.
+            </Text>
 
-          {/* Email */}
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>EMAIL ADDRESS</Text>
-            <View style={styles.inputContainer}>
-              <Ionicons name="at-outline" size={20} color="#9ca3af" style={styles.inputIcon} />
-              <TextInput
-                style={styles.input}
-                placeholder="name@company.com"
-                placeholderTextColor="#9ca3af"
-                value={email}
-                onChangeText={setEmail}
-                keyboardType="email-address"
-                autoCapitalize="none"
-              />
+            {/* Email */}
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>EMAIL ADDRESS</Text>
+              <View style={styles.inputContainer}>
+                <Ionicons name="at-outline" size={20} color="#9ca3af" style={styles.inputIcon} />
+                <TextInput
+                  style={styles.input}
+                  placeholder="name@company.com"
+                  placeholderTextColor="#9ca3af"
+                  value={email}
+                  onChangeText={setEmail}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                />
+              </View>
+            </View>
+
+            {/* Button */}
+            <TouchableOpacity style={styles.button} activeOpacity={0.8}>
+              <Text style={styles.buttonText}>Send Reset Link</Text>
+              <Ionicons name="arrow-forward" size={18} color="#fff" style={{ marginLeft: 6 }} />
+            </TouchableOpacity>
+
+            {/* Back to Sign In */}
+            <View style={styles.backContainer}>
+              <Link href="/(auth)/sign-in" asChild>
+                <TouchableOpacity style={styles.backButton}>
+                  <Ionicons name="arrow-back" size={16} color="#5a55d2" style={{ marginRight: 6 }} />
+                  <Text style={styles.backText}>Back to Sign In</Text>
+                </TouchableOpacity>
+              </Link>
             </View>
           </View>
 
-          {/* Button */}
-          <TouchableOpacity style={styles.button} activeOpacity={0.8}>
-            <Text style={styles.buttonText}>Send Reset Link</Text>
-            <Ionicons name="arrow-forward" size={18} color="#fff" style={{ marginLeft: 6 }} />
-          </TouchableOpacity>
-
-          {/* Back to Sign In */}
-          <View style={styles.backContainer}>
-            <Link href="/(auth)/sign-in" asChild>
-              <TouchableOpacity style={styles.backButton}>
-                <Ionicons name="arrow-back" size={16} color="#5a55d2" style={{ marginRight: 6 }} />
-                <Text style={styles.backText}>Back to Sign In</Text>
-              </TouchableOpacity>
-            </Link>
+          {/* Footer */}
+          <View style={styles.footerContainer}>
+            <Text style={styles.footerText}>
+              Having trouble? <Text style={styles.footerLink}>Contact support</Text>
+            </Text>
           </View>
-        </View>
-
-        {/* Footer */}
-        <View style={styles.footerContainer}>
-          <Text style={styles.footerText}>
-            Having trouble? <Text style={styles.footerLink}>Contact support</Text>
-          </Text>
-        </View>
-      </ScrollView>
-    </KeyboardAvoidingView>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
@@ -83,15 +87,6 @@ const styles = StyleSheet.create({
     padding: 24,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  header: {
-    alignItems: 'center',
-    marginBottom: 24,
-    marginTop: Platform.OS === 'ios' ? 40 : 20,
-  },
-  headerLogo: {
-    width: 260,
-    height: 72,
   },
   card: {
     backgroundColor: '#ffffff',

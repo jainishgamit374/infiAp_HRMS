@@ -152,10 +152,16 @@ export default function UpcomingWFH() {
     <SafeAreaView style={styles.container}>
       <Header title="Upcoming WFH" showBack={true} />
 
-      <ScrollView 
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={{ flex: 1 }}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
       >
+        <ScrollView 
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+        >
         {wfhList.length > 0 ? (
           wfhList.map((item, index) => (
             <WFHCard key={item.id} item={item} index={index} />
@@ -169,7 +175,8 @@ export default function UpcomingWFH() {
             <Text style={styles.emptySub}>When you have approved WFH dates, they will appear here.</Text>
           </View>
         )}
-      </ScrollView>
+        </ScrollView>
+      </KeyboardAvoidingView>
 
       {/* Add Button */}
       <TouchableOpacity 
@@ -195,6 +202,7 @@ export default function UpcomingWFH() {
           <KeyboardAvoidingView 
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             style={styles.modalContentWrapper}
+            keyboardVerticalOffset={Platform.OS === 'ios' ? 40 : 20}
           >
             <TouchableOpacity activeOpacity={1} style={styles.modalContent}>
               <View style={styles.modalHeader}>

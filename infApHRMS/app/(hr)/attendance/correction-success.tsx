@@ -1,12 +1,13 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import Animated, { FadeInDown, ZoomIn } from 'react-native-reanimated';
 
 export default function CorrectionSuccess() {
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.content}>
         <Image 
           source={require('../../../assets/images/logo.png')} 
@@ -58,7 +59,7 @@ export default function CorrectionSuccess() {
         </TouchableOpacity>
         <Text style={styles.footerMotto}>INFIAP ENTERPRISE</Text>
       </Animated.View>
-    </View>
+    </SafeAreaView>
   );
 }
 

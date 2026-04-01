@@ -56,11 +56,11 @@ const BulkImport = () => {
 
   return (
     <View style={{ flex: 1 }}>
+      <Header 
+        title="Bulk Employee Import" 
+        showBack={true} 
+      />
       <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-        <Header 
-          title="Bulk Employee Import" 
-          showBack={true} 
-        />
 
         {renderStepIndicator()}
 
@@ -155,7 +155,6 @@ const BulkImport = () => {
             <Ionicons name="arrow-forward" size={18} color="#fff" style={{ marginLeft: 8 }} />
           </TouchableOpacity>
         </View>
-        <View style={{ height: 100 }} />
       </ScrollView>
       <HRBottomNav />
     </View>
@@ -169,7 +168,8 @@ const styles = StyleSheet.create({
   },
   content: {
     paddingHorizontal: 20,
-    paddingBottom: 40,
+    paddingTop: 24,
+    paddingBottom: 120,
   },
   stepIndicator: {
     flexDirection: 'row',

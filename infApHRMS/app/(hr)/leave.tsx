@@ -53,15 +53,12 @@ const LeaveManagementScreen = () => {
 
   return (
     <View style={{ flex: 1, backgroundColor: '#f9f9fb' }}>
+      <Header 
+        title="Leave Management"
+        subtitle="INFIAP DASHBOARD"
+        showBack={true}
+      />
       <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-        
-        {/* Header */}
-        <Header 
-          title="Leave Management"
-          subtitle="INFIAP DASHBOARD"
-          showBack={true}
-        />
-
         <Text style={styles.introText}>Manage employee leave requests, approvals, and leave history.</Text>
 
         {/* Filters Row */}
@@ -204,7 +201,7 @@ const LeaveManagementScreen = () => {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  content: { paddingHorizontal: 20 },
+  content: { paddingHorizontal: 20, paddingTop: 20, paddingBottom: 120 },
   
   introText: { fontSize: 13, color: '#6b7280', marginBottom: 20, lineHeight: 20 },
   

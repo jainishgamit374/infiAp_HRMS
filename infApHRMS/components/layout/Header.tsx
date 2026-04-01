@@ -10,6 +10,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useSidebar } from '../../context/SidebarContext';
 import { router } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 interface HeaderProps {
   title?: string;
@@ -32,37 +33,39 @@ const Header = ({ title, subtitle, showBack, onBackPress, rightElement, backIcon
   };
 
   return (
-    <View style={styles.header}>
-      <View style={styles.leftSection}>
-        {showBack ? (
-          <TouchableOpacity onPress={handleBack} style={styles.iconBtn}>
-            <Ionicons name={backIconName || "chevron-back"} size={24} color="#1e293b" />
+    <SafeAreaView edges={['top']} style={{ backgroundColor: '#fff' }}>
+      <View style={styles.header}>
+        <View style={styles.leftSection}>
+          {showBack ? (
+            <TouchableOpacity onPress={handleBack} style={styles.iconBtn}>
+              <Ionicons name={backIconName || "chevron-back"} size={24} color="#1e293b" />
+            </TouchableOpacity>
+          ) : (
+            <Image
+              source={require('../../assets/images/logo.png')}
+              style={styles.headerLogo}
+              resizeMode="contain"
+            />
+          )}
+        </View>
+
+        <View style={styles.centerSection}>
+          {title ? (
+            <View style={styles.titleContainer}>
+              <Text style={styles.headerTitle} numberOfLines={1}>{title}</Text>
+              {subtitle && <Text style={styles.headerSubtitle} numberOfLines={1}>{subtitle}</Text>}
+            </View>
+          ) : null}
+        </View>
+
+        <View style={styles.rightSection}>
+          {rightElement}
+          <TouchableOpacity onPress={openSidebar} style={styles.iconBtn}>
+            <Ionicons name="menu-outline" size={28} color="#1e293b" />
           </TouchableOpacity>
-        ) : (
-          <Image
-            source={require('../../assets/images/logo.png')}
-            style={styles.headerLogo}
-            resizeMode="contain"
-          />
-        )}
+        </View>
       </View>
-
-      <View style={styles.centerSection}>
-        {title ? (
-          <View style={styles.titleContainer}>
-            <Text style={styles.headerTitle} numberOfLines={1}>{title}</Text>
-            {subtitle && <Text style={styles.headerSubtitle} numberOfLines={1}>{subtitle}</Text>}
-          </View>
-        ) : null}
-      </View>
-
-      <View style={styles.rightSection}>
-        {rightElement}
-        <TouchableOpacity onPress={openSidebar} style={styles.iconBtn}>
-          <Ionicons name="menu-outline" size={28} color="#1e293b" />
-        </TouchableOpacity>
-      </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

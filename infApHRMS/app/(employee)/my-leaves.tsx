@@ -19,8 +19,8 @@ import Header from '../../components/layout/Header';
 
 const { width } = Dimensions.get('window');
 
-const TABS = ['All', 'Pending', 'Approved', 'History'];
-const TAB_WIDTH = width / 4;
+const TABS = ['All', 'Pending', 'Approved', 'History', 'Drafts'];
+const TAB_WIDTH = width / 5;
 
 export default function MyLeaves() {
   const { leaves } = useLeave();
@@ -44,10 +44,11 @@ export default function MyLeaves() {
 
   // Filter leaves based on active tab
   const filteredLeaves = leaves.filter((leave) => {
-    if (activeTab === 'All') return true;
+    if (activeTab === 'All') return leave.status !== 'DRAFT'; // Don't show drafts in 'All' to keep it clean, or show everything
     if (activeTab === 'Pending') return leave.status === 'PENDING';
     if (activeTab === 'Approved') return leave.status === 'APPROVED';
     if (activeTab === 'History') return leave.status === 'REJECTED' || leave.status === 'CANCELLED';
+    if (activeTab === 'Drafts') return leave.status === 'DRAFT';
     return true;
   });
 
@@ -85,6 +86,7 @@ export default function MyLeaves() {
       case 'APPROVED': return { text: '#22c55e', bg: '#dcfce7' };
       case 'PENDING': return { text: '#ea580c', bg: '#ffedd5' };
       case 'REJECTED': return { text: '#ef4444', bg: '#fee2e2' };
+      case 'DRAFT': return { text: '#64748b', bg: '#f1f5f9' };
       default: return { text: '#64748b', bg: '#f1f5f9' };
     }
   };
@@ -187,7 +189,7 @@ export default function MyLeaves() {
                 </View>
 
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  {item.status === 'PENDING' ? (
+                  {item.status === 'PENDING' || item.status === 'DRAFT' ? (
                     <TouchableOpacity 
                       activeOpacity={0.6}
                       style={{ marginRight: 16, flexDirection: 'row', alignItems: 'center' }}

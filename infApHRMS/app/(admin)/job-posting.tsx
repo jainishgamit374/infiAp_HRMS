@@ -99,7 +99,11 @@ export default function JobPosting() {
       </Animated.View>
 
       <Modal visible={showAddJob} transparent animationType="fade">
-        <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={styles.modalOverlay}>
+        <KeyboardAvoidingView 
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'} 
+          style={styles.modalOverlay}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+        >
           <TouchableOpacity style={styles.modalBackdrop} activeOpacity={1} onPress={() => setShowAddJob(false)} />
           <Animated.View entering={SlideInDown.springify()} style={styles.modalContent}>
             <View style={styles.modalHandle} />

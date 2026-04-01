@@ -76,7 +76,7 @@ export default function LeaveDetailsScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fcfcfd' },
-  content: { padding: 20 },
+  content: { paddingHorizontal: 20, paddingTop: 20, paddingBottom: 120 },
   profileCard: { alignItems: 'center', marginBottom: 24 },
   avatar: { width: 80, height: 80, borderRadius: 24, marginBottom: 12 },
   name: { fontSize: 22, fontWeight: '800', color: '#111827' },

@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Link, router } from 'expo-router';
-
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const ROLES = [
   { label: 'Employee', value: 'employee', icon: 'person-outline' },
@@ -44,147 +44,150 @@ export default function SignIn() {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-    >
-      <ScrollView contentContainerStyle={styles.container}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#f5f7fa' }}>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+      >
+        <ScrollView contentContainerStyle={styles.container}>
+          <View style={{ marginTop: 4 }} />
+          <View style={styles.card}>
+            <Text style={styles.title}>Welcome back</Text>
+            <Text style={styles.subtitle}>
+              Enter your credentials to access your{'\n'}enterprise dashboard
+            </Text>
 
-        <View style={styles.card}>
-          <Text style={styles.title}>Welcome back</Text>
-          <Text style={styles.subtitle}>
-            Enter your credentials to access your{'\n'}enterprise dashboard
-          </Text>
+            {/* Role Selector */}
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Sign in as</Text>
+              <TouchableOpacity
+                style={styles.roleSelector}
+                onPress={() => setShowRoleDropdown(!showRoleDropdown)}
+                activeOpacity={0.7}
+              >
+                <View style={styles.roleSelectorLeft}>
+                  <Ionicons name={currentRole.icon as any} size={20} color="#5a55d2" />
+                  <Text style={styles.roleSelectorText}>{currentRole.label}</Text>
+                </View>
+                <Ionicons name={showRoleDropdown ? "chevron-up" : "chevron-down"} size={20} color="#9ca3af" />
+              </TouchableOpacity>
+              
+              {showRoleDropdown && (
+                <View style={styles.roleDropdown}>
+                  {ROLES.map((role) => (
+                    <TouchableOpacity
+                      key={role.value}
+                      style={[
+                        styles.roleOption,
+                        selectedRole === role.value && styles.roleOptionActive,
+                      ]}
+                      onPress={() => {
+                        setSelectedRole(role.value);
+                        setShowRoleDropdown(false);
+                      }}
+                      activeOpacity={0.7}
+                    >
+                      <Ionicons name={role.icon as any} size={18} color={selectedRole === role.value ? '#5a55d2' : '#6b7280'} />
+                      <Text style={[
+                        styles.roleOptionText,
+                        selectedRole === role.value && styles.roleOptionTextActive,
+                      ]}>{role.label}</Text>
+                      {selectedRole === role.value && (
+                        <Ionicons name="checkmark" size={18} color="#5a55d2" style={{ marginLeft: 'auto' }} />
+                      )}
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              )}
+            </View>
 
-          {/* Role Selector */}
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Sign in as</Text>
+            {/* Email */}
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Email address</Text>
+              <View style={styles.inputContainer}>
+                <Ionicons name="mail-outline" size={20} color="#9ca3af" style={styles.inputIcon} />
+                <TextInput
+                  style={styles.input}
+                  placeholder="name@company.com"
+                  placeholderTextColor="#9ca3af"
+                  value={email}
+                  onChangeText={setEmail}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                />
+              </View>
+            </View>
+
+            {/* Password */}
+            <View style={styles.inputGroup}>
+              <View style={styles.passwordHeader}>
+                <Text style={styles.label}>Password</Text>
+                <Link href="/(auth)/forgot-password" asChild>
+                  <TouchableOpacity>
+                    <Text style={styles.forgotPassword}>Forgot password?</Text>
+                  </TouchableOpacity>
+                </Link>
+              </View>
+              <View style={styles.inputContainer}>
+                <Ionicons name="lock-closed-outline" size={20} color="#9ca3af" style={styles.inputIcon} />
+                <TextInput
+                  style={styles.input}
+                  placeholder="........"
+                  placeholderTextColor="#9ca3af"
+                  value={password}
+                  onChangeText={setPassword}
+                  secureTextEntry
+                />
+              </View>
+            </View>
+
+            {/* Remember Me */}
             <TouchableOpacity
-              style={styles.roleSelector}
-              onPress={() => setShowRoleDropdown(!showRoleDropdown)}
+              style={styles.rememberMeContainer}
+              onPress={() => setRememberMe(!rememberMe)}
               activeOpacity={0.7}
             >
-              <View style={styles.roleSelectorLeft}>
-                <Ionicons name={currentRole.icon as any} size={20} color="#5a55d2" />
-                <Text style={styles.roleSelectorText}>{currentRole.label}</Text>
-              </View>
-              <Ionicons name={showRoleDropdown ? "chevron-up" : "chevron-down"} size={20} color="#9ca3af" />
-            </TouchableOpacity>
-            
-            {showRoleDropdown && (
-              <View style={styles.roleDropdown}>
-                {ROLES.map((role) => (
-                  <TouchableOpacity
-                    key={role.value}
-                    style={[
-                      styles.roleOption,
-                      selectedRole === role.value && styles.roleOptionActive,
-                    ]}
-                    onPress={() => {
-                      setSelectedRole(role.value);
-                      setShowRoleDropdown(false);
-                    }}
-                    activeOpacity={0.7}
-                  >
-                    <Ionicons name={role.icon as any} size={18} color={selectedRole === role.value ? '#5a55d2' : '#6b7280'} />
-                    <Text style={[
-                      styles.roleOptionText,
-                      selectedRole === role.value && styles.roleOptionTextActive,
-                    ]}>{role.label}</Text>
-                    {selectedRole === role.value && (
-                      <Ionicons name="checkmark" size={18} color="#5a55d2" style={{ marginLeft: 'auto' }} />
-                    )}
-                  </TouchableOpacity>
-                ))}
-              </View>
-            )}
-          </View>
-
-          {/* Email */}
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Email address</Text>
-            <View style={styles.inputContainer}>
-              <Ionicons name="mail-outline" size={20} color="#9ca3af" style={styles.inputIcon} />
-              <TextInput
-                style={styles.input}
-                placeholder="name@company.com"
-                placeholderTextColor="#9ca3af"
-                value={email}
-                onChangeText={setEmail}
-                keyboardType="email-address"
-                autoCapitalize="none"
+              <Ionicons
+                name={rememberMe ? "checkbox" : "square-outline"}
+                size={20}
+                color={rememberMe ? "#5a55d2" : "#9ca3af"}
               />
-            </View>
-          </View>
+              <Text style={styles.rememberMeText}>Remember me</Text>
+            </TouchableOpacity>
 
-          {/* Password */}
-          <View style={styles.inputGroup}>
-            <View style={styles.passwordHeader}>
-              <Text style={styles.label}>Password</Text>
-              <Link href="/(auth)/forgot-password" asChild>
+            {/* Sign In Button */}
+            <TouchableOpacity style={styles.signInButton} onPress={handleSignIn} activeOpacity={0.8}>
+              <Text style={styles.signInText}>Sign In</Text>
+            </TouchableOpacity>
+
+            <View style={{ height: 20 }} />
+
+            {/* Footer Card Section */}
+            <View style={styles.cardFooter}>
+              <Text style={styles.noAccountText}>Don't have an account? </Text>
+              <Link href="/(auth)/sign-up" asChild>
                 <TouchableOpacity>
-                  <Text style={styles.forgotPassword}>Forgot password?</Text>
+                  <Text style={styles.createAccountText}>Create an account</Text>
                 </TouchableOpacity>
               </Link>
             </View>
-            <View style={styles.inputContainer}>
-              <Ionicons name="lock-closed-outline" size={20} color="#9ca3af" style={styles.inputIcon} />
-              <TextInput
-                style={styles.input}
-                placeholder="........"
-                placeholderTextColor="#9ca3af"
-                value={password}
-                onChangeText={setPassword}
-                secureTextEntry
-              />
+          </View>
+
+          {/* Footer Badges */}
+          <View style={styles.badgesContainer}>
+            <View style={styles.badge}>
+              <Ionicons name="shield-checkmark-outline" size={16} color="#9ca3af" />
+              <Text style={styles.badgeText}>ENTERPRISE SECURE</Text>
+            </View>
+            <View style={styles.badge}>
+              <Ionicons name="cloud-done-outline" size={16} color="#9ca3af" />
+              <Text style={styles.badgeText}>99.9% UPTIME</Text>
             </View>
           </View>
-
-          {/* Remember Me */}
-          <TouchableOpacity
-            style={styles.rememberMeContainer}
-            onPress={() => setRememberMe(!rememberMe)}
-            activeOpacity={0.7}
-          >
-            <Ionicons
-              name={rememberMe ? "checkbox" : "square-outline"}
-              size={20}
-              color={rememberMe ? "#5a55d2" : "#9ca3af"}
-            />
-            <Text style={styles.rememberMeText}>Remember me</Text>
-          </TouchableOpacity>
-
-          {/* Sign In Button */}
-          <TouchableOpacity style={styles.signInButton} onPress={handleSignIn} activeOpacity={0.8}>
-            <Text style={styles.signInText}>Sign In</Text>
-          </TouchableOpacity>
-
-          <View style={{ height: 20 }} />
-
-          {/* Footer Card Section */}
-          <View style={styles.cardFooter}>
-            <Text style={styles.noAccountText}>Don't have an account? </Text>
-            <Link href="/(auth)/sign-up" asChild>
-              <TouchableOpacity>
-                <Text style={styles.createAccountText}>Create an account</Text>
-              </TouchableOpacity>
-            </Link>
-          </View>
-        </View>
-
-        {/* Footer Badges */}
-        <View style={styles.badgesContainer}>
-          <View style={styles.badge}>
-            <Ionicons name="shield-checkmark-outline" size={16} color="#9ca3af" />
-            <Text style={styles.badgeText}>ENTERPRISE SECURE</Text>
-          </View>
-          <View style={styles.badge}>
-            <Ionicons name="cloud-done-outline" size={16} color="#9ca3af" />
-            <Text style={styles.badgeText}>99.9% UPTIME</Text>
-          </View>
-        </View>
-      </ScrollView>
-    </KeyboardAvoidingView>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 

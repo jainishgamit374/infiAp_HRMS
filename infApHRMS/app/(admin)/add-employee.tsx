@@ -34,45 +34,51 @@ export default function AddEmployee() {
         showBack={true} 
       />
 
-      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        <Animated.View entering={FadeInDown.duration(600)}>
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>FULL NAME</Text>
-            <View style={styles.inputWrapper}>
-              <Ionicons name="person-outline" size={20} color="#94a3b8" style={styles.inputIcon} />
-              <TextInput style={styles.input} placeholder="e.g. Marcus Johnson" value={name} onChangeText={setName} />
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={{ flex: 1 }}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+      >
+        <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
+          <Animated.View entering={FadeInDown.duration(600)}>
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>FULL NAME</Text>
+              <View style={styles.inputWrapper}>
+                <Ionicons name="person-outline" size={20} color="#94a3b8" style={styles.inputIcon} />
+                <TextInput style={styles.input} placeholder="e.g. Marcus Johnson" value={name} onChangeText={setName} />
+              </View>
             </View>
-          </View>
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>EMAIL ADDRESS</Text>
-            <View style={styles.inputWrapper}>
-              <Ionicons name="mail-outline" size={20} color="#94a3b8" style={styles.inputIcon} />
-              <TextInput style={styles.input} placeholder="marcus@company.com" keyboardType="email-address" value={email} onChangeText={setEmail} />
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>EMAIL ADDRESS</Text>
+              <View style={styles.inputWrapper}>
+                <Ionicons name="mail-outline" size={20} color="#94a3b8" style={styles.inputIcon} />
+                <TextInput style={styles.input} placeholder="marcus@company.com" keyboardType="email-address" value={email} onChangeText={setEmail} />
+              </View>
             </View>
-          </View>
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>DESIGNATION</Text>
-            <View style={styles.inputWrapper}>
-              <Ionicons name="briefcase-outline" size={20} color="#94a3b8" style={styles.inputIcon} />
-              <TextInput style={styles.input} placeholder="e.g. Senior Backend Dev" value={role} onChangeText={setRole} />
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>DESIGNATION</Text>
+              <View style={styles.inputWrapper}>
+                <Ionicons name="briefcase-outline" size={20} color="#94a3b8" style={styles.inputIcon} />
+                <TextInput style={styles.input} placeholder="e.g. Senior Backend Dev" value={role} onChangeText={setRole} />
+              </View>
             </View>
-          </View>
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>DEPARTMENT</Text>
-            <View style={styles.inputWrapper}>
-              <Ionicons name="business-outline" size={20} color="#94a3b8" style={styles.inputIcon} />
-              <TextInput style={styles.input} placeholder="e.g. Engineering" value={dept} onChangeText={setDept} />
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>DEPARTMENT</Text>
+              <View style={styles.inputWrapper}>
+                <Ionicons name="business-outline" size={20} color="#94a3b8" style={styles.inputIcon} />
+                <TextInput style={styles.input} placeholder="e.g. Engineering" value={dept} onChangeText={setDept} />
+              </View>
             </View>
-          </View>
 
-          <TouchableOpacity style={styles.submitBtn} onPress={handleSubmit}>
-            <Text style={styles.submitBtnText}>Create Account</Text>
-          </TouchableOpacity>
-        </Animated.View>
-      </ScrollView>
+            <TouchableOpacity style={styles.submitBtn} onPress={handleSubmit}>
+              <Text style={styles.submitBtnText}>Create Account</Text>
+            </TouchableOpacity>
+          </Animated.View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }

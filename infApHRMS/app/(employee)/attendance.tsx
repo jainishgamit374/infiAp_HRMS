@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useMemo } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform, Alert, Modal, TextInput, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform, Alert, Modal, TextInput, ActivityIndicator, KeyboardAvoidingView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { BottomNav } from '../../components/BottomNav';
@@ -198,7 +198,12 @@ export default function AttendancePage() {
     <SafeAreaView style={styles.root}>
       <Header title="Attendance" subtitle="Track your time & presence" showBack={true} />
 
-      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={{ flex: 1 }}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+      >
+        <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
         {/* Check-in Toast */}
         {checkedIn && (
           <Animated.View entering={FadeInDown.duration(400)} style={styles.toast}>
@@ -485,7 +490,8 @@ export default function AttendancePage() {
         </View>
 
         <View style={{ height: 120 }} />
-      </ScrollView>
+        </ScrollView>
+      </KeyboardAvoidingView>
 
       {/* ═══ REPORT MODAL ═══ */}
       <Modal visible={reportVisible} transparent animationType="slide">
@@ -538,7 +544,11 @@ export default function AttendancePage() {
 
       {/* ═══ REJECTION REASON MODAL ═══ */}
       <Modal visible={rejectModalVisible} transparent animationType="fade">
-        <View style={styles.modalOverlay}>
+        <KeyboardAvoidingView 
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'} 
+          style={styles.modalOverlay}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+        >
           <View style={styles.rejectModal}>
             <Text style={styles.modalTitle}>Rejection Reason</Text>
             <TextInput
@@ -559,7 +569,7 @@ export default function AttendancePage() {
               </TouchableOpacity>
             </View>
           </View>
-        </View>
+        </KeyboardAvoidingView>
       </Modal>
 
       {/* ═══ CORRECTION DETAIL MODAL ═══ */}

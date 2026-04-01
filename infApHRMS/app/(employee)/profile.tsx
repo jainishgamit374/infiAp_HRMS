@@ -11,7 +11,7 @@ export default function PersonalProfilePage() {
   const { user } = useUser();
 
   return (
-    <SafeAreaView style={styles.root}>
+    <View style={styles.root}>
       {/* New Unified Header */}
       <Header 
         title="My Profile" 
@@ -132,7 +132,7 @@ export default function PersonalProfilePage() {
       </ScrollView>
 
       <BottomNav />
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -146,7 +146,8 @@ const styles = StyleSheet.create({
   },
   titleSection: {
     paddingHorizontal: 20,
-    paddingVertical: 24,
+    paddingTop: 0,
+    paddingBottom: 16,
   },
   pageMainTitle: {
     fontSize: 24,

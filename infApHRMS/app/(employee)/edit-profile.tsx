@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform, Image, TextInput } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform, Image, TextInput, KeyboardAvoidingView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useUser } from '../../context/UserContext';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from '../../components/layout/Header';
+import { useImagePicker } from '@/hooks/useImagePicker';
 
 export default function EditProfilePage() {
   const { user, updateUser } = useUser();
@@ -12,94 +13,115 @@ export default function EditProfilePage() {
   const [role, setRole] = useState(user.role);
   const [email, setEmail] = useState(user.email);
   const [department, setDepartment] = useState(user.department);
+  const [avatarUri, setAvatarUri] = useState<string | null>(null);
+
+  const { showImagePickerOptions } = useImagePicker();
+
+  const handlePickImage = () => {
+    showImagePickerOptions((uri) => {
+      setAvatarUri(uri);
+    });
+  };
 
   const handleSave = () => {
-    updateUser({ name, role, email, department });
+    updateUser({ 
+      name, 
+      role, 
+      email, 
+      department,
+      avatar: avatarUri || user.avatar 
+    });
     router.back();
   };
 
   return (
-    <SafeAreaView style={styles.root}>
+    <View style={styles.root}>
       {/* Unified Header */}
       <Header 
         title="Edit Profile" 
         showBack={true} 
       />
 
-      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        {/* Profile Photo Section */}
-        <View style={styles.photoSection}>
-          <View style={styles.avatarContainer}>
-            <Image source={user.avatar} style={styles.avatar} />
-            <TouchableOpacity style={styles.cameraBtn}>
-              <Ionicons name="camera" size={20} color="#fff" />
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={{ flex: 1 }}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+      >
+        <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
+          {/* Profile Photo Section */}
+          <View style={styles.photoSection}>
+            <View style={styles.avatarContainer}>
+              <Image source={avatarUri ? { uri: avatarUri } : user.avatar} style={styles.avatar} />
+              <TouchableOpacity style={styles.cameraBtn} onPress={handlePickImage}>
+                <Ionicons name="camera" size={20} color="#fff" />
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          {/* Form Section */}
+          <View style={styles.form}>
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Full Name</Text>
+              <View style={styles.inputWrapper}>
+                <TextInput
+                  style={styles.input}
+                  value={name}
+                  onChangeText={setName}
+                  placeholder="Enter full name"
+                />
+              </View>
+            </View>
+
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Role</Text>
+              <View style={styles.inputWrapper}>
+                <TextInput
+                  style={styles.input}
+                  value={role}
+                  onChangeText={setRole}
+                  placeholder="Enter job role"
+                />
+              </View>
+            </View>
+
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Email</Text>
+              <View style={styles.inputWrapper}>
+                <TextInput
+                  style={styles.input}
+                  value={email}
+                  onChangeText={setEmail}
+                  placeholder="Enter email address"
+                  keyboardType="email-address"
+                />
+              </View>
+            </View>
+
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Department</Text>
+              <View style={styles.inputWrapper}>
+                <TextInput
+                  style={styles.input}
+                  value={department}
+                  onChangeText={setDepartment}
+                  placeholder="Enter department"
+                />
+              </View>
+            </View>
+          </View>
+
+          {/* Actions */}
+          <View style={styles.actions}>
+            <TouchableOpacity style={styles.saveBtn} onPress={handleSave}>
+              <Text style={styles.saveBtnText}>Save Changes</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.cancelBtn} onPress={() => router.back()}>
+              <Text style={styles.cancelBtnText}>Cancel</Text>
             </TouchableOpacity>
           </View>
-        </View>
-
-        {/* Form Section */}
-        <View style={styles.form}>
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Full Name</Text>
-            <View style={styles.inputWrapper}>
-              <TextInput
-                style={styles.input}
-                value={name}
-                onChangeText={setName}
-                placeholder="Enter full name"
-              />
-            </View>
-          </View>
-
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Role</Text>
-            <View style={styles.inputWrapper}>
-              <TextInput
-                style={styles.input}
-                value={role}
-                onChangeText={setRole}
-                placeholder="Enter job role"
-              />
-            </View>
-          </View>
-
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Email</Text>
-            <View style={styles.inputWrapper}>
-              <TextInput
-                style={styles.input}
-                value={email}
-                onChangeText={setEmail}
-                placeholder="Enter email address"
-                keyboardType="email-address"
-              />
-            </View>
-          </View>
-
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Department</Text>
-            <View style={styles.inputWrapper}>
-              <TextInput
-                style={styles.input}
-                value={department}
-                onChangeText={setDepartment}
-                placeholder="Enter department"
-              />
-            </View>
-          </View>
-        </View>
-
-        {/* Actions */}
-        <View style={styles.actions}>
-          <TouchableOpacity style={styles.saveBtn} onPress={handleSave}>
-            <Text style={styles.saveBtnText}>Save Changes</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.cancelBtn} onPress={() => router.back()}>
-            <Text style={styles.cancelBtnText}>Cancel</Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </View>
   );
 }
 
@@ -118,7 +140,8 @@ const styles = StyleSheet.create({
   },
   photoSection: {
     alignItems: 'center',
-    paddingVertical: 32,
+    paddingTop: 8,
+    paddingBottom: 16,
   },
   avatarContainer: {
     position: 'relative',

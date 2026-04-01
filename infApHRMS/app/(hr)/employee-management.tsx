@@ -9,6 +9,7 @@ import {
   Image,
   Dimensions,
   Platform,
+  KeyboardAvoidingView,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
@@ -67,7 +68,7 @@ const EmployeeManagement = () => {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       {/* Unified Header */}
       <Header 
         title="Employees" 
@@ -75,59 +76,63 @@ const EmployeeManagement = () => {
         showBack={true} 
       />
 
-      {/* Search Bar */}
-      <View style={styles.searchContainer}>
-        <Ionicons name="search-outline" size={20} color="#9ca3af" style={styles.searchIcon} />
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Search employees..."
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-        />
-        <TouchableOpacity style={styles.filterButton}>
-          <Ionicons name="options-outline" size={20} color="#5a55d2" />
-        </TouchableOpacity>
-      </View>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        style={{ flex: 1 }}
+      >
+        {/* Search Bar */}
+        <View style={styles.searchContainer}>
+          <Ionicons name="search-outline" size={20} color="#9ca3af" style={styles.searchIcon} />
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Search employees..."
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+          />
+          <TouchableOpacity style={styles.filterButton}>
+            <Ionicons name="options-outline" size={20} color="#5a55d2" />
+          </TouchableOpacity>
+        </View>
 
-      {/* Department Filter */}
-      <View style={styles.filterContainer}>
+        {/* Department Filter */}
+        <View style={styles.filterContainer}>
+          <FlatList
+            data={DEPARTMENTS}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            keyExtractor={(item) => item}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                style={[
+                  styles.filterChip,
+                  selectedDept === item && styles.filterChipActive
+                ]}
+                onPress={() => setSelectedDept(item)}
+              >
+                <Text style={[
+                  styles.filterChipText,
+                  selectedDept === item && styles.filterChipTextActive
+                ]}>{item}</Text>
+              </TouchableOpacity>
+            )}
+            contentContainerStyle={styles.filterList}
+          />
+        </View>
+
+        {/* Employee List */}
         <FlatList
-          data={DEPARTMENTS}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          keyExtractor={(item) => item}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              style={[
-                styles.filterChip,
-                selectedDept === item && styles.filterChipActive
-              ]}
-              onPress={() => setSelectedDept(item)}
-            >
-              <Text style={[
-                styles.filterChipText,
-                selectedDept === item && styles.filterChipTextActive
-              ]}>{item}</Text>
-            </TouchableOpacity>
-          )}
-          contentContainerStyle={styles.filterList}
+          data={filteredEmployees}
+          keyExtractor={(item) => item.id}
+          renderItem={renderEmployeeItem}
+          contentContainerStyle={styles.listContent}
+          ListHeaderComponent={<Text style={styles.recentMembersTitle}>Member List ({filteredEmployees.length})</Text>}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
         />
-      </View>
-
-      {/* Employee List */}
-      <FlatList
-        data={filteredEmployees}
-        keyExtractor={(item) => item.id}
-        renderItem={renderEmployeeItem}
-        contentContainerStyle={styles.listContent}
-        ListHeaderComponent={<Text style={styles.recentMembersTitle}>Member List ({filteredEmployees.length})</Text>}
-        showsVerticalScrollIndicator={false}
-      />
-
-
+      </KeyboardAvoidingView>
 
       <HRBottomNav />
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -152,6 +157,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#e5e7eb',
     marginBottom: 16,
+    marginTop: 20,
   },
   searchIcon: {
     marginRight: 10,
@@ -199,7 +205,7 @@ const styles = StyleSheet.create({
   },
   listContent: {
     paddingHorizontal: 20,
-    paddingBottom: 160,
+    paddingBottom: 120,
   },
   employeeCard: {
     flexDirection: 'row',

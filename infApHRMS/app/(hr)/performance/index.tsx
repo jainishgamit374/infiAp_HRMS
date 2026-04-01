@@ -41,7 +41,7 @@ export default function PerformanceDashboard() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       {/* Unified Header */}
       <Header 
         title="Performance" 
@@ -142,18 +142,14 @@ export default function PerformanceDashboard() {
           <Ionicons name="document-text-outline" size={20} color="#9ca3af" />
           <Text style={styles.navText}>REPORT</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
-          <Ionicons name="settings-outline" size={20} color="#9ca3af" />
-          <Text style={styles.navText}>CONFIG</Text>
-        </TouchableOpacity>
       </View>
-    </SafeAreaView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fcfcfd' },
-  content: { padding: 20, paddingBottom: 100 },
+  content: { paddingHorizontal: 20, paddingTop: 20, paddingBottom: 120 },
   grid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', marginBottom: 32 },
   card: { width: '48%', backgroundColor: '#fff', borderRadius: 20, padding: 20, marginBottom: 16, borderWidth: 1, borderColor: '#f3f4f6', shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.02, shadowRadius: 10, elevation: 1 },
   cardTitle: { fontSize: 10, fontWeight: '800', color: '#9ca3af', letterSpacing: 0.5, marginBottom: 8 },
@@ -162,7 +158,7 @@ const styles = StyleSheet.create({
   cardChangePos: { fontSize: 13, fontWeight: '700', color: '#10b981' },
   cardChangeNeg: { fontSize: 13, fontWeight: '700', color: '#ef4444' },
   cardSubValue: { fontSize: 11, fontWeight: '600', color: '#6b7280' },
-  listHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 },
+  listHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, marginTop: 3 },
   listTitle: { fontSize: 18, fontWeight: '800', color: '#111827' },
   viewAllBtn: { fontSize: 13, fontWeight: '700', color: '#4f46e5' },
   list: { gap: 16 },

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Platform, Alert } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Platform, Alert, KeyboardAvoidingView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useRecruitment, Candidate } from './_layout';
@@ -55,7 +55,12 @@ export default function AddCandidate() {
         showBack={true}
       />
 
-      <ScrollView contentContainerStyle={styles.content}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={{ flex: 1 }}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+      >
+        <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
         <Animated.View entering={FadeInDown.duration(400)}>
           <View style={styles.formGroup}>
             <Text style={styles.label}>Full Name *</Text>
@@ -124,6 +129,7 @@ export default function AddCandidate() {
           </TouchableOpacity>
         </Animated.View>
       </ScrollView>
+      </KeyboardAvoidingView>
     </View>
   );
 }

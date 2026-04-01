@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Platform, Image } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Platform, Image, KeyboardAvoidingView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
@@ -39,7 +39,12 @@ export default function CandidateTracking() {
         </TouchableOpacity>
       </View>
 
-      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={{ flex: 1 }}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+      >
+        <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
         {/* Search */}
         <Animated.View entering={FadeInDown.duration(400)} style={styles.searchBox}>
           <Ionicons name="search" size={20} color="#9ca3af" />
@@ -197,7 +202,8 @@ export default function CandidateTracking() {
             </Animated.View>
           ))}
         </View>
-      </ScrollView>
+        </ScrollView>
+      </KeyboardAvoidingView>
       <HRBottomNav />
     </View>
   );

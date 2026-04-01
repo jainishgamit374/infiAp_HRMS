@@ -66,18 +66,18 @@ export default function PerformanceReports() {
 
         {/* Export Actions */}
         <Animated.View entering={FadeInDown.delay(200).duration(400)} style={styles.exportRow}>
-          <TouchableOpacity style={styles.exportBtn}>
+          <TouchableOpacity style={styles.exportBtn} onPress={() => Alert.alert('Export Started', 'The PDF download has started.')}>
             <Ionicons name="document-outline" size={18} color="#4f46e5" />
             <Text style={styles.exportBtnText}>PDF</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.exportBtn}>
+          <TouchableOpacity style={styles.exportBtn} onPress={() => Alert.alert('Export Started', 'The Excel spreadsheet is being generated.')}>
             <Ionicons name="grid-outline" size={18} color="#10b981" />
             <Text style={styles.exportBtnText}>Excel</Text>
           </TouchableOpacity>
         </Animated.View>
 
         <Animated.View entering={FadeInDown.delay(300).duration(400)}>
-          <TouchableOpacity style={styles.shareBtn}>
+          <TouchableOpacity style={styles.shareBtn} onPress={() => Alert.alert('Success', 'Hub secure link has been copied.')}>
             <Ionicons name="share-social-outline" size={18} color="#4f46e5" />
             <Text style={styles.shareBtnText}>Share Hub Link</Text>
           </TouchableOpacity>
@@ -114,7 +114,6 @@ export default function PerformanceReports() {
         <TouchableOpacity style={styles.navItem} onPress={() => router.push('/(hr)/performance')}><Ionicons name="home-outline" size={20} color="#9ca3af" /><Text style={styles.navText}>HOME</Text></TouchableOpacity>
         <TouchableOpacity style={styles.navItem} onPress={() => router.push('/(hr)/performance/feedbacks')}><Ionicons name="chatbubbles-outline" size={20} color="#9ca3af" /><Text style={styles.navText}>REVIEWS</Text></TouchableOpacity>
         <TouchableOpacity style={styles.navItem}><Ionicons name="document-text" size={20} color="#4f46e5" /><Text style={[styles.navText, { color: '#4f46e5' }]}>REPORT</Text></TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}><Ionicons name="settings-outline" size={20} color="#9ca3af" /><Text style={styles.navText}>CONFIG</Text></TouchableOpacity>
       </View>
     </View>
   );
@@ -127,7 +126,7 @@ const styles = StyleSheet.create({
   tabBtnActive: { borderBottomWidth: 2, borderBottomColor: '#4f46e5' },
   tabText: { fontSize: 14, fontWeight: '600', color: '#6b7280' },
   tabTextActive: { color: '#4f46e5', fontWeight: '800' },
-  content: { padding: 20, paddingBottom: 120 },
+  content: { paddingHorizontal: 20, paddingTop: 20, paddingBottom: 120 },
   statsRow: { flexDirection: 'row', gap: 16, marginBottom: 24 },
   statCard: { flex: 1, backgroundColor: '#fff', borderRadius: 20, padding: 20, borderWidth: 1, borderColor: '#f3f4f6' },
   statLabel: { fontSize: 10, fontWeight: '800', color: '#9ca3af', letterSpacing: 0.5, marginBottom: 8 },

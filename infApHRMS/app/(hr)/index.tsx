@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   View,
   Text,
@@ -9,6 +9,7 @@ import {
   Dimensions,
   Platform,
   TextInput,
+  KeyboardAvoidingView,
 } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { router } from 'expo-router';
@@ -150,15 +151,41 @@ const HRDashboard = () => {
     }
   ];
 
+  const filteredModules = useMemo(() => {
+    if (!searchQuery) return HR_MODULES;
+    return HR_MODULES.filter(m => 
+      m.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      m.options.some(opt => opt.label.toLowerCase().includes(searchQuery.toLowerCase()))
+    );
+  }, [searchQuery]);
+
+  const filteredEmployees = useMemo(() => {
+    if (!searchQuery || searchQuery.length < 2) return [];
+    return employees.filter(e => 
+      e.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      e.department.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      e.role.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [searchQuery, employees]);
+
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#fcfcfd' }}>
+    <View style={{ flex: 1, backgroundColor: '#fcfcfd' }}>
       {/* Top Bar */}
       <Header 
         title="HR Dashboard"
         subtitle="Manage Workforce & Operations"
       />
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={{ flex: 1 }}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+      >
+        <ScrollView 
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+        >
 
         {/* Search Bar */}
         <Animated.View entering={FadeInDown.duration(600)} style={styles.searchContainer}>
@@ -200,16 +227,45 @@ const HRDashboard = () => {
           </View>
         </LinearGradient>
 
+        {/* Search Results for Employees */}
+        {searchQuery.length > 0 && filteredEmployees.length > 0 && (
+          <View style={styles.searchResultsContainer}>
+            <Text style={styles.sectionTitle}>Employee Results</Text>
+            {filteredEmployees.map((emp) => (
+              <TouchableOpacity 
+                key={emp.id} 
+                style={styles.employeeResultCard}
+                onPress={() => router.push({ pathname: '/(hr)/employee-management', params: { search: emp.name } } as any)}
+              >
+                <Image source={{ uri: emp.avatar }} style={styles.resultAvatar} />
+                <View style={styles.resultInfo}>
+                  <Text style={styles.resultName}>{emp.name}</Text>
+                  <Text style={styles.resultMeta}>{emp.role} • {emp.department}</Text>
+                </View>
+                <Ionicons name="chevron-forward" size={18} color="#9ca3af" />
+              </TouchableOpacity>
+            ))}
+          </View>
+        )}
+
         {/* Structured Module Grid */}
-        <Text style={styles.sectionTitle}>HR Operations</Text>
+        <Text style={styles.sectionTitle}>
+          {searchQuery ? 'Matching Modules' : 'HR Operations'}
+        </Text>
         <View style={styles.moduleGrid}>
-          {HR_MODULES.map((module, index) => (
+          {filteredModules.map((module, index) => (
             <ModuleCard
               key={index}
               index={index}
               {...module}
             />
           ))}
+          {filteredModules.length === 0 && (
+            <View style={styles.noResults}>
+              <Ionicons name="search-outline" size={48} color="#e5e7eb" />
+              <Text style={styles.noResultsText}>No modules found matching "{searchQuery}"</Text>
+            </View>
+          )}
         </View>
 
         {/* Quick Insights Row (Mini Charts) */}
@@ -283,16 +339,19 @@ const HRDashboard = () => {
         </View>
 
         <View style={{ height: 120 }} />
-      </ScrollView>
+        </ScrollView>
+      </KeyboardAvoidingView>
 
       <HRBottomNav />
-    </SafeAreaView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   scrollContent: {
     paddingHorizontal: 20,
+    paddingTop: 20,
+    paddingBottom: 120,
   },
   topRight: {
     flexDirection: 'row',
@@ -361,6 +420,50 @@ const styles = StyleSheet.create({
     color: 'rgba(255,255,255,0.8)',
     marginTop: 6,
     marginBottom: 24,
+  },
+  searchResultsContainer: {
+    marginBottom: 24,
+  },
+  employeeResultCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    padding: 12,
+    marginBottom: 10,
+    borderWidth: 1,
+    borderColor: '#f3f4f6',
+  },
+  resultAvatar: {
+    width: 40,
+    height: 40,
+    borderRadius: 10,
+    marginRight: 12,
+  },
+  resultInfo: {
+    flex: 1,
+  },
+  resultName: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#1f2937',
+  },
+  resultMeta: {
+    fontSize: 11,
+    color: '#6b7280',
+    marginTop: 2,
+  },
+  noResults: {
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 40,
+  },
+  noResultsText: {
+    marginTop: 12,
+    fontSize: 14,
+    color: '#9ca3af',
+    fontWeight: '600',
   },
   statsSplit: {
     flexDirection: 'row',

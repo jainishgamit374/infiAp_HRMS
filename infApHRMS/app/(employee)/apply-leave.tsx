@@ -24,6 +24,10 @@ export default function ApplyLeave() {
   const [isCalendarVisible, setIsCalendarVisible] = useState(false);
   const [calendarTarget, setCalendarTarget] = useState<'start' | 'end'>('start');
   const [isSuccessVisible, setIsSuccessVisible] = useState(false);
+  const [successInfo, setSuccessInfo] = useState({
+    title: 'Leave Applied Successfully ✅',
+    sub: 'Your request has been sent for approval.'
+  });
 
   // Animation values
   const successScale = useSharedValue(0.8);
@@ -93,6 +97,40 @@ export default function ApplyLeave() {
     });
     
     // Show Success Modal with Animation
+    setSuccessInfo({
+      title: 'Leave Applied Successfully ✅',
+      sub: 'Your request has been sent for approval.'
+    });
+    setIsSuccessVisible(true);
+    successScale.value = withSpring(1);
+    successOpacity.value = withTiming(1, { duration: 400 });
+
+    setTimeout(() => {
+        setIsSuccessVisible(false);
+        router.back();
+    }, 2000);
+  };
+
+  const handleSaveDraft = () => {
+    // Partial validation for draft
+    if (!leaveType && !startDate && !endDate) {
+      alert('Please select at least a leave type or date to save a draft');
+      return;
+    }
+
+    // Step 5: Save as Draft
+    applyLeave({
+      type: leaveType || 'Unspecified Leave',
+      startDate: startDate || 'Not set',
+      endDate: endDate || 'Not set',
+      reason: reason || 'No reason provided',
+    }, 'DRAFT');
+    
+    // Show Success Modal with Animation
+    setSuccessInfo({
+      title: 'Draft Saved Successfully 💾',
+      sub: 'You can find this in your Drafts tab.'
+    });
     setIsSuccessVisible(true);
     successScale.value = withSpring(1);
     successOpacity.value = withTiming(1, { duration: 400 });
@@ -110,13 +148,17 @@ export default function ApplyLeave() {
 
   return (
     <SafeAreaView style={styles.root}>
+      <Header title="Apply Leave" showBack={true} />
       <KeyboardAvoidingView 
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={{ flex: 1 }}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
       >
-        <Header title="Apply Leave" showBack={true} />
-
-        <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+        <ScrollView 
+          contentContainerStyle={styles.scrollContent} 
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+        >
           {/* Banner Card */}
           <View style={styles.bannerCard}>
             <View style={styles.bannerIconWrap}>
@@ -223,14 +265,15 @@ export default function ApplyLeave() {
               <Text style={styles.submitBtnText}>Submit Application</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.draftBtn}>
+          <TouchableOpacity style={styles.draftBtn} onPress={handleSaveDraft} activeOpacity={0.7}>
               <Text style={styles.draftBtnText}>Save as Draft</Text>
           </TouchableOpacity>
 
           <View style={{ height: 100 }} />
         </ScrollView>
+      </KeyboardAvoidingView>
 
-        <BottomNav />
+      <BottomNav />
 
         {/* Leave Type Selection Modal */}
         <Modal
@@ -347,14 +390,13 @@ export default function ApplyLeave() {
           <View style={styles.successOverlay}>
              <Animated.View style={[styles.successCard, animatedSuccessStyle]}>
                 <View style={styles.successIconCircle}>
-                   <Ionicons name="checkmark" size={40} color="#fff" />
+                   <Ionicons name={successInfo.title.includes('Draft') ? "save" : "checkmark"} size={40} color="#fff" />
                 </View>
-                <Text style={styles.successTitle}>Leave Applied Successfully ✅</Text>
-                <Text style={styles.successSub}>Your request has been sent for approval.</Text>
+                <Text style={styles.successTitle}>{successInfo.title}</Text>
+                <Text style={styles.successSub}>{successInfo.sub}</Text>
              </Animated.View>
           </View>
         </Modal>
-      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
@@ -681,11 +723,11 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: '#22c55e',
+    backgroundColor: '#4f39f6',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 24,
-    shadowColor: '#22c55e',
+    shadowColor: '#4f39f6',
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.3,
     shadowRadius: 12,

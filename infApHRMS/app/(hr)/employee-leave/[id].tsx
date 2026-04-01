@@ -149,8 +149,6 @@ export default function EmployeeLeaveProfile() {
           </View>
 
         </Animated.View>
-
-        <View style={{ height: 100 }} />
       </ScrollView>
     </View>
   );
@@ -158,7 +156,7 @@ export default function EmployeeLeaveProfile() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff' }, // fully white bg based on screenshot
-  content: { padding: 24, paddingTop: 10 },
+  content: { paddingHorizontal: 20, paddingTop: 20, paddingBottom: 120 },
   
   profileSection: { alignItems: 'center', marginBottom: 24 },
   avatarWrapper: { position: 'relative', marginBottom: 16 },

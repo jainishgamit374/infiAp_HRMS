@@ -76,7 +76,7 @@ export default function ExitProcess() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fcfcfd' },
   headerTitle: { fontSize: 18, fontWeight: '700', color: '#111827' },
-  content: { padding: 20, paddingBottom: 100 },
+  content: { paddingHorizontal: 20, paddingTop: 20, paddingBottom: 120 },
   emptyBox: { alignItems: 'center', paddingVertical: 60 },
   emptyText: { fontSize: 14, color: '#9ca3af', marginTop: 12 },
   card: { backgroundColor: '#fff', padding: 20, borderRadius: 20, borderWidth: 1, borderColor: '#f3f4f6', marginBottom: 16 },

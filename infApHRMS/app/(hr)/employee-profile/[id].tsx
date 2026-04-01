@@ -16,6 +16,8 @@ import { HRBottomNav } from '@/components/HRBottomNav';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import Header from '@/components/layout/Header';
 
+import { SafeAreaView } from 'react-native-safe-area-context';
+
 const { width } = Dimensions.get('window');
 
 const EmployeeProfile = () => {
@@ -42,21 +44,24 @@ const EmployeeProfile = () => {
   );
 
   return (
-    <View style={{ flex: 1 }}>
-      <ScrollView style={styles.container} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        <Header 
-          title="Employee Profile"
-          showBack={true}
-          rightElement={
-            <TouchableOpacity
-              style={styles.editButton}
-              onPress={() => router.push(`/(hr)/edit-employee/${employee.id}` as any)}
-            >
-              <Ionicons name="create-outline" size={20} color="#1f2937" />
-            </TouchableOpacity>
-          }
-        />
-
+    <View style={styles.container}>
+      <Header 
+        title="Employee Profile"
+        showBack={true}
+        rightElement={
+          <TouchableOpacity
+            style={styles.editButton}
+            onPress={() => router.push(`/(hr)/edit-employee/${employee.id}` as any)}
+          >
+            <Ionicons name="create-outline" size={20} color="#1f2937" />
+          </TouchableOpacity>
+        }
+      />
+      <ScrollView 
+        style={styles.container} 
+        contentContainerStyle={styles.content} 
+        showsVerticalScrollIndicator={false}
+      >
         {/* Main Card */}
         <Animated.View entering={FadeInDown.delay(100).duration(600)} style={styles.profileCard}>
           <Image source={{ uri: employee.avatar }} style={styles.profileAvatar} />
@@ -148,7 +153,6 @@ const EmployeeProfile = () => {
             <Text style={styles.logoutText}>Logout Session</Text>
           </TouchableOpacity>
         </Animated.View>
-        <View style={{ height: 120 }} />
       </ScrollView>
       <HRBottomNav />
     </View>
@@ -162,7 +166,8 @@ const styles = StyleSheet.create({
   },
   content: {
     paddingHorizontal: 20,
-    paddingBottom: 40,
+    paddingTop: 20,
+    paddingBottom: 120,
   },
   editButton: {
     padding: 4,

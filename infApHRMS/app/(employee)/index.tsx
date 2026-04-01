@@ -81,7 +81,7 @@ const SwipeToCheckIn = () => {
   }));
 
   return (
-    <View style={styles.swipeContainer}>
+    <View style={styles.container}>
       <GestureDetector gesture={panGesture}>
         <View style={[styles.swipeTrack, isCheckedIn && styles.swipeTrackSuccess]}>
           <Animated.View style={[styles.swipeTextContainer, animatedTextStyle]}>
@@ -176,7 +176,7 @@ export default function EmployeeDashboard() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaView style={styles.root}>
+      <View style={styles.root}>
         <Animated.View entering={FadeInDown.duration(800).springify()} style={{ flex: 1 }}>
           <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
 
@@ -428,7 +428,7 @@ export default function EmployeeDashboard() {
           </ScrollView>
         </Animated.View>
         <BottomNav />
-      </SafeAreaView>
+      </View>
     </GestureHandlerRootView>
   );
 }
@@ -471,6 +471,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#2e4ce6',
     borderRadius: 20,
     padding: 24,
+    marginTop: 10,
     marginBottom: 16,
     shadowColor: '#2e4ce6',
     shadowOffset: { width: 0, height: 8 },

@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
   activeTab: { backgroundColor: '#5a55d2', borderColor: '#5a55d2' },
   tabText: { fontSize: 13, fontWeight: '600', color: '#6b7280' },
   activeTabText: { color: '#fff' },
-  content: { padding: 20, paddingBottom: 100 },
+  content: { paddingHorizontal: 20, paddingTop: 20, paddingBottom: 120 },
   card: { backgroundColor: '#fff', padding: 20, borderRadius: 20, borderWidth: 1, borderColor: '#f3f4f6', marginBottom: 16 },
   cardTop: { flexDirection: 'row', alignItems: 'center', marginBottom: 12 },
   avatar: { width: 44, height: 44, borderRadius: 22, marginRight: 12 },

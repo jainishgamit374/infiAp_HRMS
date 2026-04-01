@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Platform, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Platform, Alert, KeyboardAvoidingView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import Animated, { FadeInDown } from 'react-native-reanimated';
@@ -63,7 +63,12 @@ export default function AddFeedback() {
         showBack={true}
         onBackPress={() => router.back()}
       />
-      <ScrollView contentContainerStyle={styles.content}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={{ flex: 1 }}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+      >
+        <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
         <Animated.View entering={FadeInDown.duration(400)}>
           <Text style={styles.label}>Select Employee</Text>
           <TouchableOpacity style={styles.dropdown} onPress={() => setShowDropdown(!showDropdown)}>
@@ -112,6 +117,7 @@ export default function AddFeedback() {
           </TouchableOpacity>
         </Animated.View>
       </ScrollView>
+      </KeyboardAvoidingView>
     </View>
   );
 }

@@ -23,7 +23,11 @@ export default function CreateNotification() {
         showBack={true}
       />
 
-      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1 }}>
+      <KeyboardAvoidingView 
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'} 
+        style={{ flex: 1 }}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+      >
         <ScrollView contentContainerStyle={styles.scroll}>
           <View style={styles.formGroup}>
             <Text style={styles.label}>CATEGORY</Text>

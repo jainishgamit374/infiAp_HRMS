@@ -7,7 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 const MainAdminDashboard = () => {
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <Header 
         title="Main Admin Dashboard"
         subtitle="Platform Performance & Alerts"
@@ -24,7 +24,7 @@ const MainAdminDashboard = () => {
       </View>
 
       <MainAdminBottomNav />
-    </SafeAreaView>
+    </View>
   );
 };
 

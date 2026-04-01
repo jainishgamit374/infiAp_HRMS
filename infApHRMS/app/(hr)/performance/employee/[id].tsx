@@ -219,10 +219,6 @@ export default function PerformanceDetail() {
           <Ionicons name="document-text-outline" size={20} color="#9ca3af" />
           <Text style={styles.navText}>REPORT</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
-          <Ionicons name="settings-outline" size={20} color="#9ca3af" />
-          <Text style={styles.navText}>CONFIG</Text>
-        </TouchableOpacity>
       </View>
     </View>
   );
@@ -232,7 +228,7 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff' },
   iconBtn: { padding: 4 },
   headerTitle: { fontSize: 18, fontWeight: '700', color: '#111827' },
-  content: { padding: 20, paddingBottom: 120 },
+  content: { paddingHorizontal: 20, paddingTop: 20, paddingBottom: 120 },
   profileSection: { alignItems: 'center', marginBottom: 24 },
   avatarContainer: { position: 'relative', marginBottom: 12 },
   avatar: { width: 80, height: 80, borderRadius: 40 },

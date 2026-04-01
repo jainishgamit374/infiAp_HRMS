@@ -11,7 +11,7 @@ export default function HRProfilePage() {
   const { user } = useUser();
 
   return (
-    <SafeAreaView style={styles.root}>
+    <View style={styles.root}>
       <Header 
         title="HR Profile" 
         showBack={true} 
@@ -94,11 +94,10 @@ export default function HRProfilePage() {
           <Text style={styles.logoutText}>Sign Out from HR Console</Text>
         </TouchableOpacity>
 
-        <View style={{ height: 100 }} />
       </ScrollView>
 
       <HRBottomNav />
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -108,11 +107,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#f8fafc',
   },
   scrollContent: {
-    paddingBottom: 20,
+    paddingBottom: 120,
   },
   titleSection: {
     paddingHorizontal: 20,
-    paddingVertical: 24,
+    paddingTop: 20,
+    paddingBottom: 16,
   },
   pageMainTitle: {
     fontSize: 24,
