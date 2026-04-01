@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, router } from 'expo-router';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { usePerformance } from '../_layout';
+import Header from '@/components/layout/Header';
 
 export default function PerformanceDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -25,15 +26,15 @@ export default function PerformanceDetail() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.iconBtn} onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={24} color="#111827" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Performance Detail</Text>
-        <TouchableOpacity style={styles.iconBtn}>
-          <Ionicons name="ellipsis-vertical" size={24} color="#111827" />
-        </TouchableOpacity>
-      </View>
+      <Header 
+        title="Performance Detail"
+        showBack={true}
+        rightElement={
+          <TouchableOpacity style={styles.iconBtn}>
+            <Ionicons name="ellipsis-vertical" size={24} color="#111827" />
+          </TouchableOpacity>
+        }
+      />
 
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         
@@ -229,15 +230,6 @@ export default function PerformanceDetail() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff' },
-  header: { 
-    flexDirection: 'row', 
-    alignItems: 'center', 
-    justifyContent: 'space-between',
-    paddingHorizontal: 20, 
-    paddingTop: Platform.OS === 'ios' ? 60 : 40,
-    paddingBottom: 16,
-    backgroundColor: '#fff',
-  },
   iconBtn: { padding: 4 },
   headerTitle: { fontSize: 18, fontWeight: '700', color: '#111827' },
   content: { padding: 20, paddingBottom: 120 },

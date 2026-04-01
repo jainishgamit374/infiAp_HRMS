@@ -85,8 +85,6 @@ export default function SubmitResignation() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fcfcfd' },
-  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, paddingTop: Platform.OS === 'ios' ? 60 : 40, paddingBottom: 16, backgroundColor: '#fff' },
-  headerTitle: { fontSize: 18, fontWeight: '700', color: '#111827' },
   content: { padding: 20, paddingBottom: 100 },
   summaryRow: { flexDirection: 'row', gap: 12, marginBottom: 24 },
   summaryCard: { flex: 1, borderRadius: 16, padding: 16, alignItems: 'center' },

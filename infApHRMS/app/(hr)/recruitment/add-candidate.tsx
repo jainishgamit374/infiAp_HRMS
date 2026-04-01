@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useRecruitment, Candidate } from './_layout';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import Header from '@/components/layout/Header';
 
 export default function AddCandidate() {
   const { addCandidate } = useRecruitment();
@@ -49,12 +50,10 @@ export default function AddCandidate() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.closeBtn} onPress={() => router.back()}>
-          <Ionicons name="close" size={24} color="#111827" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Add New Candidate</Text>
-      </View>
+      <Header 
+        title="Add New Candidate"
+        showBack={true}
+      />
 
       <ScrollView contentContainerStyle={styles.content}>
         <Animated.View entering={FadeInDown.duration(400)}>
@@ -131,16 +130,6 @@ export default function AddCandidate() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff' },
-  header: { 
-    flexDirection: 'row', 
-    alignItems: 'center', 
-    paddingHorizontal: 20, 
-    paddingTop: Platform.OS === 'ios' ? 60 : 40,
-    paddingBottom: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#f3f4f6'
-  },
-  closeBtn: { padding: 4, marginRight: 16 },
   headerTitle: { fontSize: 18, fontWeight: '700', color: '#111827' },
   content: { padding: 24 },
   formGroup: { marginBottom: 20 },

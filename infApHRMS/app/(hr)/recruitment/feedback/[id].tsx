@@ -5,6 +5,7 @@ import { useLocalSearchParams, router } from 'expo-router';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { useRecruitment, Feedback } from '../_layout';
 import { HRBottomNav } from '@/components/HRBottomNav';
+import Header from '@/components/layout/Header';
 
 export default function InterviewFeedback() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -70,17 +71,15 @@ export default function InterviewFeedback() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <View style={styles.headerTop}>
-          <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-            <Ionicons name="arrow-back" size={24} color="#111827" />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Interview Feedback</Text>
+      <Header 
+        title="Interview Feedback"
+        showBack={true}
+        rightElement={
           <View style={styles.inReviewBadge}>
              <Text style={styles.inReviewText}>IN REVIEW</Text>
           </View>
-        </View>
-      </View>
+        }
+      />
 
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         
@@ -179,17 +178,6 @@ export default function InterviewFeedback() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#f8f9fe' },
-  header: { 
-    paddingHorizontal: 20, 
-    paddingTop: Platform.OS === 'ios' ? 60 : 40,
-    paddingBottom: 16,
-    backgroundColor: '#fff',
-    borderBottomWidth: 1,
-    borderBottomColor: '#f3f4f6'
-  },
-  headerTop: { flexDirection: 'row', alignItems: 'center' },
-  backButton: { marginRight: 16 },
-  headerTitle: { fontSize: 18, fontWeight: '700', color: '#111827', flex: 1 },
   inReviewBadge: { backgroundColor: '#eef2ff', paddingHorizontal: 12, paddingVertical: 4, borderRadius: 6 },
   inReviewText: { color: '#4f46e5', fontSize: 11, fontWeight: '700', letterSpacing: 0.5 },
   content: { padding: 20, paddingBottom: 100 },

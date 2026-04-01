@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { usePerformance, ReviewFeedback } from './_layout';
+import Header from '@/components/layout/Header';
 
 export default function AddFeedback() {
   const { employees, addFeedback } = usePerformance();
@@ -57,11 +58,11 @@ export default function AddFeedback() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()}><Ionicons name="close" size={24} color="#111827" /></TouchableOpacity>
-        <Text style={styles.headerTitle}>Add Feedback</Text>
-        <View style={{ width: 24 }} />
-      </View>
+      <Header 
+        title="Add Feedback"
+        showBack={true}
+        onBackPress={() => router.back()}
+      />
       <ScrollView contentContainerStyle={styles.content}>
         <Animated.View entering={FadeInDown.duration(400)}>
           <Text style={styles.label}>Select Employee</Text>
@@ -117,7 +118,6 @@ export default function AddFeedback() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff' },
-  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, paddingTop: Platform.OS === 'ios' ? 60 : 40, paddingBottom: 20, borderBottomWidth: 1, borderBottomColor: '#f3f4f6' },
   headerTitle: { fontSize: 18, fontWeight: '700', color: '#111827' },
   content: { padding: 24, paddingBottom: 60 },
   label: { fontSize: 14, fontWeight: '700', color: '#374151', marginBottom: 8 },

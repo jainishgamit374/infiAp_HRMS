@@ -15,6 +15,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import Animated, { FadeInDown, FadeIn, ZoomIn, SlideInDown, Layout } from 'react-native-reanimated';
 import { AdminBottomNav } from '../../components/AdminBottomNav';
+import Header from '../../components/layout/Header';
 
 const { width } = Dimensions.get('window');
 
@@ -132,15 +133,15 @@ export default function RecruitmentHub() {
 
   return (
     <View style={styles.mainContainer}>
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={24} color="#1e293b" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Recruitment Hub</Text>
-        <TouchableOpacity style={styles.searchBtn}>
-          <Ionicons name="search-outline" size={22} color="#64748b" />
-        </TouchableOpacity>
-      </View>
+      <Header 
+        title="Recruitment Hub"
+        showBack={true}
+        rightElement={
+          <TouchableOpacity style={styles.searchBtn}>
+            <Ionicons name="search-outline" size={22} color="#64748b" />
+          </TouchableOpacity>
+        }
+      />
 
       <View style={styles.tabsContainer}>
         {(['Jobs', 'Candidates', 'Interviews'] as Tab[]).map((tab) => (
@@ -200,12 +201,6 @@ export default function RecruitmentHub() {
 
 const styles = StyleSheet.create({
   mainContainer: { flex: 1, backgroundColor: '#f8fafc' },
-  header: {
-    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    paddingHorizontal: 20, paddingVertical: 16, backgroundColor: '#fff',
-    paddingTop: Platform.OS === 'ios' ? 50 : 20,
-    borderBottomWidth: 1, borderBottomColor: '#f1f5f9',
-  },
   backBtn: { width: 40, height: 40, borderRadius: 12, backgroundColor: '#f1f5f9', justifyContent: 'center', alignItems: 'center' },
   headerTitle: { fontSize: 18, fontWeight: '800', color: '#1e293b' },
   searchBtn: { width: 40, height: 40, borderRadius: 12, backgroundColor: '#f1f5f9', justifyContent: 'center', alignItems: 'center' },

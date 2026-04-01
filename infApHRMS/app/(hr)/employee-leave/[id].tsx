@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Platform }
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, router } from 'expo-router';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import Header from '@/components/layout/Header';
 
 export default function EmployeeLeaveProfile() {
   const { id } = useLocalSearchParams();
@@ -14,14 +15,10 @@ export default function EmployeeLeaveProfile() {
 
   return (
     <View style={styles.container}>
-      {/* Header */}
-      <Animated.View entering={FadeInDown.duration(600)} style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={24} color="#1f2937" />
-        </TouchableOpacity>
-        <Text style={styles.title}>Employee Leave Profile</Text>
-        <View style={{ width: 24 }} />
-      </Animated.View>
+      <Header 
+        title="Leave Profile"
+        showBack={true}
+      />
 
       <ScrollView contentContainerStyle={styles.content}>
         
@@ -161,9 +158,6 @@ export default function EmployeeLeaveProfile() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff' }, // fully white bg based on screenshot
-  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, paddingTop: Platform.OS === 'ios' ? 60 : 40, paddingBottom: 20 },
-  backButton: { padding: 4 },
-  title: { fontSize: 16, fontWeight: '800', color: '#111827' },
   content: { padding: 24, paddingTop: 10 },
   
   profileSection: { alignItems: 'center', marginBottom: 24 },

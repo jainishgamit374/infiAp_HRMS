@@ -3,22 +3,22 @@ import { View, Text, StyleSheet, TouchableOpacity, Platform, ScrollView } from '
 import { Ionicons } from '@expo/vector-icons';
 import { router, useLocalSearchParams } from 'expo-router';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import Header from '@/components/layout/Header';
 
 export default function ReportDetailScreen() {
   const { id } = useLocalSearchParams();
 
   return (
     <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={24} color="#111827" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Report Preview</Text>
-        <TouchableOpacity style={styles.headerRightBtn}>
-          <Ionicons name="share-outline" size={24} color="#4f46e5" />
-        </TouchableOpacity>
-      </View>
+      <Header 
+        title="Report Preview"
+        showBack={true}
+        rightElement={
+          <TouchableOpacity style={styles.headerRightBtn}>
+            <Ionicons name="share-outline" size={24} color="#4f46e5" />
+          </TouchableOpacity>
+        }
+      />
 
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
          {/* Document Header */}
@@ -72,19 +72,6 @@ export default function ReportDetailScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fcfcfd' },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingTop: Platform.OS === 'ios' ? 60 : 40,
-    paddingBottom: 16,
-    backgroundColor: '#ffffff',
-    borderBottomWidth: 1,
-    borderBottomColor: '#f3f4f6',
-  },
-  backBtn: { padding: 8 },
-  headerTitle: { fontSize: 18, fontWeight: '800', color: '#111827' },
   headerRightBtn: { padding: 8 },
   content: { padding: 20, paddingBottom: 100 },
   

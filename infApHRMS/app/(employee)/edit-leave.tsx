@@ -10,6 +10,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useLeave } from '../../context/LeaveContext';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Header from '../../components/layout/Header';
 
 export default function EditLeave() {
   const { id } = useLocalSearchParams();
@@ -133,14 +134,7 @@ export default function EditLeave() {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={{ flex: 1 }}
       >
-        {/* Header */}
-        <View style={styles.header}>
-          <TouchableOpacity style={styles.headerBtn} onPress={() => router.back()}>
-            <Ionicons name="close" size={24} color="#1e293b" />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Edit Leave</Text>
-          <View style={{ width: 40 }} />
-        </View>
+        <Header title="Edit Leave" showBack={true} />
 
         <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
           {/* Form Fields */}
@@ -339,28 +333,6 @@ const styles = StyleSheet.create({
   root: {
     flex: 1,
     backgroundColor: '#fff',
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    backgroundColor: '#fff',
-    borderBottomWidth: 1,
-    borderBottomColor: '#f1f5f9',
-    marginTop: Platform.OS === 'android' ? 30 : 0,
-  },
-  headerBtn: {
-    width: 40,
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  headerTitle: {
-    fontSize: 18,
-    fontWeight: '800',
-    color: '#0f172a',
   },
   scrollContent: {
     padding: 20,

@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { MainAdminBottomNav } from '../../components/MainAdminBottomNav';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Header from '../../components/layout/Header';
 
 const { width } = Dimensions.get('window');
 
@@ -57,21 +58,16 @@ export default function SystemAlerts() {
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
-      <View style={styles.header}>
-        <View style={styles.headerLeft}>
-          <View style={styles.avatarBox}>
-            <Ionicons name="person" size={20} color="#fff" />
-          </View>
-          <View>
-            <Text style={styles.headerTitle}>InfiAP Platform</Text>
-            <Text style={styles.headerSub}>MAIN ADMIN</Text>
-          </View>
-        </View>
-        <TouchableOpacity style={styles.notifBtn}>
-          <Ionicons name="notifications-outline" size={24} color="#1e293b" />
-          <View style={styles.dot} />
-        </TouchableOpacity>
-      </View>
+      <Header 
+        title="InfiAP Platform"
+        subtitle="MAIN ADMIN"
+        rightElement={
+          <TouchableOpacity style={styles.notifBtn}>
+            <Ionicons name="notifications-outline" size={24} color="#1e293b" />
+            <View style={styles.dot} />
+          </TouchableOpacity>
+        }
+      />
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         <View style={styles.titleSection}>
@@ -157,38 +153,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    marginTop: Platform.OS === 'android' ? 30 : 0,
-  },
-  headerLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
-  avatarBox: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: '#334155',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  headerTitle: {
-    fontSize: 16,
-    fontWeight: '800',
-    color: '#1e293b',
-  },
-  headerSub: {
-    fontSize: 10,
-    fontWeight: '700',
-    color: '#4f46e5',
-    letterSpacing: 0.5,
   },
   notifBtn: {
     padding: 4,

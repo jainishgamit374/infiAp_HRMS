@@ -5,6 +5,7 @@ import { router } from 'expo-router';
 import { BottomNav } from '../../components/BottomNav';
 import { useNotifications, Notification, NotificationType } from '../../context/NotificationContext';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Header from '../../components/layout/Header';
 import Animated, { 
   FadeInDown, 
   FadeIn, 
@@ -51,23 +52,18 @@ export default function NotificationsPage() {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Header */}
-      <Animated.View entering={FadeIn.duration(400)} style={styles.header}>
-        <TouchableOpacity 
-          onPress={() => router.back()} 
-          style={styles.backButton}
-          activeOpacity={0.7}
-        >
-          <Ionicons name="arrow-back" size={24} color="#1e293b" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Notifications</Text>
-        <TouchableOpacity 
-           onPress={markAllAsRead}
-           activeOpacity={0.7}
-        >
-          <Text style={styles.markAllText}>Mark all as read</Text>
-        </TouchableOpacity>
-      </Animated.View>
+      <Header 
+        title="Notifications" 
+        showBack={true} 
+        rightElement={
+          <TouchableOpacity 
+             onPress={markAllAsRead}
+             activeOpacity={0.7}
+          >
+            <Text style={styles.markAllText}>Mark all as read</Text>
+          </TouchableOpacity>
+        }
+      />
 
       {/* Tabs */}
       <View style={styles.tabContainer}>
@@ -142,24 +138,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f8fafc',
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    backgroundColor: '#fff',
-    borderBottomWidth: 1,
-    borderBottomColor: '#f1f5f9',
-    ...Platform.select({
-      android: { paddingTop: 40 },
-    }),
-  },
-  backButton: {
-    padding: 8,
-    borderRadius: 12,
-    backgroundColor: '#f1f5f9',
   },
   headerTitle: {
     fontSize: 18,

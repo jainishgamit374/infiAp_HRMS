@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, router } from 'expo-router';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useHR } from '@/context/HRContext';
+import Header from '@/components/layout/Header';
 
 export default function CorrectionRequest() {
   const { id } = useLocalSearchParams();
@@ -14,12 +15,10 @@ export default function CorrectionRequest() {
   if (!request) {
     return (
       <View style={styles.container}>
-        <View style={styles.header}>
-          <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
-            <Ionicons name="arrow-back" size={24} color="#1f2937" />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Correction Request</Text>
-        </View>
+      <Header 
+        title="Correction Request"
+        showBack={true}
+      />
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <Text style={{ color: '#9ca3af' }}>Request not found.</Text>
         </View>
@@ -30,15 +29,15 @@ export default function CorrectionRequest() {
   return (
     <View style={styles.container}>
       {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={24} color="#1f2937" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Correction Request</Text>
-        <TouchableOpacity style={styles.headerRightBtn}>
-          <Ionicons name="ellipsis-vertical" size={22} color="#1f2937" />
-        </TouchableOpacity>
-      </View>
+      <Header 
+        title="Correction Request"
+        showBack={true}
+        rightElement={
+          <TouchableOpacity style={styles.headerRightBtn}>
+            <Ionicons name="ellipsis-vertical" size={22} color="#1f2937" />
+          </TouchableOpacity>
+        }
+      />
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
         
@@ -140,19 +139,6 @@ export default function CorrectionRequest() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#ffffff' },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingTop: Platform.OS === 'ios' ? 60 : 40,
-    paddingBottom: 16,
-    backgroundColor: '#ffffff',
-    borderBottomWidth: 1,
-    borderBottomColor: '#f3f4f6',
-  },
-  backBtn: { padding: 8 },
-  headerTitle: { fontSize: 18, fontWeight: '700', color: '#1f2937' },
   headerRightBtn: { padding: 8 },
   content: { padding: 20 },
   

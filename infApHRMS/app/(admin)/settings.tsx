@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { AdminBottomNav } from '../../components/AdminBottomNav';
+import Header from '../../components/layout/Header';
 
 export default function Settings() {
   const [pushEnabled, setPushEnabled] = useState(true);
@@ -11,13 +12,10 @@ export default function Settings() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={24} color="#1e293b" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>System Settings</Text>
-        <View style={{ width: 40 }} />
-      </View>
+      <Header 
+        title="Settings"
+        showBack={true}
+      />
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.sectionHeader}>
@@ -70,9 +68,6 @@ export default function Settings() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#f8fafc' },
-  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, paddingVertical: 16, backgroundColor: '#fff', paddingTop: Platform.OS === 'ios' ? 50 : 20, borderBottomWidth: 1, borderBottomColor: '#f1f5f9' },
-  backBtn: { width: 40, height: 40, borderRadius: 12, backgroundColor: '#f1f5f9', justifyContent: 'center', alignItems: 'center' },
-  headerTitle: { fontSize: 18, fontWeight: '800', color: '#1e293b' },
   scrollContent: { padding: 20 },
   sectionHeader: { marginTop: 20, marginBottom: 12 },
   sectionTitle: { fontSize: 12, fontWeight: '800', color: '#94a3b8', letterSpacing: 1 },

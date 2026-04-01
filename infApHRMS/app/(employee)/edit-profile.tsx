@@ -108,22 +108,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    marginTop: Platform.OS === 'android' ? 30 : 0,
-    borderBottomWidth: 1,
-    borderBottomColor: '#f1f5f9',
-  },
-  headerBtn: {
-    padding: 4,
-  },
-  headerBtnPlaceholder: {
-    width: 32,
-  },
   headerTitle: {
     fontSize: 18,
     fontWeight: '800',

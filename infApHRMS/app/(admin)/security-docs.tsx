@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform } from '
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { AdminBottomNav } from '../../components/AdminBottomNav';
+import Header from '../../components/layout/Header';
 
 const DOCS = [
   { id: '1', title: 'System Architecture Diagram', level: 'Confidential', date: 'Oct 01' },
@@ -13,13 +14,10 @@ const DOCS = [
 export default function SecurityDocs() {
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={24} color="#1e293b" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Security Docs</Text>
-        <View style={{ width: 40 }} />
-      </View>
+      <Header 
+        title="Security Docs"
+        showBack={true}
+      />
       <ScrollView contentContainerStyle={styles.scroll}>
         <View style={styles.warningBox}>
           <Ionicons name="shield-checkmark" size={24} color="#d97706" />
@@ -50,8 +48,6 @@ export default function SecurityDocs() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#f8fafc' },
-  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, paddingVertical: 16, backgroundColor: '#fff', paddingTop: Platform.OS === 'ios' ? 50 : 20, borderBottomWidth: 1, borderBottomColor: '#f1f5f9' },
-  backBtn: { width: 40, height: 40, borderRadius: 12, backgroundColor: '#f1f5f9', justifyContent: 'center', alignItems: 'center' },
   headerTitle: { fontSize: 18, fontWeight: '800', color: '#1e293b' },
   scroll: { padding: 20 },
   warningBox: { flexDirection: 'row', gap: 12, backgroundColor: '#fff7ed', padding: 16, borderRadius: 16, marginBottom: 20, borderWidth: 1, borderColor: '#ffedd5' },

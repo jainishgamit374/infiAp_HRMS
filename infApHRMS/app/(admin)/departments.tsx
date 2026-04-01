@@ -23,6 +23,7 @@ import Animated, {
   Layout,
 } from 'react-native-reanimated';
 import { AdminBottomNav } from '../../components/AdminBottomNav';
+import Header from '../../components/layout/Header';
 
 const { width } = Dimensions.get('window');
 
@@ -173,20 +174,20 @@ export default function DepartmentsPage() {
   return (
     <View style={styles.container}>
       {/* Header */}
-      <Animated.View entering={FadeIn.duration(400)} style={styles.header}>
-        <TouchableOpacity style={styles.headerIcon} onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={24} color="#1e293b" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Departments</Text>
-        <View style={styles.headerRight}>
-          <TouchableOpacity style={styles.headerIcon} onPress={() => setShowSearch(!showSearch)}>
-            <Ionicons name="search-outline" size={22} color="#64748b" />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.profileBtn} onPress={() => router.push('/(admin)/profile')}>
-            <Text style={styles.profileInitial}>AD</Text>
-          </TouchableOpacity>
-        </View>
-      </Animated.View>
+      <Header 
+        title="Departments"
+        showBack={true}
+        rightElement={
+          <View style={styles.headerRight}>
+            <TouchableOpacity style={styles.headerIcon} onPress={() => setShowSearch(!showSearch)}>
+              <Ionicons name="search-outline" size={22} color="#64748b" />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.profileBtn} onPress={() => router.push('/(admin)/profile')}>
+              <Text style={styles.profileInitial}>AD</Text>
+            </TouchableOpacity>
+          </View>
+        }
+      />
 
       {/* Search Bar (toggle) */}
       {showSearch && (
@@ -474,19 +475,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f8fafc',
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    backgroundColor: '#fff',
-    borderBottomWidth: 1,
-    borderBottomColor: '#f1f5f9',
-    ...Platform.select({
-      android: { paddingTop: 40 },
-    }),
   },
   headerIcon: {
     width: 40,

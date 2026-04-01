@@ -4,17 +4,16 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { HRBottomNav } from '@/components/HRBottomNav';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import Header from '@/components/layout/Header';
 
 const PlaceholderScreen = ({ title, icon }: { title: string, icon: string }) => {
   return (
     <View style={{ flex: 1 }}>
       <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-        <Animated.View entering={FadeInDown.duration(600)} style={styles.header}>
-          <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-            <Ionicons name="arrow-back" size={24} color="#1f2937" />
-          </TouchableOpacity>
-          <Text style={styles.title}>{title}</Text>
-        </Animated.View>
+      <Header 
+        title={title}
+        showBack={true}
+      />
 
         <Animated.View entering={FadeInDown.delay(200).duration(600)} style={styles.placeholderCard}>
           <Ionicons name={icon as any} size={64} color="#5a55d2" />
@@ -30,8 +29,6 @@ const PlaceholderScreen = ({ title, icon }: { title: string, icon: string }) => 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#f8f9fe' },
   content: { paddingHorizontal: 20, paddingTop: Platform.OS === 'ios' ? 60 : 40 },
-  header: { flexDirection: 'row', alignItems: 'center', marginBottom: 32, gap: 12 },
-  backButton: { padding: 4 },
   title: { fontSize: 24, fontWeight: '700', color: '#1f2937' },
   placeholderCard: { backgroundColor: '#fff', borderRadius: 24, padding: 40, alignItems: 'center', borderWidth: 1, borderColor: '#e5e7eb' },
   placeholderTitle: { fontSize: 20, fontWeight: '700', color: '#111827', marginTop: 20 },

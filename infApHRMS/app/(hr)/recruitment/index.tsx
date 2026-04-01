@@ -178,13 +178,6 @@ export default function RecruitmentDashboard() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff' },
-  header: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingTop: Platform.OS === 'ios' ? 50 : 30, paddingBottom: 16 },
-  backBtn: { marginRight: 12 },
-  headerTitleContainer: { flex: 1 },
-  headerTitle: { fontSize: 20, fontWeight: '700', color: '#111827' },
-  headerSubtitle: { fontSize: 13, color: '#6b7280' },
-  iconBtn: { padding: 8, borderRadius: 20, backgroundColor: '#f3f4f6' },
-  userAvatar: { width: 36, height: 36, borderRadius: 18, backgroundColor: '#fecaca' },
   content: { padding: 20, paddingBottom: 100 },
   searchBox: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#f9fafb', borderWidth: 1, borderColor: '#f3f4f6', borderRadius: 12, paddingHorizontal: 16, height: 50, marginBottom: 16 },
   searchInput: { flex: 1, marginLeft: 12, fontSize: 15, color: '#111827' },

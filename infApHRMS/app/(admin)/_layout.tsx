@@ -1,6 +1,13 @@
-import { Stack } from 'expo-router';
+import { Stack, Redirect } from 'expo-router';
+import { useUser } from '@/context/UserContext';
 
 export default function AdminLayout() {
+  const { user } = useUser();
+
+  if (user.systemRole !== 'admin') {
+    return <Redirect href={`/(${user.systemRole})/` as any} />;
+  }
+
   return (
     <Stack screenOptions={{ headerShown: false, animation: 'slide_from_right' }}>
       <Stack.Screen name="index" />

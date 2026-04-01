@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { HRBottomNav } from '@/components/HRBottomNav';
+import Header from '@/components/layout/Header';
 
 export default function AttendanceReports() {
   const [activeTab, setActiveTab] = useState('Daily');
@@ -24,16 +25,16 @@ export default function AttendanceReports() {
 
   return (
     <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={24} color="#1f2937" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Attendance Reports</Text>
-        <TouchableOpacity style={styles.headerRightBtn}>
-          <Ionicons name="ellipsis-vertical" size={22} color="#1f2937" />
-        </TouchableOpacity>
-      </View>
+      <Header 
+        title="Attendance Reports"
+        subtitle="MANAGER PORTAL"
+        showBack={true}
+        rightElement={
+          <TouchableOpacity style={styles.iconBtn}>
+            <Ionicons name="ellipsis-vertical" size={22} color="#1f2937" />
+          </TouchableOpacity>
+        }
+      />
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
         
@@ -144,20 +145,7 @@ export default function AttendanceReports() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#ffffff' },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingTop: Platform.OS === 'ios' ? 60 : 40,
-    paddingBottom: 16,
-    backgroundColor: '#ffffff',
-    borderBottomWidth: 1,
-    borderBottomColor: '#f3f4f6',
-  },
-  backBtn: { padding: 8 },
-  headerTitle: { fontSize: 18, fontWeight: '700', color: '#1f2937' },
-  headerRightBtn: { padding: 8 },
+  iconBtn: { padding: 8 },
   content: { padding: 20 },
   
   tabsContainer: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 24, paddingBottom: 12, borderBottomWidth: 1, borderBottomColor: '#f3f4f6' },

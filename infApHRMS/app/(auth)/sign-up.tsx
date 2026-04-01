@@ -60,18 +60,7 @@ export default function SignUp() {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <ScrollView contentContainerStyle={styles.container}>
-        {/* Header */}
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-            <Ionicons name="arrow-back" size={24} color="#111827" />
-          </TouchableOpacity>
-          <Image 
-            source={require('../../assets/images/logo.png')} 
-            style={styles.headerLogo} 
-            resizeMode="contain"
-          />
-          <View style={{ width: 24 }} />
-        </View>
+        
 
         {/* Card */}
         <View style={styles.card}>
@@ -179,24 +168,7 @@ export default function SignUp() {
              </Link>
           </View>
 
-          {/* Divider */}
-          <View style={styles.dividerContainer}>
-            <View style={styles.dividerLine} />
-            <Text style={styles.dividerText}>OR CONTINUE WITH</Text>
-            <View style={styles.dividerLine} />
-          </View>
-
-          {/* Social Buttons */}
-          <View style={styles.socialContainer}>
-            <TouchableOpacity style={styles.socialButton}>
-              <Ionicons name="logo-google" size={18} color="#DB4437" />
-              <Text style={styles.socialText}>Google</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.socialButton}>
-              <Ionicons name="logo-apple" size={18} color="#000000" />
-              <Text style={styles.socialText}>Apple</Text>
-            </TouchableOpacity>
-          </View>
+          <View style={{ height: 20 }} />
         </View>
 
         {/* Footer */}
@@ -211,11 +183,13 @@ export default function SignUp() {
       </ScrollView>
 
       {/* Success Modal */}
-      <Modal visible={showSuccessModal} transparent animationType="fade">
+
+    <Modal visible={showSuccessModal} transparent animationType="fade">
         <View style={styles.modalOverlay}>
           <View style={styles.modalCard}>
+            
             <View style={styles.modalIconContainer}>
-              <Ionicons name="checkmark-circle" size={56} color="#5a55d2" />
+              <Ionicons name="checkmark-circle" size={48} color="#22c55e" />
             </View>
             <Text style={styles.modalTitle}>Account Created!</Text>
             <Text style={styles.modalSubtitle}>
@@ -251,9 +225,9 @@ const styles = StyleSheet.create({
     marginLeft: -8,
   },
   headerLogo: {
-    width: 120,
-    height: 36,
-    marginLeft: -24, // Flush to the edge if container padding is 24
+    width: 150,
+    height: 45,
+    marginLeft: -24,
   },
   card: {
     backgroundColor: '#ffffff',
@@ -436,8 +410,13 @@ const styles = StyleSheet.create({
     shadowRadius: 24,
     elevation: 10,
   },
-  modalIconContainer: {
+  modalLogo: {
+    width: 180,
+    height: 50,
     marginBottom: 20,
+  },
+  modalIconContainer: {
+    marginBottom: 16,
   },
   modalTitle: {
     fontSize: 24,

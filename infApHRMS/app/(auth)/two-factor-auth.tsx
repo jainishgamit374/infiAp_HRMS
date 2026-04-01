@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Animated, Easing, Platform, I
 import { Ionicons } from '@expo/vector-icons';
 import { Link, router, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useUser } from '../../context/UserContext';
 
 const ROLE_DASHBOARD_MAP: Record<string, string> = {
   employee: '/(employee)/',
@@ -18,6 +19,7 @@ const ROLE_LABEL_MAP: Record<string, string> = {
 
 export default function TwoFactorAuth() {
   const { role = 'employee' } = useLocalSearchParams<{ role: string }>();
+  const { updateUser } = useUser();
   const [code, setCode] = useState<string>('');
   const [timer, setTimer] = useState(54);
   const [isVerifying, setIsVerifying] = useState(false);
@@ -58,6 +60,9 @@ export default function TwoFactorAuth() {
     setTimeout(() => {
       setIsVerifying(false);
       setIsSuccess(true);
+      
+      // Update system role in context
+      updateUser({ systemRole: role as any });
       
       // Animate success state
       Animated.timing(progressWidth, {
@@ -124,14 +129,9 @@ export default function TwoFactorAuth() {
   if (isSuccess) {
     return (
       <SafeAreaView style={styles.container}>
+
         <View style={styles.cardCenter}>
-          <View style={styles.successHeader}>
-            <Image 
-              source={require('../../assets/images/logo.png')} 
-              style={styles.headerLogo} 
-              resizeMode="contain"
-            />
-          </View>
+          
 
           <View style={styles.successContent}>
             <View style={styles.successIconOuter}>
@@ -433,11 +433,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 48,
+    marginBottom: 24,
+    marginTop: 20,
   },
   headerLogo: {
-    width: 100,
-    height: 30,
+    width: 320,
+    height: 90,
   },
   successContent: {
     alignItems: 'center',

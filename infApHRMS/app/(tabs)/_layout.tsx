@@ -1,5 +1,6 @@
-import { Tabs } from 'expo-router';
+import { Tabs, Redirect } from 'expo-router';
 import React from 'react';
+import { useUser } from '@/context/UserContext';
 
 import { HapticTab } from '@/components/haptic-tab';
 import { IconSymbol } from '@/components/ui/icon-symbol';
@@ -8,6 +9,10 @@ import { useColorScheme } from '@/hooks/use-color-scheme';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const { user } = useUser();
+
+  // Redirect to role-based dashboard as (tabs) is legacy/unused
+  return <Redirect href={`/(${user.systemRole})/` as any} />;
 
   return (
     <Tabs

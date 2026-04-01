@@ -5,6 +5,7 @@ import { router } from 'expo-router';
 import Animated, { FadeInDown, FadeInRight } from 'react-native-reanimated';
 import { useRecruitment } from './_layout';
 import { HRBottomNav } from '@/components/HRBottomNav';
+import Header from '@/components/layout/Header';
 
 export default function ReviewApplications() {
   const { candidates, updateStatus } = useRecruitment();
@@ -16,20 +17,11 @@ export default function ReviewApplications() {
 
   return (
     <View style={styles.container}>
-      {/* Header Area */}
-      <View style={styles.header}>
-        <View style={styles.headerTop}>
-          <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
-             <Ionicons name="settings-outline" size={24} color="#4f46e5" />
-          </TouchableOpacity>
-          <Text style={styles.headerTitleSmall}>InfiAp Recruiter</Text>
-          <View style={{ flex: 1 }} />
-          <Ionicons name="notifications-outline" size={20} color="#6b7280" style={{ marginRight: 16 }} />
-          <View style={styles.avatarCircle}><Text style={styles.avatarTextSmall}>JD</Text></View>
-        </View>
-
-        <Text style={styles.headerTitle}>Review Applications</Text>
-        
+      <Header 
+        title="Review Applications"
+        showBack={true}
+      />
+      <View style={{ paddingHorizontal: 20, paddingBottom: 16 }}>
         <View style={styles.statsRow}>
            <View style={styles.statChip}>
              <Text style={styles.statChipValue}>12</Text>
@@ -165,13 +157,6 @@ export default function ReviewApplications() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#f8f9fe' },
-  header: { paddingHorizontal: 20, paddingTop: Platform.OS === 'ios' ? 50 : 30, backgroundColor: '#fff' },
-  headerTop: { flexDirection: 'row', alignItems: 'center', marginBottom: 24 },
-  backBtn: { marginRight: 8 },
-  headerTitleSmall: { fontSize: 16, fontWeight: '700', color: '#111827' },
-  avatarCircle: { width: 28, height: 28, borderRadius: 14, backgroundColor: '#eef2ff', alignItems: 'center', justifyContent: 'center' },
-  avatarTextSmall: { fontSize: 12, fontWeight: '700', color: '#4f46e5' },
-  headerTitle: { fontSize: 28, fontWeight: '800', color: '#111827', marginBottom: 16 },
   statsRow: { flexDirection: 'row', gap: 12, marginBottom: 20 },
   statChip: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#f9fafb', paddingHorizontal: 12, paddingVertical: 8, borderRadius: 8, borderWidth: 1, borderColor: '#f3f4f6' },
   statChipValue: { fontSize: 15, fontWeight: '700', color: '#4f46e5', marginRight: 6 },

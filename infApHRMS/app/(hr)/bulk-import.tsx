@@ -12,6 +12,7 @@ import {
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { HRBottomNav } from '@/components/HRBottomNav';
+import Header from '@/components/layout/Header';
 import Animated, { FadeInDown, FadeOut, Layout } from 'react-native-reanimated';
 
 const { width } = Dimensions.get('window');
@@ -56,13 +57,10 @@ const BulkImport = () => {
   return (
     <View style={{ flex: 1 }}>
       <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-        {/* Header */}
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-            <Ionicons name="arrow-back" size={24} color="#1f2937" />
-          </TouchableOpacity>
-          <Text style={styles.title}>Bulk Employee Import</Text>
-        </View>
+        <Header 
+          title="Bulk Employee Import" 
+          showBack={true} 
+        />
 
         {renderStepIndicator()}
 
@@ -171,22 +169,7 @@ const styles = StyleSheet.create({
   },
   content: {
     paddingHorizontal: 20,
-    paddingTop: Platform.OS === 'ios' ? 60 : 40,
     paddingBottom: 40,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 32,
-    gap: 12,
-  },
-  backButton: {
-    padding: 4,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: '#1f2937',
   },
   stepIndicator: {
     flexDirection: 'row',

@@ -1,10 +1,10 @@
 import React, { useState, useCallback, useMemo } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform, Image, Alert, Modal, TextInput, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform, Alert, Modal, TextInput, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { BottomNav } from '../../components/BottomNav';
 import { useUser } from '../../context/UserContext';
-import Animated, { FadeInDown, FadeIn, SlideInRight } from 'react-native-reanimated';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from '../../components/layout/Header';
 
@@ -196,12 +196,7 @@ export default function AttendancePage() {
 
   return (
     <SafeAreaView style={styles.root}>
-      {/* Unified Header */}
-      <Header 
-        title="Attendance"
-        subtitle="Track your time & presence"
-        showBack={true}
-      />
+      <Header title="Attendance" subtitle="Track your time & presence" showBack={true} />
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* Check-in Toast */}
@@ -610,11 +605,6 @@ export default function AttendancePage() {
 
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: '#f8fafc' },
-  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, paddingVertical: 12, backgroundColor: '#fff', marginTop: Platform.OS === 'android' ? 30 : 0 },
-  headerBtn: { padding: 4 },
-  headerTitle: { fontSize: 18, fontWeight: '700', color: '#0f172a' },
-  headerRight: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  headerAvatar: { width: 36, height: 36, borderRadius: 18, borderWidth: 1, borderColor: '#e2e8f0' },
   scrollContent: { paddingBottom: 20 },
 
   // Toast

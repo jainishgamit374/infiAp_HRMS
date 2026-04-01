@@ -5,6 +5,7 @@ import { router } from 'expo-router';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useResignation } from './_layout';
 import { HRBottomNav } from '@/components/HRBottomNav';
+import Header from '@/components/layout/Header';
 
 export default function ResignationRequests() {
   const { requests, approveResignation, rejectResignation } = useResignation();
@@ -20,11 +21,10 @@ export default function ResignationRequests() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()}><Ionicons name="arrow-back" size={24} color="#111827" /></TouchableOpacity>
-        <Text style={styles.headerTitle}>Resignation Requests</Text>
-        <View style={{ width: 24 }} />
-      </View>
+      <Header 
+        title="Resignation Requests"
+        showBack={true}
+      />
 
       <View style={styles.tabsContainer}>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.tabsScroll}>
@@ -84,7 +84,6 @@ export default function ResignationRequests() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fcfcfd' },
-  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, paddingTop: Platform.OS === 'ios' ? 60 : 40, paddingBottom: 16, backgroundColor: '#fff' },
   headerTitle: { fontSize: 18, fontWeight: '700', color: '#111827' },
   tabsContainer: { backgroundColor: '#fff', paddingBottom: 12, borderBottomWidth: 1, borderBottomColor: '#f3f4f6' },
   tabsScroll: { paddingHorizontal: 20, gap: 12 },

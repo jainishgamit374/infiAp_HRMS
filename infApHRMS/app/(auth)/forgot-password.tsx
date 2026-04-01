@@ -10,7 +10,8 @@ import {
   ScrollView,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
+import { Image } from 'react-native';
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState('');
@@ -21,11 +22,7 @@ export default function ForgotPassword() {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <ScrollView contentContainerStyle={styles.container}>
-        {/* Header Logo */}
-        <View style={styles.header}>
-          <View style={styles.logoIconContainer} />
-          <Text style={styles.logoText}>InfiAP</Text>
-        </View>
+        
 
         {/* Card */}
         <View style={styles.card}>
@@ -73,14 +70,6 @@ export default function ForgotPassword() {
           <Text style={styles.footerText}>
             Having trouble? <Text style={styles.footerLink}>Contact support</Text>
           </Text>
-          <View style={styles.socialRow}>
-            <TouchableOpacity style={[styles.socialIconBtn, { backgroundColor: '#111827' }]}>
-              <Ionicons name="logo-google" size={14} color="#fff" />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.socialIconBtn}>
-              <Ionicons name="logo-apple" size={16} color="#111827" />
-            </TouchableOpacity>
-          </View>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
@@ -100,17 +89,9 @@ const styles = StyleSheet.create({
     marginBottom: 24,
     marginTop: Platform.OS === 'ios' ? 40 : 20,
   },
-  logoIconContainer: {
-    width: 48,
-    height: 48,
-    borderRadius: 12,
-    backgroundColor: '#5a55d2',
-    marginBottom: 12,
-  },
-  logoText: {
-    fontSize: 24,
-    fontWeight: '800',
-    color: '#111827',
+  headerLogo: {
+    width: 260,
+    height: 72,
   },
   card: {
     backgroundColor: '#ffffff',
@@ -210,19 +191,5 @@ const styles = StyleSheet.create({
   footerLink: {
     color: '#5a55d2',
     fontWeight: '500',
-  },
-  socialRow: {
-    flexDirection: 'row',
-    gap: 16,
-  },
-  socialIconBtn: {
-    width: 36,
-    height: 36,
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#e5e7eb',
   },
 });

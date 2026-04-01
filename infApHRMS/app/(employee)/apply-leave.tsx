@@ -11,6 +11,7 @@ import Animated, {
 import { BottomNav } from '../../components/BottomNav';
 import { useLeave } from '../../context/LeaveContext';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Header from '../../components/layout/Header';
 
 export default function ApplyLeave() {
   const { applyLeave, balances } = useLeave();
@@ -113,16 +114,7 @@ export default function ApplyLeave() {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={{ flex: 1 }}
       >
-        {/* Header */}
-        <View style={styles.header}>
-          <TouchableOpacity style={styles.headerBtn} onPress={() => router.back()}>
-            <Ionicons name="chevron-back" size={24} color="#fff" />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Apply Leave</Text>
-          <TouchableOpacity style={styles.headerBtn}>
-            <Ionicons name="ellipsis-vertical" size={24} color="#fff" />
-          </TouchableOpacity>
-        </View>
+        <Header title="Apply Leave" showBack={true} />
 
         <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
           {/* Banner Card */}
@@ -371,26 +363,6 @@ const styles = StyleSheet.create({
   root: {
     flex: 1,
     backgroundColor: '#fff',
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    backgroundColor: '#4f39f6', // user theme purple
-    marginTop: Platform.OS === 'android' ? 30 : 0,
-  },
-  headerBtn: {
-    width: 40,
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  headerTitle: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: '#fff',
   },
   scrollContent: {
     padding: 20,

@@ -14,6 +14,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import Animated, { FadeInDown, FadeInUp, ZoomIn } from 'react-native-reanimated';
 import { AdminBottomNav } from '../../components/AdminBottomNav';
+import Header from '../../components/layout/Header';
 
 const { width } = Dimensions.get('window');
 
@@ -57,15 +58,15 @@ export default function SalaryStructure() {
   return (
     <View style={styles.container}>
       {/* Header */}
-      <Animated.View entering={FadeInDown.duration(400)} style={styles.header}>
-        <TouchableOpacity style={styles.headerIcon} onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={24} color="#1e293b" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Salary Structure</Text>
-        <TouchableOpacity style={styles.headerIcon} onPress={() => Alert.alert("Download", "Salary structure report is being generated...")}>
-          <Ionicons name="download-outline" size={22} color="#4f46e5" />
-        </TouchableOpacity>
-      </Animated.View>
+      <Header 
+        title="Salary Structure"
+        showBack={true}
+        rightElement={
+          <TouchableOpacity style={styles.headerIcon} onPress={() => Alert.alert("Download", "Salary structure report is being generated...")}>
+            <Ionicons name="download-outline" size={22} color="#4f46e5" />
+          </TouchableOpacity>
+        }
+      />
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         {/* Annual CTC Card */}
@@ -157,16 +158,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f8fafc',
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    backgroundColor: '#fff',
-    borderBottomWidth: 1, borderBottomColor: '#f1f5f9',
-    paddingTop: Platform.OS === 'ios' ? 50 : 20,
   },
   headerIcon: {
     width: 40,

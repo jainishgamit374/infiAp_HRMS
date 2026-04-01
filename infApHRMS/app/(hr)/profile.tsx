@@ -2,30 +2,28 @@ import * as React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import { BottomNav } from '../../components/BottomNav';
+import { HRBottomNav } from '../../components/HRBottomNav';
 import { useUser } from '../../context/UserContext';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from '../../components/layout/Header';
 
-export default function PersonalProfilePage() {
+export default function HRProfilePage() {
   const { user } = useUser();
 
   return (
     <SafeAreaView style={styles.root}>
-      {/* New Unified Header */}
       <Header 
-        title="My Profile" 
+        title="HR Profile" 
         showBack={true} 
+        onBackPress={() => router.push('/(hr)/' as any)}
       />
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        {/* Page Title Section */}
         <View style={styles.titleSection}>
-          <Text style={styles.pageMainTitle}>Personal Profile</Text>
-          <Text style={styles.pageSubTitle}>View and manage your personal and professional profile details.</Text>
+          <Text style={styles.pageMainTitle}>HR Administration Profile</Text>
+          <Text style={styles.pageSubTitle}>Manage your account details and administrative preferences.</Text>
         </View>
 
-        {/* Profile Card */}
         <View style={styles.profileCard}>
           <View style={styles.avatarContainer}>
             <Image 
@@ -35,7 +33,7 @@ export default function PersonalProfilePage() {
             <View style={styles.statusBadge} />
           </View>
           <Text style={styles.profileName}>{user.name}</Text>
-          <Text style={styles.profileRole}>{user.role}</Text>
+          <Text style={styles.profileRole}>HR Manager</Text>
           <View style={styles.profileMeta}>
             <Text style={styles.metaLabel}>{user.department}</Text>
             <View style={styles.metaDot} />
@@ -43,7 +41,6 @@ export default function PersonalProfilePage() {
           </View>
         </View>
 
-        {/* Personal Information Section */}
         <View style={styles.section}>
           <View style={styles.sectionHeaderRow}>
             <Ionicons name="person-outline" size={20} color="#4f46e5" />
@@ -69,69 +66,38 @@ export default function PersonalProfilePage() {
               <Text style={styles.infoValue}>{user.email}</Text>
             </View>
           </View>
-          <View style={styles.singleInfo}>
-            <Text style={styles.infoLabel}>ADDRESS</Text>
-            <Text style={styles.infoValue}>123, Tech Heights, Bangalore, India</Text>
-          </View>
         </View>
 
-        {/* Professional Information Section */}
         <View style={styles.section}>
           <View style={styles.sectionHeaderRow}>
-            <Ionicons name="briefcase-outline" size={20} color="#4f46e5" />
-            <Text style={styles.sectionHeaderTitle}>PROFESSIONAL INFORMATION</Text>
+            <Ionicons name="shield-outline" size={20} color="#4f46e5" />
+            <Text style={styles.sectionHeaderTitle}>ADMINISTRATIVE ACCESS</Text>
           </View>
           <View style={styles.infoGrid}>
             <View style={styles.infoCol}>
-              <Text style={styles.infoLabel}>DEPARTMENT</Text>
-              <Text style={styles.infoValue}>{user.department}</Text>
+              <Text style={styles.infoLabel}>ACCESS LEVEL</Text>
+              <Text style={styles.infoValue}>Full HR Permissions</Text>
             </View>
             <View style={styles.infoCol}>
-              <Text style={styles.infoLabel}>ROLE</Text>
-              <Text style={styles.infoValue}>{user.role}</Text>
-            </View>
-          </View>
-          <View style={styles.infoGrid}>
-            <View style={styles.infoCol}>
-              <Text style={styles.infoLabel}>MANAGER</Text>
-              <Text style={styles.infoValue}>Arjun Mehta</Text>
-            </View>
-            <View style={styles.infoCol}>
-              <Text style={styles.infoLabel}>WORK LOCATION</Text>
-              <Text style={styles.infoValue}>Hybrid (Bangalore)</Text>
+              <Text style={styles.infoLabel}>COMPLIANCE STATUS</Text>
+              <Text style={styles.infoValue}>Certified</Text>
             </View>
           </View>
         </View>
 
-        {/* Activity Feed Section */}
-        <View style={styles.section}>
-          <View style={styles.sectionHeaderRow}>
-            <Ionicons name="time-outline" size={20} color="#4f46e5" />
-            <Text style={styles.sectionHeaderTitle}>PROFILE ACTIVITY FEED</Text>
-          </View>
-          <View style={styles.feedList}>
-            {[
-              { title: 'Address details updated', date: 'Oct 12, 2023 • 11:45 AM', completed: true },
-              { title: 'Emergency contact added', date: 'Sep 05, 2023 • 09:20 AM', completed: false },
-            ].map((feed, idx) => (
-              <View key={idx} style={styles.feedItem}>
-                <View style={styles.feedTimeline}>
-                  <View style={[styles.feedDot, feed.completed && styles.feedDotActive]} />
-                  {idx === 0 && <View style={styles.feedLine} />}
-                </View>
-                <View style={styles.feedContent}>
-                  <Text style={styles.feedTitle}>{feed.title}</Text>
-                  <Text style={styles.feedDate}>{feed.date}</Text>
-                </View>
-              </View>
-            ))}
-          </View>
-        </View>
+        <TouchableOpacity 
+          style={styles.logoutBtn} 
+          onPress={() => router.replace('/(auth)/sign-in')}
+          activeOpacity={0.8}
+        >
+          <Ionicons name="log-out-outline" size={20} color="#ef4444" />
+          <Text style={styles.logoutText}>Sign Out from HR Console</Text>
+        </TouchableOpacity>
 
         <View style={{ height: 100 }} />
       </ScrollView>
 
-      <BottomNav />
+      <HRBottomNav />
     </SafeAreaView>
   );
 }
@@ -263,48 +229,20 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#1e293b',
   },
-  singleInfo: {
-    paddingVertical: 12,
-  },
-  feedList: {
-    marginTop: 8,
-  },
-  feedItem: {
+  logoutBtn: {
     flexDirection: 'row',
-  },
-  feedTimeline: {
     alignItems: 'center',
-    marginRight: 16,
-    width: 12,
+    justifyContent: 'center',
+    backgroundColor: '#fee2e2',
+    padding: 16,
+    borderRadius: 16,
+    marginHorizontal: 20,
+    marginTop: 8,
+    gap: 10,
   },
-  feedDot: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    backgroundColor: '#e2e8f0',
-    zIndex: 1,
-  },
-  feedDotActive: {
-    backgroundColor: '#4f46e5',
-  },
-  feedLine: {
-    width: 2,
-    flex: 1,
-    backgroundColor: '#f1f5f9',
-    marginVertical: 4,
-  },
-  feedContent: {
-    flex: 1,
-    paddingBottom: 20,
-  },
-  feedTitle: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#334155',
-    marginBottom: 4,
-  },
-  feedDate: {
-    fontSize: 12,
-    color: '#94a3b8',
+  logoutText: {
+    color: '#ef4444',
+    fontSize: 16,
+    fontWeight: '800',
   },
 });

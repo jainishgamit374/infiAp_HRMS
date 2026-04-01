@@ -1,23 +1,26 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Platform, Image } from 'react-native';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import Animated, { FadeIn, FadeInDown, SlideInDown } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
+import Header from '@/components/layout/Header';
 
 export default function LeaveSuccessScreen() {
   return (
     <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.closeBtn} onPress={() => router.push('/(hr)' as any)}>
-           <Ionicons name="close" size={24} color="#1f2937" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Success</Text>
-        <View style={{ width: 40 }} />
-      </View>
+      <Header 
+        title="Success"
+        showBack={true}
+        onBackPress={() => router.push('/(hr)' as any)}
+      />
 
       <View style={styles.content}>
+        <Image 
+          source={require('../../assets/images/logo.png')} 
+          style={styles.successLogo} 
+          resizeMode="contain"
+        />
         <Animated.View entering={FadeIn.duration(800)} style={styles.iconContainer}>
           <View style={styles.iconCircleOuter}>
             <View style={styles.iconCircleInner}>
@@ -59,12 +62,13 @@ export default function LeaveSuccessScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#f9f9fb' },
-  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingTop: Platform.OS === 'ios' ? 60 : 40, paddingBottom: 16, backgroundColor: '#fff', borderBottomWidth: 1, borderBottomColor: '#f3f4f6' },
-  closeBtn: { padding: 8 },
-  headerTitle: { fontSize: 16, fontWeight: '700', color: '#111827' },
   
   content: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 24, paddingBottom: 40 },
-  
+  successLogo: {
+    width: 180,
+    height: 50,
+    marginBottom: 32,
+  },
   iconContainer: { position: 'relative', marginBottom: 40 },
   iconCircleOuter: { width: 100, height: 100, borderRadius: 50, backgroundColor: '#dcfce7', justifyContent: 'center', alignItems: 'center' },
   iconCircleInner: { width: 60, height: 60, borderRadius: 30, backgroundColor: '#fff', justifyContent: 'center', alignItems: 'center', borderWidth: 3, borderColor: '#10b981' },

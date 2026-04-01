@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { BottomNav } from '../../components/BottomNav';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Header from '../../components/layout/Header';
 import Animated, { 
   useSharedValue, 
   useAnimatedStyle, 
@@ -100,17 +101,7 @@ export default function PayrollDashboard() {
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
       
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.headerIcon} onPress={() => router.back()}>
-          <Ionicons name="arrow-back-outline" size={28} color="#1e293b" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Payroll Dashboard</Text>
-        <TouchableOpacity style={styles.headerIcon}>
-          <Ionicons name="notifications-outline" size={26} color="#1e293b" />
-          <View style={styles.notifDot} />
-        </TouchableOpacity>
-      </View>
+      <Header title="Payroll" showBack={true} />
 
       <ScrollView 
         showsVerticalScrollIndicator={false}
@@ -295,38 +286,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f8fafc',
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    backgroundColor: '#fff',
-    borderBottomWidth: 1,
-    borderBottomColor: '#f1f5f9',
-    ...Platform.select({
-      android: { paddingTop: 40 },
-    }),
-  },
-  headerIcon: {
-    padding: 8,
-  },
-  headerTitle: {
-    fontSize: 20,
-    fontWeight: '800',
-    color: '#1e293b',
-  },
-  notifDot: {
-    position: 'absolute',
-    top: 10,
-    right: 10,
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: '#ef4444',
-    borderWidth: 1.5,
-    borderColor: '#fff',
   },
   scrollContent: {
     padding: 20,

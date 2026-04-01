@@ -12,6 +12,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { BottomNav } from '../../components/BottomNav';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Header from '../../components/layout/Header';
 
 const { width } = Dimensions.get('window');
 
@@ -60,16 +61,15 @@ export default function AttendanceLogging() {
 
   return (
     <SafeAreaView style={styles.root}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.headerBtn} onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={24} color="#1e293b" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Attendance Logging</Text>
-        <TouchableOpacity style={styles.headerBtn}>
-          <Ionicons name="information-circle-outline" size={24} color="#1e293b" />
-        </TouchableOpacity>
-      </View>
+      <Header 
+        title="Attendance Logging" 
+        showBack={true} 
+        rightElement={
+          <TouchableOpacity style={{ padding: 4 }}>
+            <Ionicons name="information-circle-outline" size={24} color="#1e293b" />
+          </TouchableOpacity>
+        }
+      />
 
       <ScrollView 
         style={styles.root} 
@@ -192,30 +192,6 @@ const styles = StyleSheet.create({
   root: {
     flex: 1,
     backgroundColor: '#f8fafc',
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    backgroundColor: '#fff',
-    marginTop: Platform.OS === 'android' ? 30 : 0,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 10,
-    elevation: 3,
-  },
-  headerBtn: {
-    padding: 4,
-  },
-  headerTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#0f172a',
-    flex: 1,
-    textAlign: 'center',
   },
   scrollContent: {
     flexGrow: 1,

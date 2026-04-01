@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Platform, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import Animated, { FadeInDown, FadeIn, ZoomIn } from 'react-native-reanimated';
@@ -12,6 +12,11 @@ export default function ReportSuccessScreen() {
       <Animated.View entering={FadeIn.duration(1000)} style={styles.bgGlow} />
 
       <View style={styles.content}>
+        <Image 
+          source={require('../../../assets/images/logo.png')} 
+          style={styles.successLogo} 
+          resizeMode="contain"
+        />
         {/* Success Icon Animation */}
         <Animated.View entering={ZoomIn.duration(500).springify()} style={styles.iconContainer}>
           <View style={styles.iconBg}>
@@ -74,6 +79,11 @@ const styles = StyleSheet.create({
   brandBg: { position: 'absolute', top: 0, left: 0, right: 0, height: Platform.OS === 'ios' ? 250 : 200, backgroundColor: '#f5f4ff', borderBottomLeftRadius: 40, borderBottomRightRadius: 40 },
   bgGlow: { position: 'absolute', top: -50, left: -50, width: 250, height: 250, borderRadius: 125, backgroundColor: 'rgba(79, 70, 229, 0.05)' },
   content: { flex: 1, padding: 24, justifyContent: 'center', alignItems: 'center' },
+  successLogo: {
+    width: 150,
+    height: 42,
+    marginBottom: 32,
+  },
   iconContainer: { marginBottom: 32, position: 'relative' },
   iconBg: { width: 120, height: 120, borderRadius: 36, backgroundColor: '#ffffff', shadowColor: '#4f46e5', shadowOffset: { width: 0, height: 20 }, shadowOpacity: 0.15, shadowRadius: 30, elevation: 10, justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: '#f3f4f6' },
   iconInner: { width: 80, height: 80, borderRadius: 24, backgroundColor: '#4f46e5', justifyContent: 'center', alignItems: 'center' },

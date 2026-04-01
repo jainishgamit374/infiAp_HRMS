@@ -5,6 +5,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { BottomNav } from '../../../components/BottomNav';
 import { useNotifications } from '../../../context/NotificationContext';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Header from '../../../components/layout/Header';
 import Animated, { 
   FadeInDown, 
   FadeIn, 
@@ -16,26 +17,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: '#f1f5f9',
-    ...Platform.select({
-      android: { paddingTop: 40 },
-    }),
-  },
-  backButton: {
-    padding: 8,
-  },
-  headerTitle: {
-    fontSize: 16,
-    fontWeight: '800',
-    color: '#1e293b',
   },
   menuButton: {
     padding: 8,
@@ -250,12 +231,7 @@ const NotificationDetails = () => {
   if (!notification) {
     return (
       <SafeAreaView style={styles.container}>
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-            <Ionicons name="arrow-back" size={24} color="#1e293b" />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Not Found</Text>
-        </View>
+      <Header title="Not Found" showBack={true} />
         <View style={styles.emptyState}>
           <Ionicons name="alert-circle-outline" size={60} color="#e2e8f0" />
           <Text style={styles.emptyTitle}>Notification not found</Text>
@@ -269,19 +245,15 @@ const NotificationDetails = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity 
-          onPress={() => router.back()} 
-          style={styles.backButton}
-        >
-          <Ionicons name="arrow-back" size={24} color="#1e293b" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Notification Details</Text>
-        <TouchableOpacity style={styles.menuButton}>
-          <Ionicons name="ellipsis-vertical" size={24} color="#64748b" />
-        </TouchableOpacity>
-      </View>
+      <Header 
+        title="Notification Details" 
+        showBack={true} 
+        rightElement={
+          <TouchableOpacity style={styles.menuButton}>
+            <Ionicons name="ellipsis-vertical" size={24} color="#64748b" />
+          </TouchableOpacity>
+        }
+      />
 
       <ScrollView 
         contentContainerStyle={styles.scrollContent}

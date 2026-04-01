@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import Animated, { FadeInDown, ZoomIn } from 'react-native-reanimated';
@@ -8,7 +8,11 @@ export default function CorrectionSuccess() {
   return (
     <View style={styles.container}>
       <View style={styles.content}>
-        
+        <Image 
+          source={require('../../../assets/images/logo.png')} 
+          style={styles.successLogo} 
+          resizeMode="contain"
+        />
         {/* Animated Icon */}
         <Animated.View entering={ZoomIn.duration(600).springify()} style={styles.iconContainer}>
           <View style={styles.iconBg}>
@@ -61,7 +65,11 @@ export default function CorrectionSuccess() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#ffffff' },
   content: { flex: 1, padding: 24, justifyContent: 'center', alignItems: 'center' },
-  
+  successLogo: {
+    width: 150,
+    height: 42,
+    marginBottom: 32,
+  },
   iconContainer: { marginBottom: 32 },
   iconBg: { width: 96, height: 96, borderRadius: 48, backgroundColor: '#f0fdf4', justifyContent: 'center', alignItems: 'center' },
   

@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { usePerformance } from './_layout';
+import Header from '@/components/layout/Header';
 
 export default function PerformanceReports() {
   const { employees, reports, generateReport } = usePerformance();
@@ -21,11 +22,11 @@ export default function PerformanceReports() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()}><Ionicons name="arrow-back" size={24} color="#111827" /></TouchableOpacity>
-        <Text style={styles.headerTitle}>Performance Reports</Text>
-        <TouchableOpacity><Ionicons name="ellipsis-vertical" size={22} color="#111827" /></TouchableOpacity>
-      </View>
+      <Header 
+        title="Performance Reports"
+        subtitle="GROWTH ANALYTICS"
+        showBack={true}
+      />
 
       {/* Tabs */}
       <View style={styles.tabsRow}>
@@ -121,8 +122,6 @@ export default function PerformanceReports() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fcfcfd' },
-  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, paddingTop: Platform.OS === 'ios' ? 60 : 40, paddingBottom: 16, backgroundColor: '#fff' },
-  headerTitle: { fontSize: 18, fontWeight: '700', color: '#111827' },
   tabsRow: { flexDirection: 'row', backgroundColor: '#fff', paddingHorizontal: 16, paddingBottom: 12, borderBottomWidth: 1, borderBottomColor: '#f3f4f6' },
   tabBtn: { marginRight: 20, paddingBottom: 8, paddingHorizontal: 4 },
   tabBtnActive: { borderBottomWidth: 2, borderBottomColor: '#4f46e5' },

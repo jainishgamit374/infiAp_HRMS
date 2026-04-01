@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { BottomNav } from '../../components/BottomNav';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Header from '../../components/layout/Header';
 import Animated, { 
   useSharedValue, 
   useAnimatedStyle, 
@@ -119,16 +120,7 @@ export default function PerformanceDashboard() {
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
       
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.headerIcon} onPress={() => router.back()}>
-          <Ionicons name="arrow-back-outline" size={28} color="#1e293b" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Performance</Text>
-        <TouchableOpacity style={styles.headerIcon}>
-          <Ionicons name="ellipsis-vertical-outline" size={24} color="#1e293b" />
-        </TouchableOpacity>
-      </View>
+      <Header title="Performance" showBack={true} />
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         
@@ -269,27 +261,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f8fafc',
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    backgroundColor: '#fff',
-    borderBottomWidth: 1,
-    borderBottomColor: '#f1f5f9',
-    ...Platform.select({
-      android: { paddingTop: 40 },
-    }),
-  },
-  headerIcon: {
-    padding: 8,
-  },
-  headerTitle: {
-    fontSize: 20,
-    fontWeight: '800',
-    color: '#1e293b',
   },
   scrollContent: {
     padding: 20,

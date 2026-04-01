@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { BottomNav } from '../../components/BottomNav';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Header from '../../components/layout/Header';
 
 const TEAMS = ['All Teams', 'Engineering', 'Design', 'Marketing', 'Product', 'HR'];
 
@@ -75,19 +76,7 @@ export default function DirectoryPage() {
   return (
     <SafeAreaView style={styles.root}>
       {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.menuBtn}>
-          <Ionicons name="menu-outline" size={24} color="#2e4ce6" />
-        </TouchableOpacity>
-        <Image 
-          source={require('../../assets/images/logo.png')} 
-          style={styles.headerLogo} 
-          resizeMode="contain"
-        />
-        <TouchableOpacity style={styles.bellBtn}>
-          <Ionicons name="notifications-outline" size={24} color="#1e293b" />
-        </TouchableOpacity>
-      </View>
+      <Header />
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* Search */}
@@ -175,32 +164,6 @@ const styles = StyleSheet.create({
   root: {
     flex: 1,
     backgroundColor: '#fff',
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    marginTop: Platform.OS === 'android' ? 30 : 0,
-  },
-  menuBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 8,
-    backgroundColor: '#eeefff',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  headerLogo: {
-    width: 140,
-    height: 36,
-  },
-  bellBtn: {
-    width: 40,
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   scrollContent: {
     paddingHorizontal: 20,

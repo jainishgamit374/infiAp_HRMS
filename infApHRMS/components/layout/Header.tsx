@@ -16,9 +16,11 @@ interface HeaderProps {
   subtitle?: string;
   showBack?: boolean;
   onBackPress?: () => void;
+  rightElement?: React.ReactNode;
+  backIconName?: keyof typeof Ionicons.glyphMap;
 }
 
-const Header = ({ title, subtitle, showBack, onBackPress }: HeaderProps) => {
+const Header = ({ title, subtitle, showBack, onBackPress, rightElement, backIconName }: HeaderProps) => {
   const { openSidebar } = useSidebar();
 
   const handleBack = () => {
@@ -34,21 +36,8 @@ const Header = ({ title, subtitle, showBack, onBackPress }: HeaderProps) => {
       <View style={styles.leftSection}>
         {showBack ? (
           <TouchableOpacity onPress={handleBack} style={styles.iconBtn}>
-            <Ionicons name="chevron-back" size={24} color="#1e293b" />
+            <Ionicons name={backIconName || "chevron-back"} size={24} color="#1e293b" />
           </TouchableOpacity>
-        ) : (
-          <TouchableOpacity onPress={openSidebar} style={styles.iconBtn}>
-            <Ionicons name="menu-outline" size={28} color="#1e293b" />
-          </TouchableOpacity>
-        )}
-      </View>
-
-      <View style={styles.centerSection}>
-        {title ? (
-          <View style={styles.titleContainer}>
-            <Text style={styles.headerTitle} numberOfLines={1}>{title}</Text>
-            {subtitle && <Text style={styles.headerSubtitle} numberOfLines={1}>{subtitle}</Text>}
-          </View>
         ) : (
           <Image
             source={require('../../assets/images/logo.png')}
@@ -58,14 +47,19 @@ const Header = ({ title, subtitle, showBack, onBackPress }: HeaderProps) => {
         )}
       </View>
 
-      <View style={styles.rightSection}>
-        <TouchableOpacity 
-          style={styles.profileBtn}
-          onPress={() => router.push('/(employee)/profile')}
-        >
-          <View style={styles.avatarPlaceholder}>
-            <Ionicons name="person" size={18} color="#4f46e5" />
+      <View style={styles.centerSection}>
+        {title ? (
+          <View style={styles.titleContainer}>
+            <Text style={styles.headerTitle} numberOfLines={1}>{title}</Text>
+            {subtitle && <Text style={styles.headerSubtitle} numberOfLines={1}>{subtitle}</Text>}
           </View>
+        ) : null}
+      </View>
+
+      <View style={styles.rightSection}>
+        {rightElement}
+        <TouchableOpacity onPress={openSidebar} style={styles.iconBtn}>
+          <Ionicons name="menu-outline" size={28} color="#1e293b" />
         </TouchableOpacity>
       </View>
     </View>
@@ -78,14 +72,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
-    paddingVertical: 12,
+    paddingVertical: 8,
     backgroundColor: '#fff',
     borderBottomWidth: 1,
     borderBottomColor: '#f1f5f9',
-    marginTop: Platform.OS === 'android' ? 30 : 0,
   },
   leftSection: {
-    width: 48,
+    width: 110,
     alignItems: 'flex-start',
   },
   centerSection: {
@@ -93,17 +86,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   rightSection: {
-    width: 48,
-    alignItems: 'flex-end',
+    width: 110,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    gap: 8,
   },
   iconBtn: {
     padding: 4,
     marginLeft: -4,
   },
   headerLogo: {
-    width: 42,
-    height: 42,
-    borderRadius: 8,
+    width: 120,
+    height: 38,
+    marginBottom: 4,
   },
   titleContainer: {
     alignItems: 'center',

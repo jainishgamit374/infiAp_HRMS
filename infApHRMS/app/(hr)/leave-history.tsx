@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useHR, LeaveRequest } from '@/context/HRContext';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import Header from '@/components/layout/Header';
 
 export default function LeaveHistoryScreen() {
   const { leaves } = useHR();
@@ -22,12 +23,10 @@ export default function LeaveHistoryScreen() {
 
   return (
     <View style={styles.container}>
-      <Animated.View entering={FadeInDown.duration(600)} style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={24} color="#1f2937" />
-        </TouchableOpacity>
-        <Text style={styles.title}>Leave History</Text>
-      </Animated.View>
+      <Header 
+        title="Leave History"
+        showBack={true}
+      />
 
       <ScrollView contentContainerStyle={styles.content}>
         
@@ -108,9 +107,6 @@ export default function LeaveHistoryScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fcfcfd' },
-  header: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingTop: Platform.OS === 'ios' ? 60 : 40, paddingBottom: 20, backgroundColor: '#fff', borderBottomWidth: 1, borderBottomColor: '#f3f4f6' },
-  backButton: { padding: 4, marginRight: 12 },
-  title: { fontSize: 20, fontWeight: '800', color: '#1f2937' },
   content: { padding: 20 },
   searchContainer: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#fff', borderRadius: 16, paddingHorizontal: 16, height: 52, marginBottom: 16, borderWidth: 1, borderColor: '#f3f4f6' },
   searchInput: { flex: 1, marginLeft: 10, fontSize: 15, color: '#111827' },

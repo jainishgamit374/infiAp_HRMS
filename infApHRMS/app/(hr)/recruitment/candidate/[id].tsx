@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, router } from 'expo-router';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { useRecruitment, CandidateStatus } from '../_layout';
+import Header from '@/components/layout/Header';
 
 export default function CandidateProfile() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -16,20 +17,20 @@ export default function CandidateProfile() {
   return (
     <View style={styles.container}>
       {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={24} color="#111827" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Candidate Profile</Text>
-        <View style={styles.headerRight}>
-          <TouchableOpacity style={{ marginRight: 16 }}>
-             <Ionicons name="share-social-outline" size={22} color="#4b5563" />
-          </TouchableOpacity>
-          <TouchableOpacity>
-             <Ionicons name="ellipsis-vertical" size={22} color="#4b5563" />
-          </TouchableOpacity>
-        </View>
-      </View>
+      <Header 
+        title="Candidate Profile"
+        showBack={true}
+        rightElement={
+          <View style={styles.headerRight}>
+            <TouchableOpacity style={{ marginRight: 16 }}>
+               <Ionicons name="share-social-outline" size={22} color="#4b5563" />
+            </TouchableOpacity>
+            <TouchableOpacity>
+               <Ionicons name="ellipsis-vertical" size={22} color="#4b5563" />
+            </TouchableOpacity>
+          </View>
+        }
+      />
 
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         {/* Profile Info */}
@@ -201,18 +202,6 @@ export default function CandidateProfile() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff' },
-  header: { 
-    flexDirection: 'row', 
-    alignItems: 'center', 
-    paddingHorizontal: 20, 
-    paddingTop: Platform.OS === 'ios' ? 60 : 40,
-    paddingBottom: 16,
-    backgroundColor: '#fff',
-    borderBottomWidth: 1,
-    borderBottomColor: '#f3f4f6'
-  },
-  backButton: { marginRight: 16 },
-  headerTitle: { fontSize: 18, fontWeight: '700', color: '#111827', flex: 1 },
   headerRight: { flexDirection: 'row', alignItems: 'center' },
   content: { paddingBottom: 180 },
   profileSection: { alignItems: 'center', paddingVertical: 24 },

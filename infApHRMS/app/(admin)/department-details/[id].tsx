@@ -15,6 +15,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { router, useLocalSearchParams } from 'expo-router';
 import Animated, { FadeInDown, FadeIn, ZoomIn, SlideInDown, Layout } from 'react-native-reanimated';
 import { AdminBottomNav } from '../../../components/AdminBottomNav';
+import Header from '../../../components/layout/Header';
 
 const { width } = Dimensions.get('window');
 
@@ -53,18 +54,16 @@ export default function DepartmentDetails() {
   return (
     <View style={styles.container}>
       {/* Header */}
-      <Animated.View entering={FadeIn.duration(400)} style={styles.header}>
-        <TouchableOpacity style={styles.headerIcon} onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={24} color="#1e293b" />
-        </TouchableOpacity>
-        <View style={styles.headerTitleContainer}>
-          <Text style={styles.headerTitle}>{name || 'Department'}</Text>
-          <Text style={styles.headerSub}>Team Management</Text>
-        </View>
-        <TouchableOpacity style={styles.headerIcon} onPress={() => setShowSearch(!showSearch)}>
-          <Ionicons name="search-outline" size={22} color="#64748b" />
-        </TouchableOpacity>
-      </Animated.View>
+      <Header 
+        title={name as string || 'Department'}
+        subtitle="Team Management"
+        showBack={true}
+        rightElement={
+          <TouchableOpacity style={styles.headerIcon} onPress={() => setShowSearch(!showSearch)}>
+            <Ionicons name="search-outline" size={22} color="#64748b" />
+          </TouchableOpacity>
+        }
+      />
 
       {/* Search Bar */}
       {showSearch && (
@@ -182,16 +181,8 @@ export default function DepartmentDetails() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#f8fafc' },
-  header: {
-    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    paddingHorizontal: 20, paddingVertical: 16, backgroundColor: '#fff',
-    paddingTop: Platform.OS === 'ios' ? 50 : 20,
-    borderBottomWidth: 1, borderBottomColor: '#f1f5f9',
-  },
   headerIcon: { width: 40, height: 40, borderRadius: 12, backgroundColor: '#f1f5f9', justifyContent: 'center', alignItems: 'center' },
-  headerTitleContainer: { alignItems: 'center' },
   headerTitle: { fontSize: 18, fontWeight: '800', color: '#1e293b' },
-  headerSub: { fontSize: 10, fontWeight: '700', color: '#64748b', textTransform: 'uppercase', letterSpacing: 1 },
   
   searchContainer: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#fff', paddingHorizontal: 20, paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: '#f1f5f9', gap: 10 },
   searchInput: { flex: 1, fontSize: 16, color: '#1e293b' },

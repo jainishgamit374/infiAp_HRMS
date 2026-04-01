@@ -38,10 +38,10 @@ const NAV_ITEMS = [
     route: '/(admin)/stats'
   },
   {
-    icon: 'shield-outline',
-    activeIcon: 'shield',
-    label: 'Admin',
-    route: '/(admin)/settings'
+    icon: 'person-outline',
+    activeIcon: 'person',
+    label: 'Profile',
+    route: '/(admin)/profile'
   },
 ];
 

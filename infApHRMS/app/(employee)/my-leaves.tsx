@@ -15,6 +15,7 @@ import Animated, {
 import { useLeave, LeaveRequest } from '../../context/LeaveContext';
 import { BottomNav } from '../../components/BottomNav';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Header from '../../components/layout/Header';
 
 const { width } = Dimensions.get('window');
 
@@ -98,19 +99,18 @@ export default function MyLeaves() {
 
   return (
     <SafeAreaView style={styles.root}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.headerBtn} onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={24} color="#1e293b" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Leave Requests</Text>
-        <TouchableOpacity 
-          style={styles.addBtn}
-          onPress={() => router.push('/(employee)/apply-leave')}
-        >
-          <Ionicons name="add" size={24} color="#fff" />
-        </TouchableOpacity>
-      </View>
+      <Header 
+        title="Leave Requests" 
+        showBack={true} 
+        rightElement={
+          <TouchableOpacity 
+            style={styles.addBtn}
+            onPress={() => router.push('/(employee)/apply-leave')}
+          >
+            <Ionicons name="add" size={24} color="#fff" />
+          </TouchableOpacity>
+        }
+      />
 
       {/* Tabs */}
       <View style={styles.tabsContainer}>
@@ -226,22 +226,6 @@ const styles = StyleSheet.create({
   root: {
     flex: 1,
     backgroundColor: '#fff',
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#f1f5f9',
-    marginTop: Platform.OS === 'android' ? 30 : 0,
-  },
-  headerBtn: {
-    width: 40,
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'flex-start',
   },
   headerTitle: {
     fontSize: 18,

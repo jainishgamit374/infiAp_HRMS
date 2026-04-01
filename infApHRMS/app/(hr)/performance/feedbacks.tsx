@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import Animated, { FadeInDown, FadeInUp, ZoomIn } from 'react-native-reanimated';
 import { usePerformance, ReviewFeedback, PerformanceEmployee } from './_layout';
+import Header from '@/components/layout/Header';
 
 export default function FeedbacksList() {
   const { feedbacks, employees } = usePerformance();
@@ -18,23 +19,11 @@ export default function FeedbacksList() {
 
   return (
     <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <View style={styles.headerLeft}>
-          <TouchableOpacity style={styles.logoBtn} onPress={() => router.push('/(hr)')}>
-            <Ionicons name="apps" size={20} color="#fff" />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>InfiAP</Text>
-        </View>
-        <View style={styles.headerRight}>
-          <TouchableOpacity style={styles.iconBtn}>
-            <Ionicons name="search" size={22} color="#111827" />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.iconBtn}>
-            <Ionicons name="notifications-outline" size={22} color="#111827" />
-          </TouchableOpacity>
-        </View>
-      </View>
+      <Header 
+        title="InfiAP Feedbacks"
+        subtitle="PERFORMANCE REVIEWS"
+        showBack={true}
+      />
 
       {/* Top Tabs */}
       <View style={styles.topTabs}>
@@ -216,20 +205,6 @@ export default function FeedbacksList() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fcfcfd' },
-  header: { 
-    flexDirection: 'row', 
-    alignItems: 'center', 
-    justifyContent: 'space-between',
-    paddingHorizontal: 20, 
-    paddingTop: Platform.OS === 'ios' ? 60 : 40,
-    paddingBottom: 16,
-    backgroundColor: '#fff',
-  },
-  headerLeft: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  logoBtn: { width: 36, height: 36, borderRadius: 10, backgroundColor: '#4f46e5', alignItems: 'center', justifyContent: 'center' },
-  headerTitle: { fontSize: 20, fontWeight: '800', color: '#111827' },
-  headerRight: { flexDirection: 'row', gap: 16 },
-  iconBtn: { padding: 4 },
   topTabs: { flexDirection: 'row', backgroundColor: '#fff', paddingHorizontal: 20, paddingBottom: 12, borderBottomWidth: 1, borderBottomColor: '#f3f4f6' },
   tabBtn: { marginRight: 24, paddingBottom: 8 },
   tabBtnActive: { borderBottomWidth: 2, borderBottomColor: '#4f46e5' },

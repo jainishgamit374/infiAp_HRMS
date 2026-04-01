@@ -13,6 +13,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import Animated, { FadeInDown, FadeIn, Layout, ZoomIn } from 'react-native-reanimated';
 import { AdminBottomNav } from '../../components/AdminBottomNav';
+import Header from '../../components/layout/Header';
 
 const { width } = Dimensions.get('window');
 
@@ -42,15 +43,15 @@ export default function ManageTeams() {
   return (
     <View style={styles.container}>
       {/* Header */}
-      <Animated.View entering={FadeIn.duration(400)} style={styles.header}>
-        <TouchableOpacity style={styles.headerIcon} onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={24} color="#1e293b" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Manage All Teams</Text>
-        <TouchableOpacity style={styles.headerIcon}>
-          <Ionicons name="filter-outline" size={22} color="#64748b" />
-        </TouchableOpacity>
-      </Animated.View>
+      <Header 
+        title="Manage All Teams"
+        showBack={true}
+        rightElement={
+          <TouchableOpacity style={styles.headerIcon}>
+            <Ionicons name="filter-outline" size={22} color="#64748b" />
+          </TouchableOpacity>
+        }
+      />
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         {/* Stats Summary */}
@@ -159,12 +160,6 @@ export default function ManageTeams() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#f8fafc' },
-  header: {
-    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    paddingHorizontal: 20, paddingVertical: 16, backgroundColor: '#fff',
-    paddingTop: Platform.OS === 'ios' ? 50 : 20,
-    borderBottomWidth: 1, borderBottomColor: '#f1f5f9',
-  },
   headerIcon: { width: 40, height: 40, borderRadius: 12, backgroundColor: '#f1f5f9', justifyContent: 'center', alignItems: 'center' },
   headerTitle: { fontSize: 18, fontWeight: '800', color: '#1e293b' },
   

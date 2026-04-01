@@ -15,6 +15,7 @@ import { useLocalSearchParams, router } from 'expo-router';
 import { useHR, Employee } from '@/context/HRContext';
 import { HRBottomNav } from '@/components/HRBottomNav';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import Header from '@/components/layout/Header';
 
 const EditEmployee = () => {
   const { id } = useLocalSearchParams();
@@ -74,16 +75,15 @@ const EditEmployee = () => {
   return (
     <View style={{ flex: 1 }}>
       <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-        {/* Header */}
-        <Animated.View entering={FadeInDown.duration(600)} style={styles.header}>
-          <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-            <Ionicons name="arrow-back" size={24} color="#1f2937" />
-          </TouchableOpacity>
-          <Text style={styles.title}>Edit Employee</Text>
-          <TouchableOpacity>
-            <Text style={styles.helpText}>Help</Text>
-          </TouchableOpacity>
-        </Animated.View>
+        <Header 
+          title="Edit Employee"
+          showBack={true}
+          rightElement={
+            <TouchableOpacity>
+              <Text style={styles.helpText}>Help</Text>
+            </TouchableOpacity>
+          }
+        />
 
         {/* Profile Header */}
         <Animated.View entering={FadeInDown.delay(100).duration(600)} style={styles.profileHeader}>
@@ -177,22 +177,7 @@ const styles = StyleSheet.create({
   },
   content: {
     paddingHorizontal: 20,
-    paddingTop: Platform.OS === 'ios' ? 60 : 40,
     paddingBottom: 40,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 32,
-  },
-  backButton: {
-    padding: 4,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#1f2937',
   },
   helpText: {
     fontSize: 14,

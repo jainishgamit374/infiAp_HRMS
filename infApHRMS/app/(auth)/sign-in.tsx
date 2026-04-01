@@ -14,6 +14,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { Link, router } from 'expo-router';
 
+
 const ROLES = [
   { label: 'Employee', value: 'employee', icon: 'person-outline' },
   { label: 'HR', value: 'hr', icon: 'people-outline' },
@@ -48,16 +49,7 @@ export default function SignIn() {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <ScrollView contentContainerStyle={styles.container}>
-        {/* Header Logo */}
-        <View style={styles.header}>
-          <Image 
-            source={require('../../assets/images/logo.png')} 
-            style={styles.headerLogo} 
-            resizeMode="contain"
-          />
-        </View>
 
-        {/* Card */}
         <View style={styles.card}>
           <Text style={styles.title}>Welcome back</Text>
           <Text style={styles.subtitle}>
@@ -167,24 +159,7 @@ export default function SignIn() {
             <Text style={styles.signInText}>Sign In</Text>
           </TouchableOpacity>
 
-          {/* Divider */}
-          <View style={styles.dividerContainer}>
-            <View style={styles.dividerLine} />
-            <Text style={styles.dividerText}>Or continue with</Text>
-            <View style={styles.dividerLine} />
-          </View>
-
-          {/* Social Buttons */}
-          <View style={styles.socialContainer}>
-            <TouchableOpacity style={styles.socialButton}>
-              <Ionicons name="logo-google" size={20} color="#DB4437" />
-              <Text style={styles.socialText}>Google</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.socialButton}>
-              <Ionicons name="logo-linkedin" size={20} color="#0A66C2" />
-              <Text style={styles.socialText}>LinkedIn</Text>
-            </TouchableOpacity>
-          </View>
+          <View style={{ height: 20 }} />
 
           {/* Footer Card Section */}
           <View style={styles.cardFooter}>
@@ -243,6 +218,7 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
     elevation: 2,
     marginBottom: 30,
+    marginTop: 20,
   },
   title: {
     fontSize: 28,

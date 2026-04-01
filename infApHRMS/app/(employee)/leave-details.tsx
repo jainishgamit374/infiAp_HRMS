@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useLeave } from '../../context/LeaveContext';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Header from '../../components/layout/Header';
 
 export default function LeaveDetails() {
   const { id } = useLocalSearchParams();
@@ -15,13 +16,7 @@ export default function LeaveDetails() {
   if (!leave) {
     return (
       <SafeAreaView style={styles.root}>
-        <View style={styles.header}>
-          <TouchableOpacity style={styles.headerBtn} onPress={() => router.back()}>
-            <Ionicons name="arrow-back" size={24} color="#1e293b" />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Leave Details</Text>
-          <View style={{ width: 40 }} />
-        </View>
+        <Header title="Leave Details" showBack={true} />
         <View style={styles.emptyContainer}>
           <Ionicons name="document-text-outline" size={48} color="#cbd5e1" />
           <Text style={styles.emptyText}>Leave not found</Text>
@@ -57,23 +52,20 @@ export default function LeaveDetails() {
 
   return (
     <SafeAreaView style={styles.root}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.headerBtn} onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={24} color="#1e293b" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Leave Details</Text>
-        {leave.status === 'PENDING' ? (
-          <TouchableOpacity 
-            style={styles.headerBtn} 
-            onPress={() => router.push({ pathname: '/(employee)/edit-leave', params: { id: leave.id } })}
-          >
-            <Ionicons name="pencil" size={20} color="#4f39f6" />
-          </TouchableOpacity>
-        ) : (
-          <View style={{ width: 40 }} />
-        )}
-      </View>
+      <Header 
+        title="Leave Details" 
+        showBack={true} 
+        rightElement={
+          leave.status === 'PENDING' ? (
+            <TouchableOpacity 
+              onPress={() => router.push({ pathname: '/(employee)/edit-leave', params: { id: leave.id } })}
+              style={{ padding: 4 }}
+            >
+              <Ionicons name="pencil" size={20} color="#4f39f6" />
+            </TouchableOpacity>
+          ) : undefined
+        }
+      />
 
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         {/* Card 1: Overview and Status */}
@@ -149,23 +141,6 @@ const styles = StyleSheet.create({
   root: {
     flex: 1,
     backgroundColor: '#f8fafc',
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    backgroundColor: '#fff',
-    borderBottomWidth: 1,
-    borderBottomColor: '#f1f5f9',
-    marginTop: Platform.OS === 'android' ? 30 : 0,
-  },
-  headerBtn: {
-    width: 40,
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'flex-start',
   },
   headerTitle: {
     fontSize: 18,

@@ -88,27 +88,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f8fafc',
   },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    backgroundColor: '#4f39f6', // user requested theme color
-    marginTop: Platform.OS === 'android' ? 30 : 0,
-  },
-  headerBtn: {
-    width: 40,
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  headerTitle: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: '#fff',
-    fontFamily: Platform.OS === 'ios' ? 'System' : 'serif', // Trying to match the font style
-  },
   content: {
     flex: 1,
     paddingHorizontal: 20,

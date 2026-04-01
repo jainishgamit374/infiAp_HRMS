@@ -5,6 +5,7 @@ import { useLocalSearchParams, router } from 'expo-router';
 import Animated, { FadeInDown, FadeInUp, ZoomIn } from 'react-native-reanimated';
 import { useRecruitment } from './_layout';
 import { HRBottomNav } from '@/components/HRBottomNav';
+import Header from '@/components/layout/Header';
 
 export default function FeedbackStatus() {
   const { id, rec } = useLocalSearchParams<{ id: string, rec: string }>();
@@ -16,12 +17,11 @@ export default function FeedbackStatus() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => router.navigate('/(hr)/recruitment')}>
-          <Ionicons name="arrow-back" size={24} color="#111827" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Submission Status</Text>
-      </View>
+      <Header 
+        title="Submission Status"
+        showBack={true}
+        onBackPress={() => router.navigate('/(hr)/recruitment')}
+      />
 
       <View style={styles.content}>
         <Animated.View entering={ZoomIn.duration(500).springify()} style={styles.iconWrapper}>
@@ -96,14 +96,6 @@ export default function FeedbackStatus() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff' },
-  header: { 
-    flexDirection: 'row', 
-    alignItems: 'center',
-    paddingHorizontal: 20, 
-    paddingTop: Platform.OS === 'ios' ? 60 : 40,
-    backgroundColor: '#fff',
-  },
-  backButton: { marginRight: 16 },
   headerTitle: { fontSize: 18, fontWeight: '700', color: '#111827' },
   content: { flex: 1, alignItems: 'center', paddingHorizontal: 24, paddingTop: 40 },
   iconWrapper: { marginBottom: 24 },

@@ -4,6 +4,7 @@ import { useLocalSearchParams, router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useHR } from '@/context/HRContext';
 import Animated, { FadeInDown, FadeIn } from 'react-native-reanimated';
+import Header from '@/components/layout/Header';
 
 export default function LeaveDetailsScreen() {
   const { id } = useLocalSearchParams();
@@ -24,12 +25,10 @@ export default function LeaveDetailsScreen() {
 
   return (
     <View style={styles.container}>
-      <Animated.View entering={FadeInDown.duration(600)} style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={24} color="#1f2937" />
-        </TouchableOpacity>
-        <Text style={styles.title}>Review Request</Text>
-      </Animated.View>
+      <Header 
+        title="Leave Details"
+        showBack={true}
+      />
 
       <ScrollView contentContainerStyle={styles.content}>
         <Animated.View entering={FadeInDown.delay(100)} style={styles.profileCard}>
@@ -77,9 +76,6 @@ export default function LeaveDetailsScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fcfcfd' },
-  header: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingTop: Platform.OS === 'ios' ? 60 : 40, paddingBottom: 20, backgroundColor: '#fff', borderBottomWidth: 1, borderBottomColor: '#f3f4f6' },
-  backButton: { padding: 4, marginRight: 12 },
-  title: { fontSize: 20, fontWeight: '800', color: '#1f2937' },
   content: { padding: 20 },
   profileCard: { alignItems: 'center', marginBottom: 24 },
   avatar: { width: 80, height: 80, borderRadius: 24, marginBottom: 12 },

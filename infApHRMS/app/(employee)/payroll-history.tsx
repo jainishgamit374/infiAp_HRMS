@@ -5,6 +5,7 @@ import { router } from 'expo-router';
 import { BottomNav } from '../../components/BottomNav';
 import Animated, { FadeInDown, SlideInUp } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Header from '../../components/layout/Header';
 
 const HISTORY_DATA = [
   { id: '1', month: 'September 2023', salary: '$3,450.00', date: 'Sept 30', status: 'Paid', year: '2023' },
@@ -25,14 +26,7 @@ export default function PayrollHistory() {
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
       
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.headerIcon} onPress={() => router.back()}>
-          <Ionicons name="arrow-back-outline" size={28} color="#1e293b" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Salary History</Text>
-        <View style={{ width: 40 }} />
-      </View>
+      <Header title="Salary History" showBack={true} />
 
       <View style={styles.filterContainer}>
         {YEAR_LIST(activeYear, setActiveYear)}
@@ -129,19 +123,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f8fafc',
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    backgroundColor: '#fff',
-    borderBottomWidth: 1,
-    borderBottomColor: '#f1f5f9',
-  },
-  headerIcon: {
-    padding: 8,
   },
   headerTitle: {
     fontSize: 20,

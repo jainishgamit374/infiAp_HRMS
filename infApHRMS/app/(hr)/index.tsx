@@ -154,7 +154,7 @@ const HRDashboard = () => {
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fcfcfd' }}>
       {/* Top Bar */}
       <Header 
-        title="HR Command Center"
+        title="HR Dashboard"
         subtitle="Manage Workforce & Operations"
       />
 
@@ -335,6 +335,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     paddingHorizontal: 16,
     height: 52,
+    marginTop: 2,
     marginBottom: 20,
     borderWidth: 1,
     borderColor: '#f3f4f6',

@@ -288,15 +288,9 @@ const CARD_WIDTH = (width - 60) / 2;
 
 const styles = StyleSheet.create({
   mainContainer: { flex: 1, backgroundColor: '#f8fafc' },
-  scrollContent: { padding: 20, paddingTop: Platform.OS === 'ios' ? 60 : 40 },
+  scrollContent: { padding: 20 },
 
   // Header
-  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 },
-  greetingText: { fontSize: 16, color: '#64748b', fontWeight: '500' },
-  adminName: { fontSize: 24, fontWeight: '700', color: '#1e293b' },
-  profileButton: { width: 48, height: 48, borderRadius: 24, backgroundColor: '#fff', elevation: 2, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4 },
-  profileImagePlaceholder: { width: '100%', height: '100%', borderRadius: 24, backgroundColor: '#5a55d2', justifyContent: 'center', alignItems: 'center' },
-  profileInitial: { color: '#fff', fontSize: 18, fontWeight: '700' },
 
   // Stats
   statsContainer: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 24 },

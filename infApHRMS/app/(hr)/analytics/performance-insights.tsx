@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { HRBottomNav } from '@/components/HRBottomNav';
+import Header from '@/components/layout/Header';
 
 const INSIGHTS = [
   { title: 'Top performer this quarter', value: 'Alex Johnson', score: '90%', avatar: 'https://i.pravatar.cc/150?u=AlexJohnson' },
@@ -29,11 +30,10 @@ export default function PerformanceInsights() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()}><Ionicons name="arrow-back" size={24} color="#111827" /></TouchableOpacity>
-        <Text style={styles.headerTitle}>Performance Insights</Text>
-        <TouchableOpacity><Ionicons name="options-outline" size={22} color="#111827" /></TouchableOpacity>
-      </View>
+      <Header 
+        title="Performance Insights"
+        showBack={true}
+      />
 
       <View style={styles.tabs}>
         {['Overview', 'History', 'Department'].map(tab => (
@@ -107,8 +107,6 @@ export default function PerformanceInsights() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fcfcfd' },
-  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, paddingTop: Platform.OS === 'ios' ? 60 : 40, paddingBottom: 16, backgroundColor: '#fff' },
-  headerTitle: { fontSize: 18, fontWeight: '700', color: '#111827' },
   tabs: { flexDirection: 'row', backgroundColor: '#fff', paddingHorizontal: 20, paddingBottom: 12, borderBottomWidth: 1, borderBottomColor: '#f3f4f6' },
   tab: { marginRight: 24, paddingBottom: 8 },
   tabActive: { borderBottomWidth: 2, borderBottomColor: '#4f46e5' },

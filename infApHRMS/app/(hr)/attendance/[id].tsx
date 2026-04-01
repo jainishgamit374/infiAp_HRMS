@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import Header from '@/components/layout/Header';
 import { useLocalSearchParams, router } from 'expo-router';
 import Animated, { FadeInDown, FadeInRight } from 'react-native-reanimated';
 
@@ -66,16 +67,16 @@ export default function AttendanceDetails() {
 
   return (
     <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={24} color="#1f2937" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Attendance Details</Text>
-        <TouchableOpacity style={styles.headerRightBtn}>
-          <Ionicons name="calendar-outline" size={22} color="#1f2937" />
-        </TouchableOpacity>
-      </View>
+      <Header 
+        title="Attendance Details" 
+        subtitle="Employee Presence Log"
+        showBack={true}
+        rightElement={
+          <TouchableOpacity style={styles.iconBtn}>
+            <Ionicons name="calendar-outline" size={22} color="#1f2937" />
+          </TouchableOpacity>
+        }
+      />
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
         
@@ -158,20 +159,7 @@ export default function AttendanceDetails() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#ffffff' },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingTop: Platform.OS === 'ios' ? 60 : 40,
-    paddingBottom: 16,
-    backgroundColor: '#ffffff',
-    borderBottomWidth: 1,
-    borderBottomColor: '#f3f4f6',
-  },
-  backBtn: { padding: 8 },
-  headerTitle: { fontSize: 18, fontWeight: '700', color: '#1f2937' },
-  headerRightBtn: { padding: 8 },
+  iconBtn: { padding: 8 },
   content: { padding: 20 },
   
   employeeCard: { flexDirection: 'row', alignItems: 'center', marginBottom: 24 },

@@ -5,6 +5,7 @@ import { router } from 'expo-router';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useResignation } from './_layout';
 import { HRBottomNav } from '@/components/HRBottomNav';
+import Header from '@/components/layout/Header';
 
 export default function ExitProcess() {
   const { requests, completeExitStep } = useResignation();
@@ -12,11 +13,10 @@ export default function ExitProcess() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()}><Ionicons name="arrow-back" size={24} color="#111827" /></TouchableOpacity>
-        <Text style={styles.headerTitle}>Exit Process</Text>
-        <View style={{ width: 24 }} />
-      </View>
+      <Header 
+        title="Exit Process"
+        showBack={true}
+      />
 
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         {approved.length === 0 && (
@@ -75,7 +75,6 @@ export default function ExitProcess() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fcfcfd' },
-  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, paddingTop: Platform.OS === 'ios' ? 60 : 40, paddingBottom: 16, backgroundColor: '#fff' },
   headerTitle: { fontSize: 18, fontWeight: '700', color: '#111827' },
   content: { padding: 20, paddingBottom: 100 },
   emptyBox: { alignItems: 'center', paddingVertical: 60 },

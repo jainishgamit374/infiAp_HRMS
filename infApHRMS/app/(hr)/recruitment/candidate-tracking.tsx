@@ -5,6 +5,7 @@ import { router } from 'expo-router';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { useRecruitment, CandidateStatus } from './_layout';
 import { HRBottomNav } from '@/components/HRBottomNav';
+import Header from '@/components/layout/Header';
 
 export default function CandidateTracking() {
   const { candidates, updateStatus } = useRecruitment();
@@ -27,17 +28,11 @@ export default function CandidateTracking() {
 
   return (
     <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <View style={styles.headerTop}>
-          <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
-            <Ionicons name="arrow-back" size={24} color="#111827" />
-          </TouchableOpacity>
-          <View style={{ flex: 1 }}>
-            <Text style={styles.headerTitle}>Candidate Tracking</Text>
-          </View>
-        </View>
-        
+      <Header 
+        title="Candidate Tracking"
+        showBack={true}
+      />
+      <View style={{ paddingHorizontal: 20, paddingBottom: 16 }}>
         <TouchableOpacity style={styles.addBtn} onPress={() => router.push('/(hr)/recruitment/add-candidate')}>
           <Ionicons name="person-add" size={16} color="#fff" />
           <Text style={styles.addBtnText}>Add Candidate</Text>
@@ -210,10 +205,6 @@ export default function CandidateTracking() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff' },
-  header: { paddingHorizontal: 20, paddingTop: Platform.OS === 'ios' ? 50 : 30, paddingBottom: 16, borderBottomWidth: 1, borderBottomColor: '#f3f4f6' },
-  headerTop: { flexDirection: 'row', alignItems: 'center', marginBottom: 16 },
-  backBtn: { marginRight: 12 },
-  headerTitle: { fontSize: 22, fontWeight: '700', color: '#111827' },
   addBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, backgroundColor: '#4f46e5', paddingVertical: 12, borderRadius: 12 },
   addBtnText: { color: '#fff', fontSize: 15, fontWeight: '600' },
   content: { padding: 20, paddingBottom: 100 },

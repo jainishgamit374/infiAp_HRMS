@@ -182,8 +182,8 @@ export default function EmployeeDashboard() {
 
             {/* Header */}
             <Header 
-              title={user.name}
-              subtitle="0+ Years Experience App Developer" 
+              title="Employee Dashboard"
+              subtitle={`Welcome, ${user.name}`} 
             />
 
             <View style={styles.contentPadding}>
@@ -425,8 +425,6 @@ export default function EmployeeDashboard() {
               </View>
             </View>
           </View>
-            <View style={{ height: 100 }} />
-            <View style={{ height: 100 }} />
           </ScrollView>
         </Animated.View>
         <BottomNav />
@@ -441,7 +439,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f8fafc',
   },
   container: {
-    paddingBottom: 20,
+    paddingBottom: 140,
   },
   contentPadding: {
     paddingHorizontal: 20,
@@ -458,12 +456,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  headerLogo: {
-    width: 58,
-    height: 58,
-    marginLeft: 2,
-    borderRadius: 10,
-  },
+
   profileCircle: {
     width: 36,
     height: 36,
@@ -478,7 +471,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#2e4ce6',
     borderRadius: 20,
     padding: 24,
-    marginBottom: 24,
+    marginBottom: 16,
     shadowColor: '#2e4ce6',
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.2,
@@ -537,7 +530,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '800',
     color: '#1e293b',
-    marginBottom: 12,
+    marginBottom: 8,
   },
   historyLink: {
     color: '#3b82f6',
@@ -550,7 +543,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 20,
     padding: 16,
-    marginBottom: 24,
+    marginBottom: 16,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,
@@ -711,7 +704,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 8,
-    marginBottom: 24,
+    marginBottom: 16,
   },
   statBadge: {
     backgroundColor: '#f8fafc',
@@ -748,7 +741,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 16,
     justifyContent: 'space-between',
-    marginBottom: 24,
+    marginBottom: 16,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.04,
@@ -872,7 +865,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    marginBottom: 24,
+    marginBottom: 16,
     gap: 12,
   },
   featureCard: {
@@ -939,7 +932,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#0f172a',
     borderRadius: 16,
     padding: 20,
-    marginBottom: 24,
+    marginBottom: 16,
     position: 'relative',
     overflow: 'hidden',
   },
@@ -1003,7 +996,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 16,
     padding: 20,
-    marginBottom: 32,
+    marginBottom: 16,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.04,

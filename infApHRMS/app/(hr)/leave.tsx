@@ -5,6 +5,7 @@ import { router } from 'expo-router';
 import { useHR, LeaveRequest } from '@/context/HRContext';
 import { HRBottomNav } from '@/components/HRBottomNav';
 import Animated, { FadeInDown, FadeInUp, Layout, FadeIn } from 'react-native-reanimated';
+import Header from '@/components/layout/Header';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -55,19 +56,11 @@ const LeaveManagementScreen = () => {
       <ScrollView style={styles.container} contentContainerStyle={styles.content}>
         
         {/* Header */}
-        <Animated.View entering={FadeInDown.duration(600)} style={styles.header}>
-          <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-            <Ionicons name="arrow-back" size={24} color="#1f2937" />
-          </TouchableOpacity>
-          <View style={styles.headerTitles}>
-             <Text style={styles.title}>Leave Management</Text>
-             <Text style={styles.subtitle}>INFIAP DASHBOARD</Text>
-          </View>
-          <View style={styles.headerRight}>
-             <TouchableOpacity style={styles.iconBtn}><Ionicons name="search" size={20} color="#6b7280" /></TouchableOpacity>
-             <Image source={{ uri: 'https://i.pravatar.cc/150?u=hrmanager' }} style={styles.headerAvatar} />
-          </View>
-        </Animated.View>
+        <Header 
+          title="Leave Management"
+          subtitle="INFIAP DASHBOARD"
+          showBack={true}
+        />
 
         <Text style={styles.introText}>Manage employee leave requests, approvals, and leave history.</Text>
 
@@ -211,15 +204,7 @@ const LeaveManagementScreen = () => {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  content: { paddingHorizontal: 20, paddingTop: Platform.OS === 'ios' ? 50 : 30 },
-  header: { flexDirection: 'row', alignItems: 'center', marginBottom: 12 },
-  backButton: { marginRight: 12 },
-  headerTitles: { flex: 1 },
-  title: { fontSize: 18, fontWeight: '800', color: '#1f2937' },
-  subtitle: { fontSize: 10, fontWeight: '700', color: '#5a55d2', letterSpacing: 0.5 },
-  headerRight: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  iconBtn: { padding: 4 },
-  headerAvatar: { width: 32, height: 32, borderRadius: 16 },
+  content: { paddingHorizontal: 20 },
   
   introText: { fontSize: 13, color: '#6b7280', marginBottom: 20, lineHeight: 20 },
   

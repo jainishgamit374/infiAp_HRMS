@@ -5,6 +5,7 @@ import { router } from 'expo-router';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useFinance } from './_layout';
 import { HRBottomNav } from '@/components/HRBottomNav';
+import Header from '@/components/layout/Header';
 
 export default function Payslips() {
   const { payslips, payroll, generatePayslip } = useFinance();
@@ -16,11 +17,10 @@ export default function Payslips() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()}><Ionicons name="arrow-back" size={24} color="#111827" /></TouchableOpacity>
-        <Text style={styles.headerTitle}>Payslip Management</Text>
-        <View style={{ width: 24 }} />
-      </View>
+      <Header 
+        title="Payslip Management"
+        showBack={true}
+      />
 
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         {/* Generate for all */}
@@ -68,8 +68,6 @@ export default function Payslips() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fcfcfd' },
-  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, paddingTop: Platform.OS === 'ios' ? 60 : 40, paddingBottom: 16, backgroundColor: '#fff' },
-  headerTitle: { fontSize: 18, fontWeight: '700', color: '#111827' },
   content: { padding: 20, paddingBottom: 100 },
   genAllBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, backgroundColor: '#4f46e5', height: 52, borderRadius: 14, marginBottom: 24 },
   genAllText: { color: '#fff', fontSize: 15, fontWeight: '700' },

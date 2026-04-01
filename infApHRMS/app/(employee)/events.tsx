@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Dimensions, Platf
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Header from '../../components/layout/Header';
 import Animated, { 
   FadeInDown, 
   FadeIn, 
@@ -118,13 +119,7 @@ export default function EventsPage() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={24} color="#1e293b" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Events</Text>
-        <View style={{ width: 40 }} />
-      </View>
+      <Header title="Events" showBack={true} />
 
       <View style={styles.tabContainer}>
         {['Upcoming', 'Past'].map((tab) => (
@@ -243,24 +238,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f8fafc',
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    backgroundColor: '#fff',
-    borderBottomWidth: 1,
-    borderBottomColor: '#f1f5f9',
-    ...Platform.select({
-      android: { paddingTop: 40 },
-    }),
-  },
-  backButton: {
-    padding: 8,
-    borderRadius: 12,
-    backgroundColor: '#f1f5f9',
   },
   headerTitle: {
     fontSize: 20,

@@ -11,6 +11,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { AdminBottomNav } from '../../components/AdminBottomNav';
+import Header from '../../components/layout/Header';
 
 const INTERVIEWS = [
   { id: 'i1', candidate: 'Liam Wilson', role: 'Node.js Backend', date: 'Oct 24, 2023', time: '10:00 AM', interviewer: 'Alex Rivera' },
@@ -26,15 +27,15 @@ export default function InterviewManagement() {
   };
   return (
     <View style={styles.mainContainer}>
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={24} color="#1e293b" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Interview Management</Text>
-        <TouchableOpacity style={styles.searchBtn}>
-          <Ionicons name="calendar-outline" size={22} color="#64748b" />
-        </TouchableOpacity>
-      </View>
+      <Header 
+        title="Interview Management"
+        showBack={true}
+        rightElement={
+          <TouchableOpacity style={styles.searchBtn}>
+            <Ionicons name="calendar-outline" size={22} color="#64748b" />
+          </TouchableOpacity>
+        }
+      />
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         <Animated.View entering={FadeInDown.duration(400)}>
@@ -67,12 +68,6 @@ export default function InterviewManagement() {
 
 const styles = StyleSheet.create({
   mainContainer: { flex: 1, backgroundColor: '#f8fafc' },
-  header: {
-    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    paddingHorizontal: 20, paddingVertical: 16, backgroundColor: '#fff',
-    paddingTop: Platform.OS === 'ios' ? 50 : 20,
-    borderBottomWidth: 1, borderBottomColor: '#f1f5f9',
-  },
   backBtn: { width: 40, height: 40, borderRadius: 12, backgroundColor: '#f1f5f9', justifyContent: 'center', alignItems: 'center' },
   headerTitle: { fontSize: 18, fontWeight: '800', color: '#1e293b' },
   searchBtn: { width: 40, height: 40, borderRadius: 12, backgroundColor: '#f1f5f9', justifyContent: 'center', alignItems: 'center' },

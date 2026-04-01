@@ -3,6 +3,7 @@ import React, { createContext, useContext, useState, ReactNode } from 'react';
 export interface UserProfile {
   name: string;
   role: string;
+  systemRole: 'admin' | 'hr' | 'employee';
   avatar: any;
   employeeId: string;
   email: string;
@@ -26,6 +27,7 @@ interface UserContextType {
 const defaultUser: UserProfile = {
   name: 'Sneha Desai',
   role: 'Senior Product Designer',
+  systemRole: 'employee',
   avatar: require('../assets/images/sneha.png'),
   employeeId: 'INF-9402',
   email: 'sneha.d@infiap.com',

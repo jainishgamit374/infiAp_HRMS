@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import Animated, { FadeInDown, FadeInRight } from 'react-native-reanimated';
 import { HRBottomNav } from '@/components/HRBottomNav';
+import Header from '@/components/layout/Header';
 
 import { useHR } from '@/context/HRContext';
 
@@ -17,21 +18,11 @@ export default function AttendanceCorrections() {
 
   return (
     <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <View style={styles.headerLeft}>
-          <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
-            <Ionicons name="apps-outline" size={24} color="#1f2937" />
-          </TouchableOpacity>
-          <View>
-            <Text style={styles.headerTitle}>InfiAP Corrections</Text>
-            <Text style={styles.headerSubtitle}>MANAGER PORTAL</Text>
-          </View>
-        </View>
-        <TouchableOpacity style={styles.bellBtn}>
-          <Ionicons name="notifications-outline" size={22} color="#1f2937" />
-        </TouchableOpacity>
-      </View>
+      <Header 
+        title="InfiAP Corrections"
+        subtitle="MANAGER PORTAL"
+        showBack={true}
+      />
 
       <View style={styles.banner}>
         <Text style={styles.bannerText}>Transform your workforce through innovation with AI-powered enterprise technology.</Text>
@@ -135,20 +126,6 @@ export default function AttendanceCorrections() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#ffffff' },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingTop: Platform.OS === 'ios' ? 60 : 40,
-    paddingBottom: 16,
-    backgroundColor: '#ffffff',
-  },
-  headerLeft: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  backBtn: { width: 40, height: 40, borderRadius: 12, backgroundColor: '#f3f4f6', justifyContent: 'center', alignItems: 'center' },
-  headerTitle: { fontSize: 16, fontWeight: '800', color: '#111827' },
-  headerSubtitle: { fontSize: 10, fontWeight: '700', color: '#6b7280', letterSpacing: 0.5 },
-  bellBtn: { width: 40, height: 40, borderRadius: 12, backgroundColor: '#ffffff', borderWidth: 1, borderColor: '#e5e7eb', justifyContent: 'center', alignItems: 'center' },
   
   banner: { paddingHorizontal: 20, paddingBottom: 16 },
   bannerText: { fontSize: 13, color: '#4b5563', lineHeight: 20, textAlign: 'center' },

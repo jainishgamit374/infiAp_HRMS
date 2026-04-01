@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform } from '
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { AdminBottomNav } from '../../components/AdminBottomNav';
+import Header from '../../components/layout/Header';
 
 const POLICIES = [
   { id: '1', title: 'Employee Handbook 2023', date: 'Oct 12, 2023', size: '2.4 MB' },
@@ -14,13 +15,10 @@ const POLICIES = [
 export default function Policies() {
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={24} color="#1e293b" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Company Policies</Text>
-        <View style={{ width: 40 }} />
-      </View>
+      <Header 
+        title="Company Policies"
+        showBack={true}
+      />
       <ScrollView contentContainerStyle={styles.scroll}>
         {POLICIES.map(p => (
           <TouchableOpacity key={p.id} style={styles.card}>
@@ -42,8 +40,6 @@ export default function Policies() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#f8fafc' },
-  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, paddingVertical: 16, backgroundColor: '#fff', paddingTop: Platform.OS === 'ios' ? 50 : 20, borderBottomWidth: 1, borderBottomColor: '#f1f5f9' },
-  backBtn: { width: 40, height: 40, borderRadius: 12, backgroundColor: '#f1f5f9', justifyContent: 'center', alignItems: 'center' },
   headerTitle: { fontSize: 18, fontWeight: '800', color: '#1e293b' },
   scroll: { padding: 20 },
   card: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#fff', padding: 16, borderRadius: 20, marginBottom: 12, borderWidth: 1, borderColor: '#f1f5f9' },

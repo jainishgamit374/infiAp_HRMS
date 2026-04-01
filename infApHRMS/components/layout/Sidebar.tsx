@@ -26,22 +26,45 @@ import { useUser } from '../../context/UserContext';
 const { width, height } = Dimensions.get('window');
 const SIDEBAR_WIDTH = width * 0.75;
 
-const MENU_ITEMS = [
-  { icon: 'grid-outline', label: 'Dashboard', route: '/(employee)/' },
-  { icon: 'person-outline', label: 'My Profile', route: '/(employee)/profile' },
-  { icon: 'calendar-outline', label: 'Leave Management', route: '/(employee)/leave' },
-  { icon: 'time-outline', label: 'Attendance', route: '/(employee)/attendance' },
-  { icon: 'cash-outline', label: 'Payroll', route: '/(employee)/payroll' },
-  { icon: 'trending-up-outline', label: 'Performance', route: '/(employee)/performance' },
-  { icon: 'notifications-outline', label: 'Notifications', route: '/(employee)/notifications' },
-  { icon: 'settings-outline', label: 'Settings', route: '/(employee)/profile-settings' },
-];
+const MENU_CONFIG = {
+  employee: [
+    { icon: 'grid-outline', label: 'Dashboard', route: '/(employee)/' },
+    { icon: 'person-outline', label: 'My Profile', route: '/(employee)/profile' },
+    { icon: 'calendar-outline', label: 'Leave Management', route: '/(employee)/leave' },
+    { icon: 'time-outline', label: 'Attendance', route: '/(employee)/attendance' },
+    { icon: 'cash-outline', label: 'Payroll', route: '/(employee)/payroll' },
+    { icon: 'trending-up-outline', label: 'Performance', route: '/(employee)/performance' },
+    { icon: 'notifications-outline', label: 'Notifications', route: '/(employee)/notifications' },
+    { icon: 'settings-outline', label: 'Settings', route: '/(employee)/profile-settings' },
+  ],
+  hr: [
+    { icon: 'grid-outline', label: 'Dashboard', route: '/(hr)/' },
+    { icon: 'person-outline', label: 'My Profile', route: '/(hr)/profile' },
+    { icon: 'people-outline', label: 'Employees', route: '/(hr)/employee-management' },
+    { icon: 'calendar-outline', label: 'Leaves', route: '/(hr)/leave' },
+    { icon: 'time-outline', label: 'Attendance', route: '/(hr)/attendance' },
+    { icon: 'briefcase-outline', label: 'Recruitment', route: '/(hr)/recruitment' },
+    { icon: 'cash-outline', label: 'Finance', route: '/(hr)/finance' },
+    { icon: 'settings-outline', label: 'Analytics', route: '/(hr)/analytics' },
+  ],
+  admin: [
+    { icon: 'grid-outline', label: 'Dashboard', route: '/(admin)/' },
+    { icon: 'person-outline', label: 'My Profile', route: '/(admin)/profile' },
+    { icon: 'business-outline', label: 'Departments', route: '/(admin)/departments' },
+    { icon: 'people-outline', label: 'User Management', route: '/(admin)/users' },
+    { icon: 'settings-outline', label: 'System Settings', route: '/(admin)/settings' },
+    { icon: 'shield-outline', label: 'Security', route: '/(admin)/security' },
+    { icon: 'notifications-outline', label: 'Notifications', route: '/(admin)/notifications' },
+  ]
+};
 
 const Sidebar = () => {
   const { isOpen, closeSidebar } = useSidebar();
   const { user } = useUser();
   const pathname = usePathname();
   const translateX = useSharedValue(-SIDEBAR_WIDTH);
+
+  const menuItems = MENU_CONFIG[user.systemRole] || MENU_CONFIG.employee;
 
   useEffect(() => {
     translateX.value = withSpring(isOpen ? 0 : -SIDEBAR_WIDTH, {
@@ -93,17 +116,21 @@ const Sidebar = () => {
           </TouchableOpacity>
         </View>
 
-        <View style={styles.userProfile}>
+        <TouchableOpacity 
+          style={styles.userProfile}
+          onPress={() => handleNavigate(`/${user.systemRole === 'admin' ? '(admin)' : user.systemRole === 'hr' ? '(hr)' : '(employee)'}/profile` as any)}
+        >
            <Image source={user.avatar} style={styles.userAvatar} />
            <View style={styles.userInfo}>
               <Text style={styles.userName}>{user.name}</Text>
               <Text style={styles.userRole}>{user.role}</Text>
            </View>
-        </View>
+           <Ionicons name="chevron-forward" size={16} color="#94a3b8" />
+        </TouchableOpacity>
 
         <View style={styles.menuContainer}>
-          {MENU_ITEMS.map((item, index) => {
-            const isActive = pathname === item.route || (item.route === '/(employee)/' && pathname === '/(employee)');
+          {menuItems.map((item, index) => {
+            const isActive = pathname === item.route || (item.route === `/${user.systemRole === 'admin' ? '(admin)' : user.systemRole === 'hr' ? '(hr)' : '(employee)'}/` && (pathname === `/${user.systemRole === 'admin' ? '(admin)' : user.systemRole === 'hr' ? '(hr)' : '(employee)'}` || pathname === `/${user.systemRole === 'admin' ? '(admin)' : user.systemRole === 'hr' ? '(hr)' : '(employee)'}/`));
             return (
               <TouchableOpacity
                 key={index}
@@ -178,9 +205,8 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   logo: {
-    width: 40,
-    height: 40,
-    borderRadius: 8,
+    width: 100,
+    height: 32,
   },
   appName: {
     fontSize: 18,

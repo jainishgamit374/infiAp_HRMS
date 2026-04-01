@@ -38,10 +38,10 @@ const NAV_ITEMS = [
     route: '/(hr)/finance'
   },
   {
-    icon: 'settings-outline',
-    activeIcon: 'settings',
-    label: 'Settings',
-    route: '/(hr)/analytics'
+    icon: 'person-outline',
+    activeIcon: 'person',
+    label: 'Profile',
+    route: '/(hr)/profile'
   },
 ];
 
@@ -99,7 +99,8 @@ export const HRBottomNav = () => {
             (item.route === '/(hr)/employee-management' && pathname.includes('employee') && !pathname.includes('add-employee')) ||
             (item.route === '/(hr)/add-employee' && pathname.includes('add-employee')) ||
             (item.route === '/(hr)/finance' && pathname.includes('finance')) ||
-            (item.route === '/(hr)/analytics' && pathname.includes('analytics'));
+            (item.route === '/(hr)/analytics' && pathname.includes('analytics')) ||
+            (item.route === '/(hr)/profile' && pathname.includes('profile'));
 
           return <NavItem key={i} item={item} isActive={isActive} />;
         })}
