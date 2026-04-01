@@ -106,4 +106,16 @@ router.post("/payroll/current", employeeController.getPayrollCurrent);
 router.post("/payroll/history", employeeController.getPayrollHistory);
 router.post("/payroll/details", employeeController.getPayrollDetails);
 
+// Performance Management Granular APIs (Reusable - POST for GET)
+router.post("/performance/current", employeeController.getEmployeePerformance);
+router.post("/performance/history", employeeController.getPerformanceHistory);
+router.post("/performance/dept-overview", employeeController.getDepartmentPerformanceOverview);
+router.post("/performance/monthly-overview", employeeController.getMonthlyPerformanceOverview);
+router.post("/performance/recent-achievements", employeeController.getRecentAchievementsList);
+router.post("/performance/breakdown", employeeController.getEmployeePerformanceBreakdownList);
+router.post("/performance/metrics", employeeController.getMonthlyPerformanceMetrics);
+router.post("/performance/kpis", employeeController.getMonthlyPerformanceKPIs);
+router.post("/performance/submit-review", employeeController.submitPerformanceReviewAction);
+router.post("/performance/review-details", employeeController.getPerformanceReviewDetailView);
+
 module.exports = router;

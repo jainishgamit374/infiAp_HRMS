@@ -1079,12 +1079,29 @@ exports.getPayrollCurrent = async (req, res) => {
 // 43. Get Salary History (POST for GET)
 exports.getPayrollHistory = async (req, res) => {
     try {
-        const history = [
-            { id: 1, month: "February 2026", netSalary: 58500, status: "Paid", paidAt: "01-Feb-2026" },
-            { id: 2, month: "January 2026", netSalary: 58500, status: "Paid", paidAt: "01-Jan-2026" },
-            { id: 3, month: "December 2025", netSalary: 62000, status: "Paid", paidAt: "01-Dec-2025" } // higher due to bonus
-        ];
-        res.status(200).json({ status: "Success", statusCode: 200, data: history });
+        const historyData = {
+            summary: {
+                totalYTD: 48250.00,
+                ytdGrowth: "+4.2% vs 2025",
+                avgNet: 6840.50,
+                avgPeriod: "Last 6 months"
+            },
+            trend: [
+                { month: "Oct", net: 6500 },
+                { month: "Nov", net: 6550 },
+                { month: "Dec", net: 7150 },
+                { month: "Jan", net: 6700 },
+                { month: "Feb", net: 6920 },
+                { month: "Mar", net: 6920 }
+            ],
+            paymentHistory: [
+                { id: 1, monthYear: "March 2026", gross: 8500.00, net: 6920.40, status: "Paid", paidAt: "Mar 30", downloadUrl: "/api/v1/payroll/download/2026-03" },
+                { id: 2, monthYear: "February 2026", gross: 8500.00, net: 6920.40, status: "Paid", paidAt: "Feb 28", downloadUrl: "/api/v1/payroll/download/2026-02" },
+                { id: 3, monthYear: "January 2026", gross: 8200.00, net: 6700.15, status: "Paid", paidAt: "Jan 30", downloadUrl: "/api/v1/payroll/download/2026-01" },
+                { id: 4, monthYear: "December 2025", gross: 8200.00, net: 7150.00, status: "Paid", paidAt: "Dec 20", downloadUrl: "/api/v1/payroll/download/2025-12" }
+            ]
+        };
+        res.status(200).json({ status: "Success", statusCode: 200, data: historyData });
     } catch (error) {
         res.status(500).json({ message: "Failed to fetch payroll history", error: error.message });
     }
@@ -1123,6 +1140,206 @@ exports.getPayrollDetails = async (req, res) => {
         res.status(500).json({ message: "Failed to fetch payslip details", error: error.message });
     }
 };
+
+// 45. Get Employee Performance (POST for GET)
+exports.getEmployeePerformance = async (req, res) => {
+    try {
+        const performanceData = {
+            monthlyScore: 88,
+            month: "March 2026",
+            coreMetrics: {
+                efficiency: 90,
+                quality: 85,
+                reliability: 92 // Substituted second 'quality' with 'reliability' for a comprehensive core
+            },
+            goalsTracking: [
+                { id: 1, title: "Complete Q1 Project Deliverables", progress: 100, status: "Completed" },
+                { id: 2, title: "Improve Code Review Time", progress: 75, status: "In Progress" },
+                { id: 3, title: "Learn New Framework", progress: 40, status: "In Progress" }
+            ],
+            feedback: [
+                { date: "15-Mar-2026", type: "Positive", message: "Great UI design implementations this sprint.", from: "Manager" }
+            ],
+            achievements: [
+                { date: "10-Mar-2026", title: "Employee of the Week", description: "Recognized for outstanding support." }
+            ]
+        };
+
+        res.status(200).json({ status: "Success", statusCode: 200, data: performanceData });
+    } catch (error) {
+        res.status(500).json({ message: "Failed to fetch performance data", error: error.message });
+    }
+};
+
+// 46. Get Employee Performance History (POST for GET)
+exports.getPerformanceHistory = async (req, res) => {
+    try {
+        const historyData = [
+            {
+                month: "February 2026",
+                review: "Consistent effort, minor delays in mid-month.",
+                improvements: ["Time management during peak loads."],
+                metrics: {
+                    overallPerformance: 85,
+                    projectPerformance: 88,
+                    workPerformance: 82
+                }
+            },
+            {
+                month: "January 2026",
+                review: "Excellent start to the year, exceeded targets.",
+                improvements: ["Proactive communication with cross-teams."],
+                metrics: {
+                    overallPerformance: 92,
+                    projectPerformance: 95,
+                    workPerformance: 89
+                }
+            },
+            {
+                month: "December 2025",
+                review: "Solid performance despite holiday season.",
+                improvements: ["Documentation detailing."],
+                metrics: {
+                    overallPerformance: 87,
+                    projectPerformance: 85,
+                    workPerformance: 89
+                }
+            }
+        ];
+
+        res.status(200).json({ status: "Success", statusCode: 200, data: historyData });
+    } catch (error) {
+        res.status(500).json({ message: "Failed to fetch performance history", error: error.message });
+    }
+};
+
+// 47. Get Department Performance Overview (POST for GET)
+exports.getDepartmentPerformanceOverview = async (req, res) => {
+    try {
+        const overview = {
+            averageTeamPerformance: 78,
+            topPerformer: { name: "Rajesh Kumar", score: 98, dept: "Engineering" },
+            taskPendingCount: 15,
+            reviewPendingCount: 4
+        };
+        res.status(200).json({ status: "Success", statusCode: 200, data: overview });
+    } catch (error) {
+        res.status(500).json({ message: "Failed to fetch department performance", error: error.message });
+    }
+};
+
+// 48. Get Monthly Performance Overview (POST for GET)
+exports.getMonthlyPerformanceOverview = async (req, res) => {
+    try {
+        const data = {
+            month: "March 2026",
+            overallScore: 82,
+            trend: "+3% vs February"
+        };
+        res.status(200).json({ status: "Success", statusCode: 200, data });
+    } catch (error) {
+        res.status(500).json({ message: "Failed to fetch monthly overview", error: error.message });
+    }
+};
+
+// 49. Get Recent Achievements (POST for GET)
+exports.getRecentAchievementsList = async (req, res) => {
+    try {
+        const achievements = [
+            { id: 1, employee: "Sneha Desai", title: "Project Guru", date: "Mar 25" },
+            { id: 2, employee: "Amit Shah", title: "Best Collaborator", date: "Mar 20" }
+        ];
+        res.status(200).json({ status: "Success", statusCode: 200, data: achievements });
+    } catch (error) {
+        res.status(500).json({ message: "Failed to fetch recent achievements", error: error.message });
+    }
+};
+
+// 50. Get Employee Performance Breakdown (POST for GET)
+exports.getEmployeePerformanceBreakdownList = async (req, res) => {
+    try {
+        const breakdown = [
+            {
+                name: "Amit Patel",
+                department: "Sales",
+                joiningDate: "12-Oct-2023",
+                email: "amit.patel@example.com",
+                performanceScore: 84
+            },
+            {
+                name: "Pooja Sharma",
+                department: "Finance",
+                joiningDate: "15-Jan-2024",
+                email: "pooja.sharma@example.com",
+                performanceScore: 91
+            }
+        ];
+        res.status(200).json({ status: "Success", statusCode: 200, data: breakdown });
+    } catch (error) {
+        res.status(500).json({ message: "Failed to fetch performance breakdown", error: error.message });
+    }
+};
+
+// 51. Get Monthly Performance Metrics (POST for GET)
+exports.getMonthlyPerformanceMetrics = async (req, res) => {
+    try {
+        const metrics = {
+            taskCompletionRate: 88, // %
+            goalAchievedRate: 92, // %
+            attendancePercentage: 98 // %
+        };
+        res.status(200).json({ status: "Success", statusCode: 200, data: metrics });
+    } catch (error) {
+        res.status(500).json({ message: "Failed to fetch performance metrics", error: error.message });
+    }
+};
+
+// 52. Get Monthly Performance KPIs (POST for GET)
+exports.getMonthlyPerformanceKPIs = async (req, res) => {
+    try {
+        const kpis = [
+            { name: "Code Quality", score: 8.5 },
+            { name: "Leadership", score: 7.0 },
+            { name: "Communication", score: 9.0 }
+        ];
+        res.status(200).json({ status: "Success", statusCode: 200, data: kpis });
+    } catch (error) {
+        res.status(500).json({ message: "Failed to fetch performance KPIs", error: error.message });
+    }
+};
+
+// 53. Submit Monthly Performance Review (POST)
+exports.submitPerformanceReviewAction = async (req, res) => {
+    try {
+        const { employeeName, department, reviewMonth, rating, strategy, improvement, comments } = req.body;
+        // In real backend, save to Database
+        res.status(200).json({
+            status: "Success",
+            message: `Performance review for ${employeeName} for ${reviewMonth} submitted successfully.`
+        });
+    } catch (error) {
+        res.status(500).json({ message: "Failed to submit review", error: error.message });
+    }
+};
+
+// 54. Get Individual Performance Review Details (POST for GET)
+exports.getPerformanceReviewDetailView = async (req, res) => {
+    try {
+        const details = {
+            employee: "Priya Rao",
+            month: "March 2026",
+            rating: 4.5,
+            review: "Great month, proactive in all tasks.",
+            improvement: "Detailed documentation for the mobile sprint.",
+            tip: "Keep leading the frontend sync meetings."
+        };
+        res.status(200).json({ status: "Success", statusCode: 200, data: details });
+    } catch (error) {
+        res.status(500).json({ message: "Failed to fetch review details", error: error.message });
+    }
+};
+
+
 
 
 
