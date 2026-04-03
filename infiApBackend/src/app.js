@@ -50,12 +50,14 @@ const authRouter = require("./routes/auth.routes");
 const mainAdminRouter = require("./routes/mainAdmin.routes");
 const employeeRouter = require("./routes/employee.routes");
 const leaveRouter = require("./routes/leave.routes");
+const hrRouter = require("./routes/hr.routes");
 
 // Routes Declaration
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/main-admin", mainAdminRouter);
 app.use("/api/v1", employeeRouter);
 app.use("/api/v1", leaveRouter);
+app.use("/api/v1/hr", hrRouter);
 
 // Basic health check
 app.get("/", (req, res) => {

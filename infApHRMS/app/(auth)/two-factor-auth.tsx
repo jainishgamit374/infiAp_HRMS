@@ -1,9 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Animated, Easing, Platform, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Animated, Easing, Platform, Image, Dimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Link, router, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useUser } from '../../context/UserContext';
+import { LinearGradient } from 'expo-linear-gradient';
+import * as Haptics from 'expo-haptics';
+
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 const ROLE_DASHBOARD_MAP: Record<string, string> = {
   employee: '/(employee)/',
@@ -31,6 +35,16 @@ export default function TwoFactorAuth() {
 
   const progressWidth = useRef(new Animated.Value(0)).current;
   const checkmarkScale = useRef(new Animated.Value(0)).current;
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  // Initial fade-in animation
+  useEffect(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 800,
+      useNativeDriver: true,
+    }).start();
+  }, []);
 
   // Handle countdown timer
   useEffect(() => {
@@ -44,6 +58,7 @@ export default function TwoFactorAuth() {
   }, [timer, isSuccess]);
 
   const handleKeyPress = (key: string) => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     if (key === 'backspace') {
       setCode((prev) => prev.slice(0, -1));
     } else if (code.length < CODE_LENGTH) {
@@ -54,6 +69,7 @@ export default function TwoFactorAuth() {
   const handleVerify = () => {
     if (code.length !== CODE_LENGTH) return;
     
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     setIsVerifying(true);
     
     // Simulate API call
@@ -110,10 +126,10 @@ export default function TwoFactorAuth() {
                   key={key}
                   style={styles.numpadKey}
                   onPress={() => handleKeyPress(key)}
-                  activeOpacity={0.7}
+                  activeOpacity={0.6}
                 >
                   {isBackspace ? (
-                    <Ionicons name="backspace-outline" size={28} color="#374151" />
+                    <Ionicons name="backspace-outline" size={28} color="#4b5563" />
                   ) : (
                     <Text style={styles.numpadText}>{key}</Text>
                   )}
@@ -128,9 +144,12 @@ export default function TwoFactorAuth() {
 
   if (isSuccess) {
     return (
-      <SafeAreaView style={styles.container}>
-        <View style={{ marginTop: 4 }} />
-        <View style={styles.cardCenter}>
+      <SafeAreaView style={styles.safeContainer}>
+        <LinearGradient
+          colors={['#f8faff', '#f1f5f9']}
+          style={StyleSheet.absoluteFill}
+        />
+        <Animated.View style={[styles.cardContainer, { opacity: fadeAnim, transform: [{ scale: fadeAnim }] }]}>
           <View style={styles.successContent}>
             <View style={styles.successIconOuter}>
               <Animated.View style={[styles.successIconInner, { transform: [{ scale: checkmarkScale }] }]}>
@@ -138,17 +157,16 @@ export default function TwoFactorAuth() {
               </Animated.View>
             </View>
             
-            <Text style={styles.successTitle}>Verification Successful</Text>
+            <Text style={styles.successTitle}>Verified!</Text>
             <Text style={styles.successSubtitle}>
-              Your identity has been verified.{'\n'}Redirecting you to your {dashboardLabel.toLowerCase()}...
+              Authenticating your {dashboardLabel.toLowerCase()} session...
             </Text>
 
-            {/* Role Badge */}
             <View style={styles.roleBadge}>
               <Ionicons name={
                 role === 'hr' ? 'people' : role === 'admin' ? 'shield-checkmark' : 'person'
               } size={14} color="#5a55d2" />
-              <Text style={styles.roleBadgeText}>Signing in as {role === 'hr' ? 'HR' : role.charAt(0).toUpperCase() + role.slice(1)}</Text>
+              <Text style={styles.roleBadgeText}>Signing in as {role.charAt(0).toUpperCase() + role.slice(1)}</Text>
             </View>
 
             <View style={styles.progressBarContainer}>
@@ -163,29 +181,36 @@ export default function TwoFactorAuth() {
               onPress={() => router.replace(dashboardRoute as any)}
               activeOpacity={0.8}
             >
-              <Text style={styles.continueButtonText}>Continue to {dashboardLabel}</Text>
+              <Text style={styles.continueButtonText}>Enter Dashboard</Text>
+              <Ionicons name="enter-outline" size={20} color="#fff" style={{ marginLeft: 8 }} />
             </TouchableOpacity>
-            
-            <Text style={styles.securityText}>Security by InfiAP Auth Engine</Text>
-            <View style={styles.bottomGradientLine} />
           </View>
-        </View>
+        </Animated.View>
       </SafeAreaView>
     );
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={{ marginTop: 4 }} />
-      <View style={styles.cardFull}>
-        {/* Header Icon */}
-        <View style={styles.headerIconContainer}>
-          <Ionicons name="shield-checkmark-outline" size={24} color="#5a55d2" />
+    <SafeAreaView style={styles.safeContainer}>
+      <LinearGradient
+        colors={['#f1f5ff', '#e2e8f0']}
+        style={StyleSheet.absoluteFill}
+      />
+      
+      <Animated.View style={[styles.cardContainer, { opacity: fadeAnim }]}>
+        {/* Header Icon Section */}
+        <View style={styles.headerIconWrapper}>
+          <LinearGradient
+            colors={['#6366f1', '#4f46e5']}
+            style={styles.headerIconGradient}
+          >
+            <Ionicons name="shield-checkmark" size={24} color="#fff" />
+          </LinearGradient>
         </View>
 
-        <Text style={styles.title}>Two-Factor{'\n'}Authentication</Text>
+        <Text style={styles.title}>Secure Login</Text>
         <Text style={styles.subtitle}>
-          A 6-digit code has been sent to your{'\n'}mobile device or email. Please enter it{'\n'}below to verify your identity.
+          We've sent a 6-digit verification code to your device. Please enter it below.
         </Text>
 
         {/* Code Input Boxes */}
@@ -202,31 +227,41 @@ export default function TwoFactorAuth() {
               <Text style={styles.codeText}>
                 {code[index] || ''}
               </Text>
+              {code.length === index && !isSuccess && (
+                <View style={styles.cursor} />
+              )}
             </View>
           ))}
         </View>
 
         {/* Verify Button */}
         <TouchableOpacity 
-          style={[styles.verifyButton, code.length !== CODE_LENGTH && styles.verifyButtonDisabled]} 
+          style={[styles.verifyButton, (code.length !== CODE_LENGTH || isVerifying) && styles.verifyButtonDisabled]} 
           onPress={handleVerify}
           disabled={code.length !== CODE_LENGTH || isVerifying}
           activeOpacity={0.8}
         >
-          <Text style={styles.verifyButtonText}>
-            {isVerifying ? 'Verifying...' : 'Verify & Continue'}
-          </Text>
-          {!isVerifying && <Ionicons name="arrow-forward" size={18} color="#fff" style={styles.verifyButtonIcon} />}
+          {isVerifying ? (
+            <Text style={styles.verifyButtonText}>Securing...</Text>
+          ) : (
+            <>
+              <Text style={styles.verifyButtonText}>Verify Account</Text>
+              <Ionicons name="finger-print-outline" size={20} color="#fff" style={styles.verifyButtonIcon} />
+            </>
+          )}
         </TouchableOpacity>
 
-        {/* Resend Code */}
-        <View style={styles.resendContainer}>
-          <Text style={styles.resendText}>Didn't receive a code? </Text>
+        {/* Resend Code Section */}
+        <View style={styles.resendWrapper}>
+          <Text style={styles.resendInfo}>Didn't get code? </Text>
           {timer > 0 ? (
-            <Text style={styles.timerText}>Resend in 00:{timer.toString().padStart(2, '0')}</Text>
+            <Text style={styles.timerInfo}>Wait {timer}s</Text>
           ) : (
-            <TouchableOpacity onPress={() => setTimer(54)}>
-              <Text style={styles.resendLink}>Resend Code</Text>
+            <TouchableOpacity onPress={() => {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+              setTimer(54);
+            }}>
+              <Text style={styles.resendAction}>Resend Now</Text>
             </TouchableOpacity>
           )}
         </View>
@@ -234,165 +269,176 @@ export default function TwoFactorAuth() {
         {/* Numpad */}
         {renderNumpad()}
 
-        {/* Back to Sign In */}
-        <View style={styles.footer}>
+        {/* Elegant Footer with Back Button */}
+        <View style={styles.elegantFooter}>
           <Link href="/(auth)/sign-in" asChild>
-            <TouchableOpacity style={styles.backButton}>
-              <Ionicons name="arrow-back" size={16} color="#6b7280" />
-              <Text style={styles.backButtonText}>Back to Sign In</Text>
+            <TouchableOpacity 
+              style={styles.elegantBackButton}
+              activeOpacity={0.6}
+              onPress={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
+            >
+              <View style={styles.backButtonIconCircle}>
+                <Ionicons name="chevron-back" size={18} color="#6366f1" />
+              </View>
+              <Text style={styles.elegantBackButtonText}>Back to Sign In</Text>
             </TouchableOpacity>
           </Link>
         </View>
-      </View>
+      </Animated.View>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  safeContainer: {
     flex: 1,
-    backgroundColor: '#f5f7fa',
-    justifyContent: 'center',
-    padding: 16,
+    backgroundColor: '#fff',
   },
-  cardFull: {
+  cardContainer: {
     flex: 1,
     backgroundColor: '#ffffff',
-    borderRadius: 24,
-    paddingHorizontal: 24,
-    paddingTop: 40,
+    marginHorizontal: 16,
+    marginVertical: 12,
+    borderRadius: 36,
+    paddingTop: 32,
     alignItems: 'center',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.05,
-    shadowRadius: 10,
-    elevation: 2,
+    shadowOffset: { width: 0, height: 12 },
+    shadowOpacity: 0.12,
+    shadowRadius: 24,
+    elevation: 8,
     overflow: 'hidden',
   },
-  cardCenter: {
-    backgroundColor: '#ffffff',
-    borderRadius: 24,
-    paddingHorizontal: 24,
-    paddingTop: 40,
-    paddingBottom: 0,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.05,
-    shadowRadius: 10,
-    elevation: 2,
-    overflow: 'hidden',
+  headerIconWrapper: {
+    marginBottom: 16,
   },
-  headerIconContainer: {
-    width: 48,
-    height: 48,
-    borderRadius: 12,
-    backgroundColor: '#eff0fe',
+  headerIconGradient: {
+    width: 60,
+    height: 60,
+    borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 24,
+    shadowColor: '#4f46e5',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.35,
+    shadowRadius: 10,
   },
   title: {
-    fontSize: 24,
-    fontWeight: '700',
-    color: '#111827',
+    fontSize: 28,
+    fontWeight: '800',
+    color: '#0f172a',
     textAlign: 'center',
-    marginBottom: 12,
-    lineHeight: 32,
+    marginBottom: 6,
+    letterSpacing: -0.8,
   },
   subtitle: {
     fontSize: 14,
-    color: '#6b7280',
+    color: '#64748b',
     textAlign: 'center',
-    lineHeight: 22,
-    marginBottom: 32,
+    lineHeight: 20,
+    marginBottom: 26,
+    paddingHorizontal: 30,
   },
   codeContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     width: '100%',
-    marginBottom: 32,
+    paddingHorizontal: 20,
+    gap: 8,
+    marginBottom: 24,
   },
   codeBox: {
-    width: 45,
-    height: 55,
-    borderWidth: 1,
-    borderColor: '#e5e7eb',
-    borderRadius: 8,
+    flex: 1,
+    maxWidth: 46,
+    height: 58,
+    borderWidth: 2,
+    borderColor: '#f1f5f9',
+    borderRadius: 14,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#ffffff',
+    backgroundColor: '#f8fafc',
   },
   codeBoxActive: {
-    borderColor: '#5a55d2',
-    borderWidth: 2,
+    borderColor: '#6366f1',
+    backgroundColor: '#fff',
+    shadowColor: '#6366f1',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.15,
+    shadowRadius: 12,
   },
   codeBoxFilled: {
-    borderColor: '#e5e7eb',
+    borderColor: '#6366f1',
+    backgroundColor: '#fff',
   },
   codeText: {
     fontSize: 24,
-    fontWeight: '600',
-    color: '#111827',
+    fontWeight: '700',
+    color: '#1e293b',
+  },
+  cursor: {
+    width: 2,
+    height: 24,
+    backgroundColor: '#6366f1',
+    position: 'absolute',
   },
   verifyButton: {
-    backgroundColor: '#5a55d2',
-    borderRadius: 12,
-    height: 52,
-    width: '100%',
+    backgroundColor: '#6366f1',
+    borderRadius: 18,
+    height: 56,
+    width: SCREEN_WIDTH * 0.8,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 20,
-    shadowColor: '#5a55d2',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    elevation: 4,
+    marginBottom: 16,
+    shadowColor: '#6366f1',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.3,
+    shadowRadius: 12,
+    elevation: 6,
   },
   verifyButtonDisabled: {
-    backgroundColor: '#a5a3e8',
+    backgroundColor: '#c7d2fe',
     shadowOpacity: 0,
     elevation: 0,
   },
   verifyButtonText: {
     color: '#ffffff',
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: '700',
+    letterSpacing: 0.5,
   },
   verifyButtonIcon: {
-    marginLeft: 8,
+    marginLeft: 10,
   },
-  resendContainer: {
+  resendWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 8,
+    marginBottom: 12,
   },
-  resendText: {
-    fontSize: 14,
-    color: '#6b7280',
+  resendInfo: {
+    fontSize: 13,
+    color: '#64748b',
   },
-  timerText: {
-    fontSize: 14,
-    color: '#9ca3af',
+  timerInfo: {
+    fontSize: 13,
+    color: '#94a3b8',
+    fontWeight: '600',
   },
-  resendLink: {
-    fontSize: 14,
-    color: '#5a55d2',
-    fontWeight: '500',
-    textDecorationLine: 'underline',
+  resendAction: {
+    fontSize: 13,
+    color: '#6366f1',
+    fontWeight: '700',
   },
   numpadContainer: {
     width: '100%',
-    flex: 1,
-    justifyContent: 'center',
-    marginTop: 16,
+    paddingHorizontal: 20,
+    marginBottom: 10,
   },
   numpadRow: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginBottom: 24,
+    justifyContent: 'space-between',
+    marginBottom: 8,
   },
   numpadKey: {
     width: '30%',
@@ -401,141 +447,135 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   numpadText: {
-    fontSize: 28,
-    fontWeight: '500',
-    color: '#111827',
+    fontSize: 26,
+    fontWeight: '600',
+    color: '#1e293b',
   },
-  footer: {
-    alignSelf: 'stretch',
-    alignItems: 'center',
-    paddingTop: 16,
-    borderTopWidth: 1,
-    borderTopColor: '#f3f4f6',
+  elegantFooter: {
+    width: '100%',
     marginTop: 'auto',
-    marginHorizontal: -24,
-    backgroundColor: '#fafafa',
-    paddingBottom: Platform.OS === 'ios' ? 24 : 16,
+    borderTopWidth: 1,
+    borderTopColor: '#f1f5f9',
+    backgroundColor: '#f8fafc',
+    paddingVertical: 18,
+    paddingBottom: Platform.OS === 'ios' ? 40 : 24,
+    alignItems: 'center',
   },
-  backButton: {
+  elegantBackButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 12,
+    backgroundColor: '#fff',
+    paddingHorizontal: 18,
+    paddingVertical: 8,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#e2e8f0',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.04,
+    shadowRadius: 4,
+    elevation: 2,
   },
-  backButtonText: {
-    marginLeft: 8,
-    fontSize: 14,
-    color: '#6b7280',
-    fontWeight: '500',
-  },
-  
-  // Success View Styles
-  successHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
+  backButtonIconCircle: {
+    width: 26,
+    height: 26,
+    borderRadius: 13,
+    backgroundColor: '#eff6ff',
     justifyContent: 'center',
-    marginBottom: 24,
-    marginTop: 20,
+    alignItems: 'center',
+    marginRight: 8,
   },
-  headerLogo: {
-    width: 320,
-    height: 90,
+  elegantBackButtonText: {
+    fontSize: 14,
+    color: '#475569',
+    fontWeight: '600',
   },
   successContent: {
+    flex: 1,
     alignItems: 'center',
+    justifyContent: 'center',
     width: '100%',
+    paddingHorizontal: 24,
   },
   successIconOuter: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    backgroundColor: '#e6fcf5',
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    backgroundColor: '#ecfdf5',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 32,
+    marginBottom: 20,
   },
   successIconInner: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: '#20c997',
+    width: 70,
+    height: 70,
+    borderRadius: 35,
+    backgroundColor: '#10b981',
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#20c997',
-    shadowOffset: { width: 0, height: 8 },
+    shadowColor: '#10b981',
+    shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.3,
-    shadowRadius: 16,
-    elevation: 8,
+    shadowRadius: 10,
   },
   successTitle: {
-    fontSize: 24,
-    fontWeight: '700',
-    color: '#111827',
-    marginBottom: 12,
+    fontSize: 32,
+    fontWeight: '800',
+    color: '#0f172a',
+    marginBottom: 10,
   },
   successSubtitle: {
-    fontSize: 14,
-    color: '#6b7280',
+    fontSize: 16,
+    color: '#64748b',
     textAlign: 'center',
-    lineHeight: 22,
-    marginBottom: 20,
+    lineHeight: 24,
+    marginBottom: 24,
   },
   roleBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#f0f0ff',
+    backgroundColor: '#f5f3ff',
     borderRadius: 20,
     paddingHorizontal: 16,
     paddingVertical: 8,
-    gap: 6,
-    marginBottom: 24,
+    gap: 8,
+    marginBottom: 30,
   },
   roleBadgeText: {
-    color: '#5a55d2',
-    fontSize: 13,
-    fontWeight: '600',
+    color: '#5b21b6',
+    fontSize: 14,
+    fontWeight: '700',
   },
   progressBarContainer: {
-    width: '100%',
-    height: 4,
-    backgroundColor: '#f3f4f6',
-    borderRadius: 2,
+    width: '85%',
+    height: 6,
+    backgroundColor: '#f1f5f9',
+    borderRadius: 3,
     marginBottom: 40,
     overflow: 'hidden',
   },
   progressBarFill: {
     height: '100%',
-    backgroundColor: '#5a55d2',
-    borderRadius: 2,
+    backgroundColor: '#6366f1',
+    borderRadius: 3,
   },
   continueButton: {
-    backgroundColor: '#5a55d2',
-    borderRadius: 12,
-    height: 52,
+    backgroundColor: '#0f172a',
+    borderRadius: 20,
+    height: 60,
     width: '100%',
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 24,
-    shadowColor: '#5a55d2',
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    elevation: 4,
+    shadowOpacity: 0.25,
+    shadowRadius: 10,
   },
   continueButtonText: {
     color: '#ffffff',
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: 17,
+    fontWeight: '700',
   },
-  securityText: {
-    fontSize: 12,
-    color: '#9ca3af',
-    marginBottom: 24,
-  },
-  bottomGradientLine: {
-    height: 4,
-    width: '120%', 
-    backgroundColor: '#5a55d2',
-    position: 'absolute',
-    bottom: 0,
-  }
 });
