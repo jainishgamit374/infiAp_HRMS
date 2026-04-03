@@ -60,7 +60,7 @@ export default function AttendanceLogging() {
   };
 
   return (
-    <SafeAreaView style={styles.root}>
+    <View style={styles.root}>
       <Header 
         title="Attendance Logging" 
         showBack={true} 
@@ -184,7 +184,7 @@ export default function AttendanceLogging() {
       </ScrollView>
 
       <BottomNav />
-    </SafeAreaView>
+    </View>
   );
 }
 

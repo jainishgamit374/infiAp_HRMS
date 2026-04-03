@@ -14,6 +14,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import Animated, { FadeInDown, FadeIn, ZoomIn, SlideInDown } from 'react-native-reanimated';
 import { AdminBottomNav } from '../../components/AdminBottomNav';
+import Header from '../../components/layout/Header';
 
 const JOBS = [
   { id: 'j1', title: 'Senior React Native Developer', dept: 'Engineering', type: 'Full-time', status: 'Active', applicants: 12, exp: '5+ years', salary: '$120k - $150k' },
@@ -47,15 +48,10 @@ export default function JobPosting() {
 
   return (
     <View style={styles.mainContainer}>
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={24} color="#1e293b" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Job Posting</Text>
-        <TouchableOpacity style={styles.searchBtn}>
-          <Ionicons name="search-outline" size={22} color="#64748b" />
-        </TouchableOpacity>
-      </View>
+      <Header 
+        title="Job Posting"
+        showBack={true}
+      />
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         <Animated.View entering={FadeInDown.duration(400)}>
@@ -139,7 +135,7 @@ const styles = StyleSheet.create({
   backBtn: { width: 40, height: 40, borderRadius: 12, backgroundColor: '#f1f5f9', justifyContent: 'center', alignItems: 'center' },
   headerTitle: { fontSize: 18, fontWeight: '800', color: '#1e293b' },
   searchBtn: { width: 40, height: 40, borderRadius: 12, backgroundColor: '#f1f5f9', justifyContent: 'center', alignItems: 'center' },
-  scrollContent: { padding: 16 },
+  scrollContent: { paddingHorizontal: 16, paddingBottom: 16, paddingTop: 6 },
   jobCard: { backgroundColor: '#fff', borderRadius: 20, padding: 20, marginBottom: 16, borderWidth: 1, borderColor: '#f1f5f9' },
   jobHeader: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 16 },
   jobTitle: { fontSize: 16, fontWeight: '800', color: '#1e293b' },
@@ -154,7 +150,7 @@ const styles = StyleSheet.create({
   jobStatText: { fontSize: 12, fontWeight: '600', color: '#64748b' },
   jobAction: { flexDirection: 'row', alignItems: 'center', gap: 6, alignSelf: 'flex-start' },
   jobActionText: { fontSize: 14, fontWeight: '700', color: '#4f46e5' },
-  fabContainer: { position: 'absolute', bottom: 100, right: 20 },
+  fabContainer: { position: 'absolute', bottom: 130, right: 20 },
   fab: { backgroundColor: '#10b981', flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingVertical: 14, borderRadius: 30, gap: 8, elevation: 5 },
   fabText: { color: '#fff', fontSize: 15, fontWeight: '700' },
   modalOverlay: { flex: 1, justifyContent: 'flex-end' },

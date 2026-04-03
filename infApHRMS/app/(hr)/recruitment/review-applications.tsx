@@ -22,7 +22,7 @@ export default function ReviewApplications() {
         title="Review Applications"
         showBack={true}
       />
-      <View style={{ paddingHorizontal: 20, paddingBottom: 16 }}>
+      <View style={{ paddingHorizontal: 20, paddingTop: 10, paddingBottom: 16 }}>
         <View style={styles.statsRow}>
            <View style={styles.statChip}>
              <Text style={styles.statChipValue}>12</Text>

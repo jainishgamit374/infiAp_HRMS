@@ -86,7 +86,7 @@ const TimelineCard = ({ data, index }: { data: typeof HISTORY_DATA[0], index: nu
 
 export default function PerformanceHistory() {
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <StatusBar barStyle="dark-content" />
       
       {/* Unified Header */}
@@ -160,7 +160,7 @@ export default function PerformanceHistory() {
         <View style={{ height: 100 }} />
       </ScrollView>
       <BottomNav />
-    </SafeAreaView>
+    </View>
   );
 }
 

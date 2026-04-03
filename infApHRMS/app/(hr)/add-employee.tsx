@@ -106,7 +106,6 @@ const AddEmployee = () => {
     <View style={{ flex: 1, backgroundColor: '#fff' }}>
       <Header 
         title="Add Employee" 
-        subtitle="Register new staff member"
         showBack={true} 
       />
       <KeyboardAvoidingView
@@ -186,7 +185,7 @@ const styles = StyleSheet.create({
   },
   content: {
     paddingHorizontal: 20,
-    paddingTop: 20,
+    paddingTop: 10,
     paddingBottom: 120,
   },
   photoSection: {

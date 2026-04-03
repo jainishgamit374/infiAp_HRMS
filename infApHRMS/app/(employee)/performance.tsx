@@ -117,7 +117,7 @@ const PerformanceBar = ({ item, index }: any) => {
 
 export default function PerformanceDashboard() {
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <StatusBar barStyle="dark-content" />
       
       <Header title="Performance" showBack={true} />
@@ -253,7 +253,7 @@ export default function PerformanceDashboard() {
         <View style={{ height: 100 }} />
       </ScrollView>
       <BottomNav />
-    </SafeAreaView>
+    </View>
   );
 }
 

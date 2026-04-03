@@ -55,6 +55,13 @@ const ALERTS = [
 ];
 
 export default function SystemAlerts() {
+  const [activeTab, setActiveTab] = React.useState('All');
+
+  const filteredAlerts = ALERTS.filter(alert => {
+    if (activeTab === 'All') return true;
+    return alert.type.toLowerCase() === activeTab.toLowerCase();
+  });
+
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
@@ -88,58 +95,77 @@ export default function SystemAlerts() {
         {/* Stats Grid */}
         <View style={styles.statsGrid}>
           {STATS.map((stat, idx) => (
-            <View key={idx} style={styles.statCard}>
+            <TouchableOpacity 
+              key={idx} 
+              style={styles.statCard}
+              onPress={() => setActiveTab(stat.sub === 'TOTAL' ? 'All' : stat.sub.charAt(0) + stat.sub.slice(1).toLowerCase())}
+            >
               <Text style={styles.statTiny}>{stat.sub}</Text>
               <Text style={[styles.statValue, { color: stat.color }]}>{stat.label}</Text>
-            </View>
+            </TouchableOpacity>
           ))}
         </View>
 
         {/* Tabs Filter */}
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.tabsScroll}>
-          {['All', 'Critical', 'Warning', 'Info', 'Resolved'].map((tab, idx) => (
-            <TouchableOpacity key={tab} style={[styles.tab, idx === 0 && styles.activeTab]}>
-              <Text style={[styles.tabText, idx === 0 && styles.activeTabText]}>{tab}</Text>
-            </TouchableOpacity>
-          ))}
+          {['All', 'Critical', 'Warning', 'Info', 'Resolved'].map((tab) => {
+            const isActive = activeTab === tab;
+            return (
+              <TouchableOpacity 
+                key={tab} 
+                style={[styles.tab, isActive && styles.activeTab]}
+                onPress={() => setActiveTab(tab)}
+                activeOpacity={0.7}
+              >
+                <Text style={[styles.tabText, isActive && styles.activeTabText]}>{tab}</Text>
+              </TouchableOpacity>
+            );
+          })}
         </ScrollView>
 
         {/* Alert List */}
-        {ALERTS.map((alert, idx) => (
-          <Animated.View
-            key={alert.id}
-            entering={FadeInDown.delay(idx * 100).springify()}
-            style={[styles.alertCard, { borderLeftColor: alert.color }]}
-          >
-            <View style={styles.alertHeader}>
-              <View style={styles.typeRow}>
-                <Ionicons name="flash" size={12} color={alert.color} />
-                <Text style={[styles.typeText, { color: alert.color }]}>{alert.type}</Text>
+        {filteredAlerts.length > 0 ? (
+          filteredAlerts.map((alert, idx) => (
+            <Animated.View
+              key={alert.id}
+              entering={FadeInDown.delay(idx * 100).springify()}
+              style={[styles.alertCard, { borderLeftColor: alert.color }]}
+            >
+              <View style={styles.alertHeader}>
+                <View style={styles.typeRow}>
+                  <Ionicons name="flash" size={12} color={alert.color} />
+                  <Text style={[styles.typeText, { color: alert.color }]}>{alert.type}</Text>
+                </View>
+                <Text style={styles.timeText}>{alert.time}</Text>
               </View>
-              <Text style={styles.timeText}>{alert.time}</Text>
-            </View>
 
-            <Text style={styles.alertTitle}>{alert.title}</Text>
-            <Text style={styles.alertDesc}>{alert.desc}</Text>
+              <Text style={styles.alertTitle}>{alert.title}</Text>
+              <Text style={styles.alertDesc}>{alert.desc}</Text>
 
-            <View style={styles.actionRow}>
-              {alert.actions.map((action, actionIdx) => (
-                <TouchableOpacity 
-                  key={actionIdx} 
-                  style={[styles.actionBtn, actionIdx === 0 && styles.primaryAction]}
-                >
-                  <Ionicons name={action.includes('Logs') ? 'albums-outline' : action.includes('Restart') ? 'refresh-outline' : 'open-outline'} size={14} color={actionIdx === 0 ? '#fff' : '#1e293b'} />
-                  <Text style={[styles.actionText, actionIdx === 0 && styles.primaryActionText]}>{action}</Text>
-                </TouchableOpacity>
-              ))}
-              {alert.type === 'CRITICAL' && (
-                <TouchableOpacity style={styles.acknowledgeBtn}>
-                  <Text style={styles.acknowledgeText}>Acknowledge</Text>
-                </TouchableOpacity>
-              )}
-            </View>
-          </Animated.View>
-        ))}
+              <View style={styles.actionRow}>
+                {alert.actions.map((action, actionIdx) => (
+                  <TouchableOpacity 
+                    key={actionIdx} 
+                    style={[styles.actionBtn, actionIdx === 0 && styles.primaryAction]}
+                  >
+                    <Ionicons name={action.includes('Logs') ? 'albums-outline' : action.includes('Restart') ? 'refresh-outline' : 'open-outline'} size={14} color={actionIdx === 0 ? '#fff' : '#1e293b'} />
+                    <Text style={[styles.actionText, actionIdx === 0 && styles.primaryActionText]}>{action}</Text>
+                  </TouchableOpacity>
+                ))}
+                {alert.type === 'CRITICAL' && (
+                  <TouchableOpacity style={styles.acknowledgeBtn}>
+                    <Text style={styles.acknowledgeText}>Acknowledge</Text>
+                  </TouchableOpacity>
+                )}
+              </View>
+            </Animated.View>
+          ))
+        ) : (
+          <View style={styles.noData}>
+            <Ionicons name="notifications-off-outline" size={48} color="#cbd5e1" />
+            <Text style={styles.noDataText}>No alerts found for this category.</Text>
+          </View>
+        )}
 
         <View style={{ height: 100 }} />
       </ScrollView>
@@ -332,5 +358,15 @@ const styles = StyleSheet.create({
     color: '#ef4444',
     fontWeight: '700',
     textDecorationLine: 'underline',
+  },
+  noData: {
+    alignItems: 'center',
+    paddingVertical: 60,
+  },
+  noDataText: {
+    fontSize: 14,
+    color: '#94a3b8',
+    marginTop: 12,
+    fontWeight: '500',
   },
 });

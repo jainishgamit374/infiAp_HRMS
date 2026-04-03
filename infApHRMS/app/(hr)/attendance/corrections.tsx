@@ -127,7 +127,7 @@ export default function AttendanceCorrections() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#ffffff' },
   
-  banner: { paddingHorizontal: 20, paddingBottom: 16 },
+  banner: { paddingHorizontal: 20, paddingBottom: 16, paddingTop: 6 },
   bannerText: { fontSize: 13, color: '#4b5563', lineHeight: 20, textAlign: 'center' },
 
   tabsContainer: { paddingHorizontal: 20, flexDirection: 'row', gap: 16, borderBottomWidth: 1, borderBottomColor: '#f3f4f6', paddingBottom: 12 },
@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
   tabText: { fontSize: 14, fontWeight: '600', color: '#6b7280' },
   activeTabText: { color: '#22c55e' },
 
-  content: { paddingHorizontal: 20, paddingTop: 20, paddingBottom: 120 },
+  content: { paddingHorizontal: 20, paddingTop: 20, paddingBottom: 180 },
   listHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 },
   sectionTitle: { fontSize: 16, fontWeight: '800', color: '#111827' },
   selectAllText: { fontSize: 13, fontWeight: '600', color: '#4f46e5' },
@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
   approveBtn: { flex: 1, paddingVertical: 12, borderRadius: 12, backgroundColor: '#4f46e5', alignItems: 'center' },
   approveBtnText: { fontSize: 14, fontWeight: '700', color: '#ffffff' },
 
-  stickyBottom: { position: 'absolute', bottom: 85, left: 20, right: 20 }, // Placed just above the bottom nav
-  bulkBtn: { backgroundColor: '#4f46e5', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingVertical: 16, borderRadius: 16, shadowColor: '#4f46e5', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 8, elevation: 4 },
-  bulkBtnText: { color: '#ffffff', fontSize: 15, fontWeight: '700', marginLeft: 8 }
+  stickyBottom: { position: 'absolute', bottom: 120, left: 20, right: 20, zIndex: 50 }, // Placed above the floating nav
+  bulkBtn: { backgroundColor: '#4f46e5', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingVertical: 16, borderRadius: 16, shadowColor: '#4f46e5', shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.3, shadowRadius: 12, elevation: 8 },
+  bulkBtnText: { color: '#ffffff', fontSize: 15, fontWeight: '800', marginLeft: 10 }
 });

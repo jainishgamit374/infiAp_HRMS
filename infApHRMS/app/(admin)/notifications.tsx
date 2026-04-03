@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, TextInput, Platform, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, TextInput, Platform, Dimensions, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import Animated, { FadeInDown } from 'react-native-reanimated';
@@ -19,7 +19,7 @@ const STATS = [
 const BROADCASTS = [
   {
     id: '1',
-    category: 'HR ANNOUNCEMENT',
+    category: 'HR Announcements',
     title: 'Q3 Performance Review Kick-off',
     desc: 'Attention all departments, the Q3 review cycle starts this Monday. Please ensure your KPIs ar...',
     date: 'Oct 12, 2023',
@@ -29,7 +29,7 @@ const BROADCASTS = [
   },
   {
     id: '2',
-    category: 'POLICY UPDATE',
+    category: 'Policy Updates',
     title: 'Revised Remote Work Guidelines',
     desc: 'New updates regarding the hybrid work model and office safety protocols effective from next...',
     date: 'Oct 15, 2023',
@@ -39,7 +39,7 @@ const BROADCASTS = [
   },
   {
     id: '3',
-    category: 'SYSTEM ALERT',
+    category: 'System Alerts',
     title: 'Planned Maintenance: payroll Module',
     desc: 'The payroll module will be unavailable for 2 hours on Saturday for critical security patches.',
     date: 'Last saved 2h ago',
@@ -52,16 +52,58 @@ const BROADCASTS = [
 export default function AdminNotifications() {
   const [activeTab, setActiveTab] = useState('All Alerts');
 
+  const handleAction = (type: string, title: string) => {
+    const msg = `${type} initiated for: ${title}`;
+    console.log(msg);
+    if (Platform.OS === 'web') {
+      alert(msg);
+    } else {
+      Alert.alert('Notification Action', msg);
+    }
+  };
+
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={[styles.container, { backgroundColor: '#fff' }]}>
       {/* Unified Header */}
       <Header 
         title="Notifications" 
-        subtitle="Admin Activity Hub"
+        subtitle="ADMIN ACTIVITY (DEBUG: ACTIVE)"
         showBack={true} 
       />
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+      {/* Tabs - Moved outside ScrollView for better touch responsiveness */}
+      <View style={[styles.tabsFixedContainer, { zIndex: 10 }]}>
+        <ScrollView 
+          horizontal 
+          showsHorizontalScrollIndicator={false} 
+          style={styles.tabsScroll}
+          contentContainerStyle={{ paddingHorizontal: 20 }}
+          keyboardShouldPersistTaps="handled"
+        >
+          {['All Alerts', 'HR Announcements', 'Policy Updates', 'System Alerts'].map((tab) => {
+            const isActive = activeTab === tab;
+            return (
+              <TouchableOpacity
+                key={tab}
+                style={[styles.tab, isActive && styles.activeTab]}
+                onPress={() => {
+                  setActiveTab(tab);
+                }}
+                activeOpacity={0.7}
+                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+              >
+                <Text style={[styles.tabText, isActive && styles.activeTabText]}>{tab}</Text>
+              </TouchableOpacity>
+            );
+          })}
+        </ScrollView>
+      </View>
+
+      <ScrollView 
+        style={{ flex: 1 }}
+        showsVerticalScrollIndicator={false} 
+        contentContainerStyle={styles.scrollContent}
+      >
         {/* Search Bar */}
         <View style={styles.searchContainer}>
           <Ionicons name="search-outline" size={20} color="#94a3b8" />
@@ -72,30 +114,27 @@ export default function AdminNotifications() {
           />
         </View>
 
-        {/* Tabs */}
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.tabsScroll}>
-          {['All Alerts', 'HR Announcements', 'Policy Updates', 'System Alerts'].map((tab) => (
-            <TouchableOpacity
-              key={tab}
-              style={[styles.tab, activeTab === tab && styles.activeTab]}
-              onPress={() => setActiveTab(tab)}
-            >
-              <Text style={[styles.tabText, activeTab === tab && styles.activeTabText]}>{tab}</Text>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
-
         {/* Stats Grid */}
         <View style={styles.statsGrid}>
           {STATS.map((stat, idx) => (
-            <View key={idx} style={styles.statCard}>
+            <TouchableOpacity 
+              key={idx} 
+              style={styles.statCard}
+              activeOpacity={0.7}
+              onPress={() => {
+                if (stat.sub.includes('Sent')) setActiveTab('All Alerts');
+                if (stat.sub.includes('Staff')) setActiveTab('HR Announcements');
+                if (stat.sub.includes('Tasks')) setActiveTab('System Alerts');
+                if (stat.sub.includes('Alerts')) setActiveTab('System Alerts');
+              }}
+            >
               <View style={styles.statHeader}>
                 <Ionicons name={stat.icon as any} size={20} color={stat.color} />
                 <Text style={styles.statTiny}>TOTAL</Text>
               </View>
               <Text style={styles.statLabel}>{stat.label}</Text>
               <Text style={styles.statSub}>{stat.sub}</Text>
-            </View>
+            </TouchableOpacity>
           ))}
         </View>
 
@@ -107,7 +146,10 @@ export default function AdminNotifications() {
           </TouchableOpacity>
         </View>
 
-        {BROADCASTS.map((item, idx) => (
+        {BROADCASTS.filter(item => {
+          if (activeTab === 'All Alerts') return true;
+          return item.category === activeTab;
+        }).map((item, idx) => (
           <Animated.View
             key={item.id}
             entering={FadeInDown.delay(idx * 100).springify()}
@@ -140,15 +182,15 @@ export default function AdminNotifications() {
             </View>
 
             <View style={styles.cardActions}>
-              <TouchableOpacity style={styles.actionBtn}>
+              <TouchableOpacity style={styles.actionBtn} onPress={() => handleAction('Analytics', item.title)}>
                 <Ionicons name="analytics-outline" size={16} color="#64748b" />
                 <Text style={styles.actionText}>Analytics</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.actionBtn}>
+              <TouchableOpacity style={styles.actionBtn} onPress={() => handleAction('Edit', item.title)}>
                 <Ionicons name="create-outline" size={16} color="#64748b" />
                 <Text style={styles.actionText}>Edit</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.actionBtn}>
+              <TouchableOpacity style={styles.actionBtn} onPress={() => handleAction('Resend', item.title)}>
                 <Ionicons name="refresh-outline" size={16} color="#64748b" />
                 <Text style={styles.actionText}>Resend</Text>
               </TouchableOpacity>
@@ -156,7 +198,7 @@ export default function AdminNotifications() {
           </Animated.View>
         ))}
 
-        <View style={{ height: 100 }} />
+        <View style={{ height: 140 }} />
       </ScrollView>
 
       {/* FAB */}
@@ -168,7 +210,7 @@ export default function AdminNotifications() {
       </TouchableOpacity>
 
       <AdminBottomNav />
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -217,7 +259,9 @@ const styles = StyleSheet.create({
     padding: 4,
   },
   scrollContent: {
-    padding: 20,
+    paddingHorizontal: 20,
+    paddingBottom: 20,
+    paddingTop: 10,
   },
   searchContainer: {
     flexDirection: 'row',
@@ -394,9 +438,15 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#64748b',
   },
+  tabsFixedContainer: {
+    backgroundColor: '#fff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#f1f5f9',
+    paddingVertical: 12,
+  },
   fab: {
     position: 'absolute',
-    bottom: 100,
+    bottom: 130,
     right: 20,
     width: 60,
     height: 60,

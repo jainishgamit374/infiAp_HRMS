@@ -149,7 +149,7 @@ export default function UpcomingWFH() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <Header title="Upcoming WFH" showBack={true} />
 
       <KeyboardAvoidingView
@@ -352,7 +352,7 @@ export default function UpcomingWFH() {
           </TouchableOpacity>
         </TouchableOpacity>
       </Modal>
-    </SafeAreaView>
+    </View>
   );
 }
 

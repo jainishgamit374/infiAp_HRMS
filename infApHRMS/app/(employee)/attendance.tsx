@@ -195,7 +195,7 @@ export default function AttendancePage() {
   };
 
   return (
-    <SafeAreaView style={styles.root}>
+    <View style={styles.root}>
       <Header title="Attendance" subtitle="Track your time & presence" showBack={true} />
 
       <KeyboardAvoidingView
@@ -609,7 +609,7 @@ export default function AttendancePage() {
       </Modal>
 
       <BottomNav />
-    </SafeAreaView>
+    </View>
   );
 }
 

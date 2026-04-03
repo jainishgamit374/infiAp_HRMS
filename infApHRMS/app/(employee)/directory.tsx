@@ -74,7 +74,7 @@ export default function DirectoryPage() {
   });
 
   return (
-    <SafeAreaView style={styles.root}>
+    <View style={styles.root}>
       {/* Header */}
       <Header />
 
@@ -156,7 +156,7 @@ export default function DirectoryPage() {
       </ScrollView>
 
       <BottomNav />
-    </SafeAreaView>
+    </View>
   );
 }
 

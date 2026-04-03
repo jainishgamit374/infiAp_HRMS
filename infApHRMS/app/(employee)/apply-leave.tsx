@@ -147,7 +147,7 @@ export default function ApplyLeave() {
   }));
 
   return (
-    <SafeAreaView style={styles.root}>
+    <View style={styles.root}>
       <Header title="Apply Leave" showBack={true} />
       <KeyboardAvoidingView 
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -397,7 +397,7 @@ export default function ApplyLeave() {
              </Animated.View>
           </View>
         </Modal>
-    </SafeAreaView>
+    </View>
   );
 }
 

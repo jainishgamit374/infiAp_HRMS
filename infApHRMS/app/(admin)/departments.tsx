@@ -177,16 +177,6 @@ export default function DepartmentsPage() {
       <Header 
         title="Departments"
         showBack={true}
-        rightElement={
-          <View style={styles.headerRight}>
-            <TouchableOpacity style={styles.headerIcon} onPress={() => setShowSearch(!showSearch)}>
-              <Ionicons name="search-outline" size={22} color="#64748b" />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.profileBtn} onPress={() => router.push('/(admin)/profile')}>
-              <Text style={styles.profileInitial}>AD</Text>
-            </TouchableOpacity>
-          </View>
-        }
       />
 
       {/* Search Bar (toggle) */}
@@ -536,7 +526,9 @@ const styles = StyleSheet.create({
   },
 
   scrollContent: {
-    padding: 20,
+    paddingHorizontal: 20,
+    paddingBottom: 20,
+    paddingTop: 10,
   },
 
   // Stats
@@ -733,7 +725,7 @@ const styles = StyleSheet.create({
   // FAB
   fab: {
     position: 'absolute',
-    bottom: 90,
+    bottom: 120,
     right: 20,
     flexDirection: 'row',
     alignItems: 'center',

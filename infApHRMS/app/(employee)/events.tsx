@@ -118,7 +118,7 @@ export default function EventsPage() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <Header title="Events" showBack={true} />
 
       <View style={styles.tabContainer}>
@@ -230,7 +230,7 @@ export default function EventsPage() {
           </Animated.View>
         </View>
       )}
-    </SafeAreaView>
+    </View>
   );
 }
 

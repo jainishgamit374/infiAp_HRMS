@@ -82,7 +82,7 @@ export default function LeaveApprovals() {
   };
 
   return (
-    <SafeAreaView style={styles.root}>
+    <View style={styles.root}>
       <Header title="Approvals & Rejections" showBack={true} />
 
       {/* Tabs */}
@@ -167,7 +167,7 @@ export default function LeaveApprovals() {
         }}
       />
       <BottomNav />
-    </SafeAreaView>
+    </View>
   );
 }
 

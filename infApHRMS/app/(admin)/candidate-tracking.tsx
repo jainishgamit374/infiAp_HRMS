@@ -38,11 +38,6 @@ export default function CandidateTracking() {
       <Header 
         title="Candidate Tracking"
         showBack={true}
-        rightElement={
-          <TouchableOpacity style={styles.searchBtn}>
-            <Ionicons name="filter-outline" size={22} color="#64748b" />
-          </TouchableOpacity>
-        }
       />
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
@@ -80,7 +75,7 @@ const styles = StyleSheet.create({
   backBtn: { width: 40, height: 40, borderRadius: 12, backgroundColor: '#f1f5f9', justifyContent: 'center', alignItems: 'center' },
   headerTitle: { fontSize: 18, fontWeight: '800', color: '#1e293b' },
   searchBtn: { width: 40, height: 40, borderRadius: 12, backgroundColor: '#f1f5f9', justifyContent: 'center', alignItems: 'center' },
-  scrollContent: { padding: 16 },
+  scrollContent: { padding: 16, paddingTop: 5 },
   candCard: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#fff', borderRadius: 20, padding: 16, marginBottom: 12, borderWidth: 1, borderColor: '#f1f5f9' },
   candAvatarBox: { width: 48, height: 48, borderRadius: 24, backgroundColor: '#eef2ff', justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: '#e0e7ff' },
   candAvatarText: { fontSize: 16, fontWeight: '800', color: '#4f46e5' },

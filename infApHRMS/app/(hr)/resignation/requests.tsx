@@ -85,7 +85,7 @@ export default function ResignationRequests() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fcfcfd' },
   headerTitle: { fontSize: 18, fontWeight: '700', color: '#111827' },
-  tabsContainer: { backgroundColor: '#fff', paddingBottom: 12, borderBottomWidth: 1, borderBottomColor: '#f3f4f6' },
+  tabsContainer: { backgroundColor: '#fff', paddingTop: 10, paddingBottom: 12, borderBottomWidth: 1, borderBottomColor: '#f3f4f6' },
   tabsScroll: { paddingHorizontal: 20, gap: 12 },
   tab: { paddingVertical: 8, paddingHorizontal: 16, borderRadius: 20, backgroundColor: '#f9fafb', borderWidth: 1, borderColor: '#e5e7eb' },
   activeTab: { backgroundColor: '#5a55d2', borderColor: '#5a55d2' },

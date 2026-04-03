@@ -40,9 +40,9 @@ const CircularProgress = ({ value, total, color, label, subLabel }: { value: num
 
 // Swipe to Check-in Component
 const SwipeToCheckIn = () => {
-  const SWIPE_WIDTH = 280;
+  const SWIPE_WIDTH = width - 72; // Dynamic width: window width - screen padding (40) - card padding (32)
   const KNOB_SIZE = 48;
-  const MAX_TRANSLATE = SWIPE_WIDTH - KNOB_SIZE - 10;
+  const MAX_TRANSLATE = SWIPE_WIDTH - KNOB_SIZE - 8;
 
   const translateX = useSharedValue(0);
   const [isCheckedIn, setIsCheckedIn] = useState(false);
@@ -81,7 +81,7 @@ const SwipeToCheckIn = () => {
   }));
 
   return (
-    <View style={styles.container}>
+    <View style={styles.swipeContainer}>
       <GestureDetector gesture={panGesture}>
         <View style={[styles.swipeTrack, isCheckedIn && styles.swipeTrackSuccess]}>
           <Animated.View style={[styles.swipeTextContainer, animatedTextStyle]}>
@@ -553,7 +553,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   swipeTrack: {
-    width: 280,
+    width: width - 72,
     height: 56,
     backgroundColor: '#f8fafc',
     borderRadius: 28,

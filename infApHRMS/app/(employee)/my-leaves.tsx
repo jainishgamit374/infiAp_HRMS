@@ -100,7 +100,7 @@ export default function MyLeaves() {
   };
 
   return (
-    <SafeAreaView style={styles.root}>
+    <View style={styles.root}>
       <Header 
         title="Leave Requests" 
         showBack={true} 
@@ -220,7 +220,7 @@ export default function MyLeaves() {
         }}
       />
       <BottomNav />
-    </SafeAreaView>
+    </View>
   );
 }
 

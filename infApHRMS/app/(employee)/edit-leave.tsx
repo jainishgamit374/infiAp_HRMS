@@ -129,7 +129,7 @@ export default function EditLeave() {
   if (!leave || leave.status !== 'PENDING') return null;
 
   return (
-    <SafeAreaView style={styles.root}>
+    <View style={styles.root}>
       <KeyboardAvoidingView 
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={{ flex: 1 }}
@@ -326,7 +326,7 @@ export default function EditLeave() {
           </View>
         </Modal>
       </KeyboardAvoidingView>
-    </SafeAreaView>
+    </View>
   );
 }
 

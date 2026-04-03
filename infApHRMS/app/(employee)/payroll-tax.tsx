@@ -20,7 +20,7 @@ const TAX_BREAKDOWN = [
 
 export default function PayrollTax() {
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <StatusBar barStyle="dark-content" />
       
       <Header title="Tax Details" showBack={true} />
@@ -80,7 +80,7 @@ export default function PayrollTax() {
       </ScrollView>
 
       <BottomNav />
-    </SafeAreaView>
+    </View>
   );
 }
 

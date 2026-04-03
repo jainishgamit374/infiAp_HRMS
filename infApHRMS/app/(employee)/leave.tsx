@@ -37,7 +37,7 @@ export default function LeaveManagement() {
   ];
 
   return (
-    <SafeAreaView style={styles.root}>
+    <View style={styles.root}>
       {/* Unified Header */}
       <Header 
         title="Leave Management" 
@@ -79,7 +79,7 @@ export default function LeaveManagement() {
       </View>
 
       <BottomNav />
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -94,8 +94,8 @@ const styles = StyleSheet.create({
   },
   heroSection: {
     alignItems: 'center',
-    marginTop: 40,
-    marginBottom: 40,
+    marginTop: 10,
+    marginBottom: 20,
   },
   heroIconCircle: {
     width: 80,

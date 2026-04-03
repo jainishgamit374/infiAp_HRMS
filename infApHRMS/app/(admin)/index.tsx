@@ -140,13 +140,11 @@ export default function AdminDashboard() {
   };
 
   return (
-    <SafeAreaView style={styles.mainContainer}>
+    <View style={styles.mainContainer}>
+      <Header 
+        title="Admin Dashboard"
+      />
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-        {/* Header */}
-        <Header 
-          title="Admin Dashboard"
-          subtitle="System Overview & Management"
-        />
 
         {/* Summary Stats with Animated Counters */}
         <Animated.View style={[styles.statsContainer, { opacity: staggerAnims[0] }]}>
@@ -254,7 +252,7 @@ export default function AdminDashboard() {
         )}
 
         {/* Recent Activity */}
-        <Animated.View style={[styles.section, { opacity: staggerAnims[7], marginBottom: 80 }]}>
+        <Animated.View style={[styles.section, { opacity: staggerAnims[7], marginBottom: 100 }]}>
           {renderSectionHeader('Recent Activity')}
           <View style={styles.activityList}>
             {RECENT_ACTIVITY.map((activity) => (
@@ -280,7 +278,7 @@ export default function AdminDashboard() {
         </Animated.View>
       </ScrollView>
       <AdminBottomNav />
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -288,7 +286,7 @@ const CARD_WIDTH = (width - 60) / 2;
 
 const styles = StyleSheet.create({
   mainContainer: { flex: 1, backgroundColor: '#f8fafc' },
-  scrollContent: { padding: 20 },
+  scrollContent: { paddingHorizontal: 20, paddingBottom: 20, paddingTop: 7 },
 
   // Header
 

@@ -98,7 +98,7 @@ export default function PayrollDashboard() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <StatusBar barStyle="dark-content" />
       
       <Header title="Payroll" showBack={true} />
@@ -278,7 +278,7 @@ export default function PayrollDashboard() {
           </Animated.View>
         </View>
       )}
-    </SafeAreaView>
+    </View>
   );
 }
 

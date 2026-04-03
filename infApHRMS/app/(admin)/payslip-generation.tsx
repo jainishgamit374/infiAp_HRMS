@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
   successIcon: { width: 100, height: 100, borderRadius: 50, backgroundColor: '#10b981', justifyContent: 'center', alignItems: 'center', marginBottom: 24, elevation: 10, shadowColor: '#10b981', shadowOffset: { width: 0, height: 10 }, shadowOpacity: 0.3, shadowRadius: 15 },
   successTitle: { fontSize: 28, fontWeight: '900', color: '#1e293b', marginBottom: 12, textAlign: 'center' },
   successSub: { fontSize: 15, color: '#64748b', textAlign: 'center', lineHeight: 22, paddingHorizontal: 20 },
-  footer: { padding: 20, paddingBottom: 100, flexDirection: 'row', gap: 12 },
+  footer: { padding: 20, paddingBottom: 130, flexDirection: 'row', gap: 12 },
   prevBtn: { flex: 1, height: 56, borderRadius: 16, borderWidth: 1, borderColor: '#e2e8f0', justifyContent: 'center', alignItems: 'center' },
   prevText: { fontSize: 16, fontWeight: '700', color: '#64748b' },
   nextBtn: { flex: 2, height: 56, borderRadius: 16, backgroundColor: '#4f46e5', justifyContent: 'center', alignItems: 'center', shadowColor: '#4f46e5', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 8, elevation: 4 },

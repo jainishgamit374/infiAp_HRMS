@@ -47,11 +47,7 @@ export default function ManageTeams() {
       <Header 
         title="Manage All Teams"
         showBack={true}
-        rightElement={
-          <TouchableOpacity style={styles.headerIcon}>
-            <Ionicons name="filter-outline" size={22} color="#64748b" />
-          </TouchableOpacity>
-        }
+        hideSidebar={true}
       />
 
       <KeyboardAvoidingView

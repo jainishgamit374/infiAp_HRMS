@@ -66,7 +66,7 @@ export default function AttendanceHistory() {
   };
 
   return (
-    <SafeAreaView style={styles.root}>
+    <View style={styles.root}>
       {/* Unified Header */}
       <Header 
         title="Attendance History" 
@@ -246,7 +246,7 @@ export default function AttendanceHistory() {
       </ScrollView>
 
       <BottomNav />
-    </SafeAreaView>
+    </View>
   );
 }
 

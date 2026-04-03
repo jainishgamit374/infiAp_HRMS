@@ -350,7 +350,7 @@ const HRDashboard = () => {
 const styles = StyleSheet.create({
   scrollContent: {
     paddingHorizontal: 20,
-    paddingTop: 20,
+    paddingTop: 0,
     paddingBottom: 120,
   },
   topRight: {

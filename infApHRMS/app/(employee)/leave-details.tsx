@@ -15,13 +15,13 @@ export default function LeaveDetails() {
 
   if (!leave) {
     return (
-      <SafeAreaView style={styles.root}>
+      <View style={styles.root}>
         <Header title="Leave Details" showBack={true} />
         <View style={styles.emptyContainer}>
           <Ionicons name="document-text-outline" size={48} color="#cbd5e1" />
           <Text style={styles.emptyText}>Leave not found</Text>
         </View>
-      </SafeAreaView>
+      </View>
     );
   }
 
@@ -51,7 +51,7 @@ export default function LeaveDetails() {
   };
 
   return (
-    <SafeAreaView style={styles.root}>
+    <View style={styles.root}>
       <Header 
         title="Leave Details" 
         showBack={true} 
@@ -133,7 +133,7 @@ export default function LeaveDetails() {
           </Animated.View>
         )}
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 

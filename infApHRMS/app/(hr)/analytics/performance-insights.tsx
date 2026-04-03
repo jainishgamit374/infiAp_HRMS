@@ -107,7 +107,7 @@ export default function PerformanceInsights() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fcfcfd' },
-  tabs: { flexDirection: 'row', backgroundColor: '#fff', paddingHorizontal: 20, paddingBottom: 12, borderBottomWidth: 1, borderBottomColor: '#f3f4f6' },
+  tabs: { flexDirection: 'row', backgroundColor: '#fff', paddingHorizontal: 20, paddingTop: 10, paddingBottom: 12, borderBottomWidth: 1, borderBottomColor: '#f3f4f6' },
   tab: { marginRight: 24, paddingBottom: 8 },
   tabActive: { borderBottomWidth: 2, borderBottomColor: '#4f46e5' },
   tabText: { fontSize: 14, fontWeight: '600', color: '#6b7280' },

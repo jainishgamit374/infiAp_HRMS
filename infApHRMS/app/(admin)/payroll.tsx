@@ -58,11 +58,6 @@ export default function AdminPayroll() {
       <Header 
         title="Payroll Dashboard"
         showBack={true}
-        rightElement={
-          <TouchableOpacity style={styles.headerIcon}>
-            <Ionicons name="ellipsis-vertical" size={22} color="#64748b" />
-          </TouchableOpacity>
-        }
       />
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>

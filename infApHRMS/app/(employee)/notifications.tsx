@@ -51,7 +51,7 @@ export default function NotificationsPage() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <Header 
         title="Notifications" 
         showBack={true} 
@@ -136,7 +136,7 @@ export default function NotificationsPage() {
         )}
       </ScrollView>
       <BottomNav />
-    </SafeAreaView>
+    </View>
   );
 }
 

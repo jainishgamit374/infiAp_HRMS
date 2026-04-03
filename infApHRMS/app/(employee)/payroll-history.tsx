@@ -23,7 +23,7 @@ export default function PayrollHistory() {
   const [detailsVisible, setDetailsVisible] = useState(false);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <StatusBar barStyle="dark-content" />
       
       <Header title="Salary History" showBack={true} />
@@ -101,7 +101,7 @@ export default function PayrollHistory() {
         </TouchableOpacity>
       </Modal>
       <BottomNav />
-    </SafeAreaView>
+    </View>
   );
 }
 

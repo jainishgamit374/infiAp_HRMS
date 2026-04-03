@@ -230,7 +230,7 @@ const NotificationDetails = () => {
 
   if (!notification) {
     return (
-      <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
       <Header title="Not Found" showBack={true} />
         <View style={styles.emptyState}>
           <Ionicons name="alert-circle-outline" size={60} color="#e2e8f0" />
@@ -239,12 +239,12 @@ const NotificationDetails = () => {
             <Text style={{color: '#4f46e5', fontWeight: '700', marginTop: 10}}>Go back</Text>
           </TouchableOpacity>
         </View>
-      </SafeAreaView>
+      </View>
     );
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <Header 
         title="Notification Details" 
         showBack={true} 
@@ -363,7 +363,7 @@ const NotificationDetails = () => {
         <View style={{ height: 100 }} />
       </ScrollView>
       <BottomNav />
-    </SafeAreaView>
+    </View>
   );
 };
 

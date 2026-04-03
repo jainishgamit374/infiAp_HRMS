@@ -19,9 +19,11 @@ interface HeaderProps {
   onBackPress?: () => void;
   rightElement?: React.ReactNode;
   backIconName?: keyof typeof Ionicons.glyphMap;
+  hideLogo?: boolean;
+  hideSidebar?: boolean;
 }
 
-const Header = ({ title, subtitle, showBack, onBackPress, rightElement, backIconName }: HeaderProps) => {
+const Header = ({ title, subtitle, showBack, onBackPress, rightElement, backIconName, hideLogo, hideSidebar }: HeaderProps) => {
   const { openSidebar } = useSidebar();
 
   const handleBack = () => {
@@ -40,13 +42,13 @@ const Header = ({ title, subtitle, showBack, onBackPress, rightElement, backIcon
             <TouchableOpacity onPress={handleBack} style={styles.iconBtn}>
               <Ionicons name={backIconName || "chevron-back"} size={24} color="#1e293b" />
             </TouchableOpacity>
-          ) : (
+          ) : !hideLogo ? (
             <Image
               source={require('../../assets/images/logo.png')}
               style={styles.headerLogo}
               resizeMode="contain"
             />
-          )}
+          ) : <View style={{ width: 24 }} />}
         </View>
 
         <View style={styles.centerSection}>
@@ -60,9 +62,11 @@ const Header = ({ title, subtitle, showBack, onBackPress, rightElement, backIcon
 
         <View style={styles.rightSection}>
           {rightElement}
-          <TouchableOpacity onPress={openSidebar} style={styles.iconBtn}>
-            <Ionicons name="menu-outline" size={28} color="#1e293b" />
-          </TouchableOpacity>
+          {!hideSidebar && (
+            <TouchableOpacity onPress={openSidebar} style={styles.iconBtn}>
+              <Ionicons name="menu-outline" size={28} color="#1e293b" />
+            </TouchableOpacity>
+          )}
         </View>
       </View>
     </SafeAreaView>
@@ -75,7 +79,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
-    paddingVertical: 8,
+    paddingVertical: 0,
     backgroundColor: '#fff',
     borderBottomWidth: 1,
     borderBottomColor: '#f1f5f9',
@@ -96,13 +100,13 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   iconBtn: {
-    padding: 4,
+    padding: 0,
     marginLeft: -4,
   },
   headerLogo: {
-    width: 120,
-    height: 38,
-    marginBottom: 4,
+    width: 110,
+    height: 32,
+    marginBottom: 0,
   },
   titleContainer: {
     alignItems: 'center',
@@ -116,7 +120,7 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: '#64748b',
     fontWeight: '600',
-    marginTop: 2,
+    marginTop: 0,
   },
   profileBtn: {
     width: 36,

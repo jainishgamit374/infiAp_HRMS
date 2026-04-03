@@ -27,7 +27,7 @@ export default function AddEmployee() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       {/* Unified Header */}
       <Header 
         title="Add New Employee" 
@@ -79,7 +79,7 @@ export default function AddEmployee() {
           </Animated.View>
         </ScrollView>
       </KeyboardAvoidingView>
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
   header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, paddingVertical: 16, borderBottomWidth: 1, borderBottomColor: '#f1f5f9', paddingTop: Platform.OS === 'ios' ? 50 : 20 },
   backBtn: { width: 40, height: 40, borderRadius: 12, backgroundColor: '#f1f5f9', justifyContent: 'center', alignItems: 'center' },
   headerTitle: { fontSize: 18, fontWeight: '800', color: '#1e293b' },
-  scrollContent: { padding: 24 },
+  scrollContent: { paddingHorizontal: 24, paddingBottom: 24, paddingTop: 10 },
   inputGroup: { marginBottom: 24 },
   label: { fontSize: 12, fontWeight: '800', color: '#64748b', marginBottom: 8, letterSpacing: 1 },
   inputWrapper: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#f8fafc', borderRadius: 16, borderWidth: 1, borderColor: '#e2e8f0', paddingHorizontal: 16 },
