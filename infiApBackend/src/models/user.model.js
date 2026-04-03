@@ -58,6 +58,29 @@ const userSchema = new mongoose.Schema(
         },
         profileImage: {
             type: String
+        },
+        employeeId: {
+            type: String,
+            unique: true,
+            sparse: true
+        },
+        department: {
+            type: String
+        },
+        designation: {
+            type: String
+        },
+        reportingManager: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User"
+        },
+        annualSalary: {
+            type: Number
+        },
+        employmentType: {
+            type: String,
+            enum: ["full-time", "part-time", "contract", "internship", "remote"],
+            default: "full-time"
         }
     },
     { timestamps: true }
