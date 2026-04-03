@@ -67,7 +67,6 @@ export default function AdminNotifications() {
       {/* Unified Header */}
       <Header 
         title="Notifications" 
-        subtitle="ADMIN ACTIVITY (DEBUG: ACTIVE)"
         showBack={true} 
       />
 

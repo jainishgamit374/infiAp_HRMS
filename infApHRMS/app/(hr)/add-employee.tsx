@@ -37,6 +37,7 @@ const AddEmployee = () => {
   
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [focusedField, setFocusedField] = useState<string | null>(null);
   const { showImagePickerOptions } = useImagePicker();
 
   const handleDateConfirm = (date: Date) => {
@@ -74,16 +75,21 @@ const AddEmployee = () => {
       [{ text: 'OK', onPress: () => router.push('/(hr)/employee-management' as any) }]
     );
   };
-
   const renderInput = (label: string, value: string, onChange: (text: string) => void, placeholder: string, icon: string, required = false, isDate = false) => (
     <View style={styles.inputGroup}>
       <Text style={styles.label}>{label}{required && <Text style={{ color: '#ef4444' }}> *</Text>}</Text>
-      <TouchableOpacity 
-        style={styles.inputContainer} 
-        activeOpacity={isDate ? 0.7 : 1}
-        onPress={() => isDate && setShowDatePicker(true)}
+      <View 
+        style={[
+          styles.inputContainer,
+          focusedField === label && styles.inputContainerFocused
+        ]} 
       >
-        <Ionicons name={icon as any} size={20} color="#9ca3af" style={styles.inputIcon} />
+        <Ionicons 
+          name={icon as any} 
+          size={20} 
+          color={focusedField === label ? '#5a55d2' : '#9ca3af'} 
+          style={styles.inputIcon} 
+        />
         <TextInput
           style={styles.input}
           value={value}
@@ -91,14 +97,18 @@ const AddEmployee = () => {
           placeholder={placeholder}
           placeholderTextColor="#9ca3af"
           editable={!isDate}
-          onFocus={isDate ? () => setShowDatePicker(true) : undefined}
+          onFocus={() => {
+            setFocusedField(label);
+            if (isDate) setShowDatePicker(true);
+          }}
+          onBlur={() => setFocusedField(null)}
         />
         {isDate && (
           <TouchableOpacity onPress={() => setShowDatePicker(true)}>
-            <Ionicons name="calendar-outline" size={20} color="#5a55d2" />
+            <Ionicons name="calendar-outline" size={20} color={focusedField === label ? '#5a55d2' : '#9ca3af'} />
           </TouchableOpacity>
         )}
-      </TouchableOpacity>
+      </View>
     </View>
   );
 
@@ -114,7 +124,7 @@ const AddEmployee = () => {
       >
         <ScrollView style={styles.container} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
           {/* Photo Upload Section */}
-          <Animated.View entering={FadeInDown.delay(100).duration(600)} style={styles.photoSection}>
+          <View style={styles.photoSection}>
             <TouchableOpacity style={styles.photoContainer} onPress={handlePickImage} activeOpacity={0.9}>
               <View style={styles.photoPlaceholder}>
                 {form.avatarUri ? (
@@ -130,9 +140,9 @@ const AddEmployee = () => {
               </View>
             </TouchableOpacity>
             <Text style={styles.uploadText}>{form.avatarUri ? 'Change Profile Photo' : 'Upload Profile Photo'}</Text>
-          </Animated.View>
+          </View>
 
-          <Animated.View entering={FadeInDown.delay(200).duration(600)}>
+          <View>
             {/* Personal Details Card */}
             <View style={styles.formCard}>
               <Text style={styles.sectionHeading}>PERSONAL DETAILS</Text>
@@ -159,7 +169,7 @@ const AddEmployee = () => {
                 <Text style={styles.submitText}>Create Employee</Text>
               </TouchableOpacity>
             </View>
-          </Animated.View>
+          </View>
 
           {showDatePicker && (
             <CustomDatePickerModal
@@ -387,6 +397,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     height: 52,
     paddingHorizontal: 16,
+  },
+  inputContainerFocused: {
+    borderColor: '#5a55d2',
+    backgroundColor: '#fff',
   },
   inputIcon: {
     marginRight: 12,

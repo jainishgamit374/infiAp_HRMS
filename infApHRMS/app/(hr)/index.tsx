@@ -173,7 +173,6 @@ const HRDashboard = () => {
       {/* Top Bar */}
       <Header 
         title="HR Dashboard"
-        subtitle="Manage Workforce & Operations"
       />
 
       <KeyboardAvoidingView

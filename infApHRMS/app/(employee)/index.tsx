@@ -183,7 +183,6 @@ export default function EmployeeDashboard() {
             {/* Header */}
             <Header 
               title="Employee Dashboard"
-              subtitle={`Welcome, ${user.name}`} 
             />
 
             <View style={styles.contentPadding}>

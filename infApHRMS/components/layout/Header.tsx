@@ -55,7 +55,6 @@ const Header = ({ title, subtitle, showBack, onBackPress, rightElement, backIcon
           {title ? (
             <View style={styles.titleContainer}>
               <Text style={styles.headerTitle} numberOfLines={1}>{title}</Text>
-              {subtitle && <Text style={styles.headerSubtitle} numberOfLines={1}>{subtitle}</Text>}
             </View>
           ) : null}
         </View>

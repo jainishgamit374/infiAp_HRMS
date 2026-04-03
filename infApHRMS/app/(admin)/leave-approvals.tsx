@@ -4,7 +4,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { AdminBottomNav } from '../../components/AdminBottomNav';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from '../../components/layout/Header';
 
 const INITIAL_REQUESTS = [
@@ -21,11 +20,10 @@ export default function LeaveApprovals() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       {/* Unified Header */}
       <Header 
         title="Leave Approvals" 
-        subtitle="Review employee leave requests"
         showBack={true} 
       />
 
@@ -77,16 +75,13 @@ export default function LeaveApprovals() {
         <View style={{ height: 100 }} />
       </ScrollView>
       <AdminBottomNav />
-    </SafeAreaView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#f8fafc' },
-  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, paddingVertical: 16, backgroundColor: '#fff', paddingTop: Platform.OS === 'ios' ? 50 : 20, borderBottomWidth: 1, borderBottomColor: '#f1f5f9' },
-  backBtn: { width: 40, height: 40, borderRadius: 12, backgroundColor: '#f1f5f9', justifyContent: 'center', alignItems: 'center' },
-  headerTitle: { fontSize: 18, fontWeight: '800', color: '#1e293b' },
-  scrollContent: { padding: 20 },
+  scrollContent: { paddingHorizontal: 20, paddingBottom: 20, paddingTop: 5 },
   statsRow: { flexDirection: 'row', gap: 12, marginBottom: 20 },
   statBox: { flex: 1, backgroundColor: '#fff', borderRadius: 16, padding: 16, alignItems: 'center', borderWidth: 1, borderColor: '#f1f5f9' },
   statVal: { fontSize: 24, fontWeight: '800', color: '#4f46e5' },

@@ -7,14 +7,16 @@ import {
   ScrollView,
   Platform,
   Dimensions,
+  Modal,
+  FlatList,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import Animated, { FadeInRight, FadeInLeft, ZoomIn } from 'react-native-reanimated';
+import Animated, { FadeInRight, FadeInLeft, ZoomIn, SlideInDown } from 'react-native-reanimated';
 import { AdminBottomNav } from '../../components/AdminBottomNav';
 import Header from '../../components/layout/Header';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 const STEPS = [
   { id: 1, title: 'Period', icon: 'calendar-outline' },
@@ -23,8 +25,25 @@ const STEPS = [
   { id: 4, title: 'Done', icon: 'checkmark-circle-outline' },
 ];
 
+const PERIODS = [
+  'October 2023',
+  'September 2023',
+  'August 2023',
+  'July 2023',
+  'June 2023',
+  'May 2023',
+  'April 2023',
+  'March 2023',
+  'February 2023',
+  'January 2023',
+  'December 2022',
+  'November 2022',
+];
+
 export default function PayslipGeneration() {
   const [currentStep, setCurrentStep] = useState(1);
+  const [selectedPeriod, setSelectedPeriod] = useState('October 2023');
+  const [showPicker, setShowPicker] = useState(false);
 
   const nextStep = () => {
     if (currentStep < 4) setCurrentStep(currentStep + 1);
@@ -42,17 +61,72 @@ export default function PayslipGeneration() {
           <Animated.View entering={FadeInRight} style={styles.stepContent}>
             <Text style={styles.stepTitle}>Select Payroll Period</Text>
             <Text style={styles.stepSub}>Select the month and year to generate slips for.</Text>
-            <TouchableOpacity style={styles.selector}>
-              <Text style={styles.selectorText}>October 2023</Text>
+            <TouchableOpacity 
+              style={styles.selector} 
+              onPress={() => setShowPicker(true)}
+              activeOpacity={0.7}
+            >
+              <Text style={styles.selectorText}>{selectedPeriod}</Text>
               <Ionicons name="chevron-down" size={20} color="#64748b" />
             </TouchableOpacity>
+
+            <Modal
+              visible={showPicker}
+              transparent
+              animationType="fade"
+              onRequestClose={() => setShowPicker(false)}
+            >
+              <View style={styles.modalOverlay}>
+                <TouchableOpacity 
+                  style={styles.modalBackdrop} 
+                  activeOpacity={1} 
+                  onPress={() => setShowPicker(false)} 
+                />
+                <Animated.View entering={SlideInDown.springify()} style={styles.modalContent}>
+                  <View style={styles.modalHeader}>
+                    <Text style={styles.modalTitle}>Select Period</Text>
+                    <TouchableOpacity onPress={() => setShowPicker(false)}>
+                      <Ionicons name="close" size={24} color="#64748b" />
+                    </TouchableOpacity>
+                  </View>
+                  <FlatList
+                    data={PERIODS}
+                    keyExtractor={(item) => item}
+                    renderItem={({ item }) => (
+                      <TouchableOpacity 
+                        style={[
+                          styles.periodItem,
+                          selectedPeriod === item && styles.periodItemSelected
+                        ]}
+                        onPress={() => {
+                          setSelectedPeriod(item);
+                          setShowPicker(false);
+                        }}
+                      >
+                        <Text style={[
+                          styles.periodText,
+                          selectedPeriod === item && styles.periodTextSelected
+                        ]}>
+                          {item}
+                        </Text>
+                        {selectedPeriod === item && (
+                          <Ionicons name="checkmark" size={20} color="#4f46e5" />
+                        )}
+                      </TouchableOpacity>
+                    )}
+                    showsVerticalScrollIndicator={false}
+                    contentContainerStyle={{ paddingBottom: 20 }}
+                  />
+                </Animated.View>
+              </View>
+            </Modal>
           </Animated.View>
         );
       case 2:
         return (
           <Animated.View entering={FadeInRight} style={styles.stepContent}>
             <Text style={styles.stepTitle}>Verify Employees</Text>
-            <Text style={styles.stepSub}>248 employees selected for this run.</Text>
+            <Text style={styles.stepSub}>248 employees selected for {selectedPeriod}.</Text>
             <View style={styles.listPlaceholder}>
               {[1, 2, 3].map(i => (
                 <View key={i} style={styles.listItem}>
@@ -65,6 +139,7 @@ export default function PayslipGeneration() {
           </Animated.View>
         );
       case 3:
+// ... (rest remains similar)
         return (
           <Animated.View entering={FadeInRight} style={styles.stepContent}>
             <Text style={styles.stepTitle}>Financial Review</Text>
@@ -167,4 +242,63 @@ const styles = StyleSheet.create({
   prevText: { fontSize: 16, fontWeight: '700', color: '#64748b' },
   nextBtn: { flex: 2, height: 56, borderRadius: 16, backgroundColor: '#4f46e5', justifyContent: 'center', alignItems: 'center', shadowColor: '#4f46e5', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 8, elevation: 4 },
   nextText: { color: '#fff', fontSize: 16, fontWeight: '800' },
+
+  // Modal Styles
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    backgroundColor: 'transparent',
+  },
+  modalBackdrop: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(15, 23, 42, 0.4)',
+  },
+  modalContent: {
+    backgroundColor: '#fff',
+    borderTopLeftRadius: 32,
+    borderTopRightRadius: 32,
+    paddingTop: 12,
+    paddingHorizontal: 24,
+    maxHeight: height * 0.7,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -10 },
+    shadowOpacity: 0.1,
+    shadowRadius: 20,
+    elevation: 20,
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f1f5f9',
+    marginBottom: 8,
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: '800',
+    color: '#1e293b',
+  },
+  periodItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 18,
+    paddingHorizontal: 12,
+    borderRadius: 16,
+    marginBottom: 4,
+  },
+  periodItemSelected: {
+    backgroundColor: '#f5f3ff',
+  },
+  periodText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#64748b',
+  },
+  periodTextSelected: {
+    color: '#4f46e5',
+    fontWeight: '800',
+  },
 });

@@ -201,7 +201,7 @@ const LeaveManagementScreen = () => {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  content: { paddingHorizontal: 20, paddingTop: 20, paddingBottom: 120 },
+  content: { paddingHorizontal: 20, paddingTop: 5, paddingBottom: 120 },
   
   introText: { fontSize: 13, color: '#6b7280', marginBottom: 20, lineHeight: 20 },
   

@@ -15,7 +15,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, router } from 'expo-router';
 import { useHR, Employee } from '@/context/HRContext';
 import { HRBottomNav } from '@/components/HRBottomNav';
-import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
+import Animated, { FadeInDown, FadeInUp, FadeIn } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from '@/components/layout/Header';
 import { useImagePicker } from '@/hooks/useImagePicker';
@@ -147,8 +147,9 @@ const EditEmployee = () => {
       />
       
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={{ flex: 1 }}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
       >
         <ScrollView 
           style={styles.container} 
@@ -192,7 +193,7 @@ const EditEmployee = () => {
           {/* Dynamic Tab Content */}
           <View style={styles.formContentWrapper}>
             {activeTab === 'General' && (
-              <Animated.View entering={FadeInDown.duration(400)} style={styles.formInner}>
+              <Animated.View entering={FadeIn.duration(300)} style={styles.formInner}>
                 <Text style={styles.formDescription}>Basic identification and contact details.</Text>
                 {renderInput('Full Name', form.name, (t) => setForm({...form, name: t}), 'person-outline', 'name', 'e.g. John Doe')}
                 {renderInput('Email Address', form.email, (t) => setForm({...form, email: t}), 'mail-outline', 'email', 'john@company.com')}
@@ -201,7 +202,7 @@ const EditEmployee = () => {
             )}
 
             {activeTab === 'Work' && (
-              <Animated.View entering={FadeInDown.duration(400)} style={styles.formInner}>
+              <Animated.View entering={FadeIn.duration(300)} style={styles.formInner}>
                 <Text style={styles.formDescription}>Department and role-specific information.</Text>
                 {renderInput('Department', form.department, (t) => setForm({...form, department: t}), 'business-outline', 'dept', 'e.g. Engineering')}
                 {renderInput('Professional Role', form.role, (t) => setForm({...form, role: t}), 'ribbon-outline', 'role', 'e.g. Senior Developer')}
@@ -239,7 +240,7 @@ const EditEmployee = () => {
             )}
 
             {activeTab === 'Financial' && (
-              <Animated.View entering={FadeInDown.duration(400)} style={styles.formInner}>
+              <Animated.View entering={FadeIn.duration(300)} style={styles.formInner}>
                 <Text style={styles.formDescription}>Remuneration and financial data.</Text>
                 <View style={styles.salaryActionCard}>
                   <View style={styles.salaryIconCircle}>
@@ -410,7 +411,7 @@ const styles = StyleSheet.create({
     padding: 24,
     borderWidth: 1,
     borderColor: '#f0f0ff',
-    minHeight: 300,
+    minHeight: 250,
   },
   formInner: {
     flex: 1,
@@ -444,11 +445,6 @@ const styles = StyleSheet.create({
   inputContainerFocused: {
     borderColor: '#5a55d2',
     backgroundColor: '#fff',
-    shadowColor: '#5a55d2',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
-    elevation: 3,
   },
   inputIcon: {
     marginRight: 12,

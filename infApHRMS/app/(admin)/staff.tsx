@@ -1,10 +1,9 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform, TextInput } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { AdminBottomNav } from '../../components/AdminBottomNav';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from '../../components/layout/Header';
 
 const STAFF = [
@@ -15,17 +14,38 @@ const STAFF = [
 ];
 
 export default function StaffList() {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isFocused, setIsFocused] = useState(false);
+
+  const filteredStaff = STAFF.filter(person => 
+    person.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    person.role.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    person.dept.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       {/* Unified Header */}
       <Header 
         title="Staff Directory" 
-        subtitle="Manage your workforce"
         showBack={true} 
       />
+      {/* Search Bar */}
+      <View style={[styles.searchContainer, isFocused && styles.searchContainerFocused]}>
+        <Ionicons name="search-outline" size={20} color={isFocused ? '#4f46e5' : '#94a3b8'} style={styles.searchIcon} />
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Search staff members..."
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+          placeholderTextColor="#94a3b8"
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+        />
+      </View>
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        {STAFF.map((person, idx) => (
+        {filteredStaff.map((person, idx) => (
           <Animated.View key={person.id} entering={FadeInDown.delay(idx * 80).springify()} style={styles.staffCard}>
             <View style={styles.avatarBox}>
               <Text style={styles.avatarText}>{person.avatar}</Text>
@@ -42,16 +62,17 @@ export default function StaffList() {
         <View style={{ height: 100 }} />
       </ScrollView>
       <AdminBottomNav />
-    </SafeAreaView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#f8fafc' },
-  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, paddingVertical: 16, backgroundColor: '#fff', paddingTop: Platform.OS === 'ios' ? 50 : 20, borderBottomWidth: 1, borderBottomColor: '#f1f5f9' },
-  headerIcon: { width: 40, height: 40, borderRadius: 12, backgroundColor: '#f1f5f9', justifyContent: 'center', alignItems: 'center' },
-  headerTitle: { fontSize: 18, fontWeight: '800', color: '#1e293b' },
-  scrollContent: { padding: 20 },
+  scrollContent: { paddingHorizontal: 20, paddingBottom: 20, paddingTop: 5 },
+  searchContainer: { flexDirection: 'row', alignItems: 'center', marginHorizontal: 20, marginBottom: 16, backgroundColor: '#f1f5f9', borderRadius: 16, paddingHorizontal: 16, height: 56, borderWidth: 1.5, borderColor: '#f1f5f9' },
+  searchContainerFocused: { borderColor: '#4f46e5', backgroundColor: '#fff' },
+  searchIcon: { marginRight: 12 },
+  searchInput: { flex: 1, fontSize: 15, fontWeight: '600', color: '#1e293b' },
   staffCard: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#fff', borderRadius: 20, padding: 16, marginBottom: 12, borderWidth: 1, borderColor: '#f1f5f9' },
   avatarBox: { width: 50, height: 50, borderRadius: 15, backgroundColor: '#eef2ff', justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: '#e0e7ff' },
   avatarText: { fontSize: 18, fontWeight: '800', color: '#4f46e5' },

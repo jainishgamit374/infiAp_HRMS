@@ -10,7 +10,6 @@ const MainAdminDashboard = () => {
     <View style={styles.container}>
       <Header 
         title="Main Admin Dashboard"
-        subtitle="Platform Performance & Alerts"
       />
       
       <View style={styles.content}>

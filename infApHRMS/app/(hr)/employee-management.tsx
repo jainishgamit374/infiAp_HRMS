@@ -15,7 +15,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useHR, Employee } from '@/context/HRContext';
 import { HRBottomNav } from '@/components/HRBottomNav';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from '@/components/layout/Header';
 import Animated, { FadeInDown, Layout } from 'react-native-reanimated';
 
@@ -26,6 +25,7 @@ const DEPARTMENTS = ['All', 'Engineering', 'Product', 'Design', 'Marketing', 'Sa
 const EmployeeManagement = () => {
   const { employees } = useHR();
   const [searchQuery, setSearchQuery] = useState('');
+  const [isFocused, setIsFocused] = useState(false);
   const [selectedDept, setSelectedDept] = useState('All');
 
   const filteredEmployees = employees.filter(emp => {
@@ -72,7 +72,6 @@ const EmployeeManagement = () => {
       {/* Unified Header */}
       <Header 
         title="Employees" 
-        subtitle="Register & Manage Staff"
         showBack={true} 
       />
 
@@ -81,13 +80,16 @@ const EmployeeManagement = () => {
         style={{ flex: 1 }}
       >
         {/* Search Bar */}
-        <View style={styles.searchContainer}>
-          <Ionicons name="search-outline" size={20} color="#9ca3af" style={styles.searchIcon} />
+        <View style={[styles.searchContainer, isFocused && styles.searchContainerFocused]}>
+          <Ionicons name="search-outline" size={20} color={isFocused ? '#4f46e5' : '#9ca3af'} style={styles.searchIcon} />
           <TextInput
             style={styles.searchInput}
-            placeholder="Search employees..."
+            placeholder="Search by name, role or ID..."
             value={searchQuery}
             onChangeText={setSearchQuery}
+            placeholderTextColor="#9ca3af"
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
           />
           <TouchableOpacity style={styles.filterButton}>
             <Ionicons name="options-outline" size={20} color="#5a55d2" />
@@ -153,11 +155,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 12,
     paddingHorizontal: 12,
-    height: 50,
+    height: 52,
     borderWidth: 1,
     borderColor: '#e5e7eb',
     marginBottom: 16,
-    marginTop: 20,
+    marginTop: 2,
+  },
+  searchContainerFocused: {
+    borderColor: '#4f46e5',
+    backgroundColor: '#fff',
   },
   searchIcon: {
     marginRight: 10,
