@@ -79,13 +79,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
-    paddingVertical: 0,
     backgroundColor: '#fff',
     borderBottomWidth: 1,
     borderBottomColor: '#f1f5f9',
+    height: 60,
   },
   leftSection: {
-    width: 110,
+    width: 80,
     alignItems: 'flex-start',
   },
   centerSection: {
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   rightSection: {
-    width: 110,
+    width: 80,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-end',
@@ -104,9 +104,8 @@ const styles = StyleSheet.create({
     marginLeft: -4,
   },
   headerLogo: {
-    width: 110,
+    width: 100,
     height: 32,
-    marginBottom: 0,
   },
   titleContainer: {
     alignItems: 'center',
@@ -121,20 +120,6 @@ const styles = StyleSheet.create({
     color: '#64748b',
     fontWeight: '600',
     marginTop: 0,
-  },
-  profileBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: '#f1f5f9',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 1.5,
-    borderColor: '#e2e8f0',
-  },
-  avatarPlaceholder: {
-    justifyContent: 'center',
-    alignItems: 'center',
   },
 });
 
